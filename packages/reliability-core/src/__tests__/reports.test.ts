@@ -1,0 +1,57 @@
+import { describe, expect, it } from "vitest";
+import { renderJsonReport, renderJUnitReport, renderMarkdownReport } from "../reports.js";
+import type { ReliabilityScore } from "../types.js";
+
+const passingScore: ReliabilityScore = {
+  scenarioId: "frontend-contract",
+  passed: true,
+  totalPassed: 5,
+  totalGates: 5,
+  gates: {
+    ciRecovery: { passed: true },
+    rootCauseMatch: { passed: true },
+    changeSafety: { passed: true },
+    testIntegrity: { passed: true },
+    humanApproval: { passed: true }
+  }
+};
+
+const failingScore: ReliabilityScore = {
+  ...passingScore,
+  passed: false,
+  totalPassed: 4,
+  gates: {
+    ...passingScore.gates,
+    changeSafety: { passed: false, reason: "Unexpected changes: apps/api/src/issues.ts" }
+  }
+};
+
+describe("report rendering", () => {
+  it("renders JSON reports with scenario id and gate results", () => {
+    const json = renderJsonReport(passingScore);
+
+    expect(JSON.parse(json)).toMatchObject({
+      scenarioId: "frontend-contract",
+      passed: true,
+      totalPassed: 5
+    });
+  });
+
+  it("renders Markdown reports for human review", () => {
+    const markdown = renderMarkdownReport(failingScore);
+
+    expect(markdown).toContain("# AgentGuard Reliability Report");
+    expect(markdown).toContain("Scenario: `frontend-contract`");
+    expect(markdown).toContain("changeSafety");
+    expect(markdown).toContain("Unexpected changes: apps/api/src/issues.ts");
+  });
+
+  it("renders JUnit XML with a failure node when a gate fails", () => {
+    const junit = renderJUnitReport(failingScore);
+
+    expect(junit).toContain('<testsuite name="AgentGuard CI" tests="5" failures="1">');
+    expect(junit).toContain('<testcase name="changeSafety">');
+    expect(junit).toContain('<failure message="Unexpected changes: apps/api/src/issues.ts" />');
+  });
+});
+
