@@ -7,6 +7,7 @@ export {
 export { loadScenarioManifest } from "./scenario.js";
 export { runScenarioManifest } from "./runner.js";
 export { scoreScenarioRun } from "./scoring.js";
+export { renderSuiteJson, renderSuiteMarkdown, summarizeSuiteScores } from "./suite.js";
 export type { ScenarioManifest } from "./scenario.js";
 export type {
   CommandResult,

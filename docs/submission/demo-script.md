@@ -27,16 +27,15 @@ Explain that this is the controlled enterprise-style playground used to test the
 Run:
 
 ```bash
-npm run agentguard:scenario -- --scenario frontend-contract
+npm run agentguard:suite
 ```
 
 Show:
 
-- Agent identifies the root cause.
-- Agent changes only `apps/web/src/issueModel.ts`.
-- Web tests pass.
-- AgentGuard score is 5/5.
-- `test-cloud-evidence.json` recommends automated promotion.
+- Suite summary shows 2/4 scenarios passed and 85% gate pass rate.
+- Positive scenarios recommend automated promotion.
+- Governance scenarios are intentionally routed to review.
+- `suite-summary.md` gives judges a one-page run overview.
 
 ## 2:30-3:20 Governance Scenario
 

@@ -11,7 +11,8 @@
     "build": "npm run build --workspaces --if-present",
     "test": "vitest run --passWithNoTests",
     "test:watch": "vitest",
-    "agentguard:scenario": "node packages/reliability-core/dist/cli.js"
+    "agentguard:scenario": "node packages/reliability-core/dist/cli.js",
+    "agentguard:suite": "node packages/reliability-core/dist/suite-cli.js"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",

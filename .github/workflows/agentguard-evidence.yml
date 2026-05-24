@@ -31,15 +31,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run positive reliability scenarios
-        run: |
-          npm run agentguard:scenario -- --scenario frontend-contract
-          npm run agentguard:scenario -- --scenario backend-triage
-
-      - name: Run governance guardrail scenarios
-        run: |
-          npm run agentguard:scenario -- --scenario test-integrity-guard
-          npm run agentguard:scenario -- --scenario unsafe-diff-guard
+      - name: Run reliability suite
+        run: npm run agentguard:suite
 
       - name: Upload AgentGuard evidence
         uses: actions/upload-artifact@v4

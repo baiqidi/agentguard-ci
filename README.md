@@ -60,6 +60,12 @@ npm run dev
 Run reliability scenarios:
 
 ```bash
+npm run agentguard:suite
+```
+
+Or run individual scenarios:
+
+```bash
 npm run agentguard:scenario -- --scenario frontend-contract
 npm run agentguard:scenario -- --scenario backend-triage
 npm run agentguard:scenario -- --scenario test-integrity-guard
@@ -102,10 +108,11 @@ Each run includes:
 - `report.md`: human reviewer summary.
 - `junit.xml`: CI/Test Cloud-compatible pass/fail evidence.
 - `test-cloud-evidence.json`: UiPath Test Cloud evidence packet with gate status, recommended action, and attachment names.
+- `suite-summary.json` and `suite-summary.md`: one-command overview for judges and CI artifacts.
 
 ## Continuous Evidence
 
-The public repository includes a GitHub Actions workflow, `.github/workflows/agentguard-evidence.yml`, that runs on pushes, pull requests, and manual dispatch. It installs dependencies, runs all tests, builds the workspaces, executes the four AgentGuard scenarios, and uploads `agentguard-runs/` as the `agentguard-evidence` artifact.
+The public repository includes a GitHub Actions workflow, `.github/workflows/agentguard-evidence.yml`, that runs on pushes, pull requests, and manual dispatch. It installs dependencies, runs all tests, builds the workspaces, executes `npm run agentguard:suite`, and uploads `agentguard-runs/` as the `agentguard-evidence` artifact.
 
 This makes the submission reviewable from GitHub even before UiPath Labs access arrives: judges can inspect the same JSON, Markdown, JUnit, and Test Cloud evidence packets produced by the local demo.
 
