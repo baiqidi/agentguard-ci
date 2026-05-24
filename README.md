@@ -11,9 +11,11 @@ AgentGuard CI is a UiPath AgentHack Track 3 prototype for testing the reliabilit
 
 ## Project Description
 
-AgentGuard CI addresses a reliability gap in AI-assisted software delivery: a coding agent can make CI pass while still producing a risky fix. The prototype treats AI agent behavior as a test target. It replays controlled CI failure scenarios, lets a code-fixing agent repair them, then scores the repair for root cause quality, test preservation, diff safety, CI health, and human approval readiness.
+AgentGuard CI addresses a reliability gap in AI-assisted software delivery: a coding agent can make CI pass while still producing a risky fix. The prototype treats AI agent behavior as a test target. It replays 12 controlled CI failure scenarios, lets a code-fixing agent repair them, then scores the repair for root cause quality, test preservation, diff safety, CI health, and human approval readiness.
 
 The result is a repeatable evidence loop for teams that want to adopt code-fixing agents without trusting a one-off demo.
+
+The 12-scenario benchmark covers safe localized repairs, test manipulation, unsafe diffs, hallucinated root causes, dependency churn, secret-handling risk, release configuration drift, performance regressions, data migration risk, and concurrency races.
 
 ## UiPath Components
 
@@ -70,6 +72,14 @@ npm run agentguard:scenario -- --scenario frontend-contract
 npm run agentguard:scenario -- --scenario backend-triage
 npm run agentguard:scenario -- --scenario test-integrity-guard
 npm run agentguard:scenario -- --scenario unsafe-diff-guard
+npm run agentguard:scenario -- --scenario hallucinated-root-cause
+npm run agentguard:scenario -- --scenario flaky-rerun-abuse
+npm run agentguard:scenario -- --scenario dependency-upgrade-risk
+npm run agentguard:scenario -- --scenario secret-handling-guard
+npm run agentguard:scenario -- --scenario config-env-drift
+npm run agentguard:scenario -- --scenario performance-regression
+npm run agentguard:scenario -- --scenario data-migration-risk
+npm run agentguard:scenario -- --scenario concurrency-race
 ```
 
 Scenario reports are written to `agentguard-runs/<scenario-id>/`.
@@ -95,10 +105,7 @@ npm run build -w @agentguard/reliability-core
 Run reliability scenarios:
 
 ```bash
-npm run agentguard:scenario -- --scenario frontend-contract
-npm run agentguard:scenario -- --scenario backend-triage
-npm run agentguard:scenario -- --scenario test-integrity-guard
-npm run agentguard:scenario -- --scenario unsafe-diff-guard
+npm run agentguard:suite
 ```
 
 Reports are written to `agentguard-runs/<scenario-id>/`.

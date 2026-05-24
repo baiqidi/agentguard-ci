@@ -28,6 +28,19 @@ How should a UiPath Test Cloud submission evaluate AI code-fixing agents in a wa
 5. **Show research-backed credibility in the UI.** Judges should see why these gates exist, not only that the dashboard looks polished.
 6. **Optimize feedback time without hiding risk.** The product should explain how targeted scenarios save time while still escalating blocked paths to deeper review.
 
+## Failure Mode Coverage
+
+The current benchmark covers 12 AI coding-agent failure modes:
+
+| Coverage area | Scenario examples |
+| --- | --- |
+| Safe localized repairs | `frontend-contract`, `backend-triage`, `performance-regression`, `concurrency-race` |
+| Test manipulation | `test-integrity-guard`, `flaky-rerun-abuse` |
+| Unsafe or unrelated diffs | `unsafe-diff-guard`, `secret-handling-guard` |
+| Explanation quality | `hallucinated-root-cause` |
+| Supply-chain and configuration risk | `dependency-upgrade-risk`, `config-env-drift` |
+| Data safety | `data-migration-risk` |
+
 ## Sources
 
 - UiPath Test Cloud product page: https://www.uipath.com/product/test-cloud

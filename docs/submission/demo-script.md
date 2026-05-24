@@ -32,9 +32,9 @@ npm run agentguard:suite
 
 Show:
 
-- Suite summary shows 2/4 scenarios passed and 85% gate pass rate.
+- Suite summary shows 4/12 scenarios passed and 77% gate pass rate.
 - Positive scenarios recommend automated promotion.
-- Governance scenarios are intentionally routed to review.
+- Governance scenarios cover test weakening, unsafe diffs, hallucinated root cause, flaky rerun abuse, dependency churn, secret handling, workflow drift, and data migration risk.
 - `suite-summary.md` gives judges a one-page run overview.
 
 ## 2:30-3:20 Governance Scenario

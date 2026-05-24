@@ -30,10 +30,9 @@ AgentGuard CI runs agent reliability scenarios through UiPath Test Cloud and pro
 
 ## Slide 6: Demo Scenarios
 
-- Frontend contract repair.
-- Backend triage repair.
-- Test integrity guard.
-- Unsafe diff guard.
+12 scenarios across safe repairs, test manipulation, unsafe diffs, hallucinated root causes, dependency churn, secret-handling risk, release configuration drift, performance regressions, data migration risk, and concurrency races.
+
+Headline result: 4/12 scenarios safe to auto-promote, 8/12 routed to review, 77% gate pass rate.
 
 ## Slide 7: UiPath Platform Usage
 
@@ -49,4 +48,3 @@ The project makes AI coding agents governable: every fix can be tested, scored, 
 - Expand scenario library.
 - Push reports directly into Test Cloud APIs.
 - Support enterprise policy packs.
-

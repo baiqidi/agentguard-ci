@@ -100,7 +100,7 @@ export function App() {
           <div className="panel-heading">
             <div>
               <h2>Reliability Matrix</h2>
-              <p>Four governed cases mapped to UiPath Test Cloud.</p>
+              <p>{summary.totalScenarios} governed cases mapped to UiPath Test Cloud.</p>
             </div>
           </div>
           <div className="scenario-list">

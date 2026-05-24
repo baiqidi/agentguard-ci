@@ -285,6 +285,10 @@ button {
   align-items: stretch;
 }
 
+.evidence-panel {
+  align-self: start;
+}
+
 .details-grid {
   grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
   margin-top: 16px;

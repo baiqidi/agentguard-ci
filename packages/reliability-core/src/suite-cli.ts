@@ -9,7 +9,15 @@ const defaultScenarioIds = [
   "frontend-contract",
   "backend-triage",
   "test-integrity-guard",
-  "unsafe-diff-guard"
+  "unsafe-diff-guard",
+  "hallucinated-root-cause",
+  "flaky-rerun-abuse",
+  "dependency-upgrade-risk",
+  "secret-handling-guard",
+  "config-env-drift",
+  "performance-regression",
+  "data-migration-risk",
+  "concurrency-race"
 ];
 
 function readArg(name: string): string | undefined {
