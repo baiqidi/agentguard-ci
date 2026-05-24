@@ -116,6 +116,10 @@ The public repository includes a GitHub Actions workflow, `.github/workflows/age
 
 This makes the submission reviewable from GitHub even before UiPath Labs access arrives: judges can inspect the same JSON, Markdown, JUnit, and Test Cloud evidence packets produced by the local demo.
 
+## Research Backing
+
+The design rationale is summarized in `docs/research/agentguard-research-brief.md`. It translates UiPath Test Cloud/Test Manager documentation and recent agent-evaluation research into AgentGuard's product principles: realistic repository-level scenarios, interactive execution evidence, traceable artifacts, structured feedback, and human review for high-risk repairs.
+
 ## UiPath Submission Assets
 
 - `uipath/test-cloud-matrix.md`: Test Cloud case mapping.

@@ -5,7 +5,10 @@ import {
   evidenceTone,
   formatGateLabel,
   judgeScenarioEvidence,
+  researchBackedProtocol,
+  summarizeResearchProtocol,
   type EvidenceTone,
+  type ResearchProtocolPrinciple,
   type ScenarioEvidence
 } from "./testCloudEvidence.js";
 import "./App.css";
@@ -40,15 +43,19 @@ const toneLabels: Record<EvidenceTone, string> = {
 export function App() {
   const [selectedScenarioId, setSelectedScenarioId] = useState(judgeScenarioEvidence[0].id);
   const summary = useMemo(() => buildConsoleSummary(judgeScenarioEvidence), []);
+  const protocolSummary = useMemo(() => summarizeResearchProtocol(researchBackedProtocol), []);
   const selectedScenario =
     judgeScenarioEvidence.find((scenario) => scenario.id === selectedScenarioId) ?? judgeScenarioEvidence[0];
 
   return (
     <main className="app-shell">
       <header className="topbar">
-        <div>
+        <div className="hero-copy">
           <h1>AgentGuard CI</h1>
-          <p>UiPath Test Cloud console for AI agent reliability evidence.</p>
+          <p>
+            Research-backed Test Cloud console for proving whether AI code-fixing agents are safe enough to
+            promote.
+          </p>
         </div>
         <div className="topbar-actions" aria-label="Submission status">
           <span>Track 3</span>
@@ -56,11 +63,18 @@ export function App() {
         </div>
       </header>
 
+      <section className="trace-band" aria-label="AgentGuard reliability flow">
+        <TraceStep index="01" title="Replay failure" detail="Realistic repository scenario" />
+        <TraceStep index="02" title="Observe agent" detail="Commands, patch, explanation" />
+        <TraceStep index="03" title="Score gates" detail="CI, root cause, diff, tests, approval" />
+        <TraceStep index="04" title="Attach evidence" detail="JUnit, Markdown, JSON, Test Cloud packet" />
+      </section>
+
       <section className="summary-grid" aria-label="Portfolio summary">
         <Metric label="Scenarios" value={`${summary.passedScenarios}/${summary.totalScenarios}`} detail="safe promotions" />
         <Metric label="Gate Pass Rate" value={summary.passRateLabel} detail={`${summary.totalPassedGates}/${summary.totalGates} gates`} />
         <Metric label="Findings" value={String(summary.governanceFindings)} detail="routed to review" />
-        <Metric label="Evidence" value="4" detail="Test Cloud packets" />
+        <Metric label="Protocol" value={String(protocolSummary.principleCount)} detail="research principles" />
       </section>
 
       <section className="console-grid">
@@ -90,7 +104,21 @@ export function App() {
         <GatePanel scenario={selectedScenario} />
         <IssueTargetPanel />
       </section>
+
+      <ResearchPanel protocolSummary={protocolSummary.headline} />
     </main>
+  );
+}
+
+function TraceStep({ index, title, detail }: { index: string; title: string; detail: string }) {
+  return (
+    <article className="trace-step">
+      <span>{index}</span>
+      <div>
+        <strong>{title}</strong>
+        <p>{detail}</p>
+      </div>
+    </article>
   );
 }
 
@@ -203,5 +231,33 @@ function IssueTargetPanel() {
         ))}
       </div>
     </section>
+  );
+}
+
+function ResearchPanel({ protocolSummary }: { protocolSummary: string }) {
+  return (
+    <section className="research-panel" aria-label="Research backed protocol">
+      <div className="research-intro">
+        <h2>Research-Backed Protocol</h2>
+        <p>{protocolSummary}</p>
+      </div>
+      <div className="research-grid">
+        {researchBackedProtocol
+          .filter((principle) => principle.featuredPrinciple)
+          .map((principle) => (
+            <ResearchCard key={principle.id} principle={principle} />
+          ))}
+      </div>
+    </section>
+  );
+}
+
+function ResearchCard({ principle }: { principle: ResearchProtocolPrinciple }) {
+  return (
+    <article className="research-card">
+      <span>{principle.source}</span>
+      <strong>{principle.title}</strong>
+      <p>{principle.productTranslation}</p>
+    </article>
   );
 }

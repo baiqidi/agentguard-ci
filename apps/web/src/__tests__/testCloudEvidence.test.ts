@@ -3,7 +3,9 @@ import {
   buildConsoleSummary,
   evidenceTone,
   formatGateLabel,
-  judgeScenarioEvidence
+  judgeScenarioEvidence,
+  researchBackedProtocol,
+  summarizeResearchProtocol
 } from "../testCloudEvidence.js";
 
 describe("test cloud evidence view model", () => {
@@ -28,5 +30,14 @@ describe("test cloud evidence view model", () => {
     expect(formatGateLabel("ciRecovery")).toBe("CI Recovery");
     expect(formatGateLabel("rootCauseMatch")).toBe("Root Cause Match");
     expect(formatGateLabel("humanApproval")).toBe("Human Approval");
+  });
+
+  it("summarizes research-backed protocol coverage", () => {
+    expect(summarizeResearchProtocol(researchBackedProtocol)).toEqual({
+      principleCount: 5,
+      paperCount: 5,
+      uipathControlCount: 3,
+      headline: "5 principles from 5 agent-evaluation papers + 3 UiPath controls"
+    });
   });
 });
