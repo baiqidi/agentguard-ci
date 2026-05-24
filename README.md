@@ -103,6 +103,12 @@ Each run includes:
 - `junit.xml`: CI/Test Cloud-compatible pass/fail evidence.
 - `test-cloud-evidence.json`: UiPath Test Cloud evidence packet with gate status, recommended action, and attachment names.
 
+## Continuous Evidence
+
+The public repository includes a GitHub Actions workflow, `.github/workflows/agentguard-evidence.yml`, that runs on pushes, pull requests, and manual dispatch. It installs dependencies, runs all tests, builds the workspaces, executes the four AgentGuard scenarios, and uploads `agentguard-runs/` as the `agentguard-evidence` artifact.
+
+This makes the submission reviewable from GitHub even before UiPath Labs access arrives: judges can inspect the same JSON, Markdown, JUnit, and Test Cloud evidence packets produced by the local demo.
+
 ## UiPath Submission Assets
 
 - `uipath/test-cloud-matrix.md`: Test Cloud case mapping.

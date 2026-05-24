@@ -18,6 +18,7 @@ Show the AgentGuard CI Console:
 - Evidence packet preview for each scenario.
 - Gate detail panel with human-review decisions.
 - Issue Tracker target used by the reliability scenarios.
+- GitHub Actions workflow that publishes the same evidence artifacts.
 
 Explain that this is the controlled enterprise-style playground used to test the agent.
 
@@ -59,6 +60,7 @@ Show `uipath/test-cloud-matrix.md` and explain:
 - Test Cloud runs each scenario as a governed test case.
 - Reports are attached as evidence.
 - The evidence packet names the failed gates and recommended action.
+- GitHub Actions already produces the same `agentguard-evidence` artifact for repository review.
 - Governance failures are routed to a human reviewer.
 - Codex/coding-agent usage is part of the workflow and bonus alignment.
 
