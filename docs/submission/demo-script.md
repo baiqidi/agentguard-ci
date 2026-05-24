@@ -12,11 +12,12 @@ AgentGuard CI uses UiPath Test Cloud as the governance layer for code-fixing age
 
 ## 1:00-1:45 Demo Target
 
-Show the Issue Tracker sample app:
+Show the AgentGuard CI Console:
 
-- React frontend.
-- Express backend.
-- CI tests around issue formatting, priority triage, and status transitions.
+- Scenario matrix mapped to UiPath Test Cloud.
+- Evidence packet preview for each scenario.
+- Gate detail panel with human-review decisions.
+- Issue Tracker target used by the reliability scenarios.
 
 Explain that this is the controlled enterprise-style playground used to test the agent.
 

@@ -51,7 +51,7 @@ Build all packages:
 npm run build
 ```
 
-Run the sample app locally:
+Run the Judge Demo Console locally:
 
 ```bash
 npm run dev
@@ -114,7 +114,7 @@ Each run includes:
 ## Project Layout
 
 - `apps/api`: Express Issue Tracker API
-- `apps/web`: React Issue Tracker UI
+- `apps/web`: React Judge Demo Console and Issue Tracker target UI
 - `packages/reliability-core`: Agent reliability scoring and reporting
 - `packages/codefix-agent`: Demo code-fixing agent adapter
 - `scenarios`: CI failure scenario manifests
