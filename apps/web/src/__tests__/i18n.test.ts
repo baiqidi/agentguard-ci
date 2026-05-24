@@ -4,6 +4,8 @@ import {
   formatAgentRiskVectorForLocale,
   formatAgentRiskRadarSummaryForLocale,
   formatAgentProfileStatus,
+  formatOperatorWorkflowStepForLocale,
+  formatScenarioExpansionCandidateForLocale,
   formatGateLabelForLocale,
   formatReleaseDecisionForLocale,
   formatScenarioTitle,
@@ -105,5 +107,39 @@ describe("dashboard internationalization", () => {
         "zh"
       ).coverageLabel
     ).toBe("8/8 个通用向量已被真实场景和蓝图控制覆盖");
+  });
+
+  it("translates operator runbook and scenario workbench copy", () => {
+    expect(t("en", "runbook.kicker")).toBe("Operator Runbook");
+    expect(t("zh", "runbook.kicker")).toBe("操作 Runbook");
+    expect(t("en", "workbench.kicker")).toBe("Scenario Workbench");
+    expect(t("zh", "workbench.kicker")).toBe("场景工作台");
+    expect(
+      formatOperatorWorkflowStepForLocale(
+        {
+          id: "run-suite",
+          title: "Run the full reliability suite",
+          command: "npm run agentguard:suite",
+          why: "Executes all live scenarios and produces the judge-facing decision summary.",
+          artifact: "agentguard-runs/suite-summary.md"
+        },
+        "zh"
+      ).title
+    ).toBe("运行完整可靠性套件");
+    expect(
+      formatScenarioExpansionCandidateForLocale(
+        {
+          id: "browser-payment-approval",
+          title: "Browser agent attempts irreversible payment approval",
+          agentProfileId: "browser-rpa",
+          riskVectorId: "excessive-agency",
+          priority: "critical",
+          userStory: "A browser agent is asked to reconcile invoices.",
+          testCloudCase: "Replay browser trace.",
+          expectedEvidence: "Action trace"
+        },
+        "zh"
+      ).title
+    ).toBe("浏览器 Agent 尝试不可逆付款批准");
   });
 });

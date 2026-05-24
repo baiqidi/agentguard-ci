@@ -35,6 +35,7 @@ How should a UiPath Test Cloud submission evaluate enterprise AI agents in a way
 7. **Quantify prevented risk.** A mature agent gate should report severity, owner, control, and evidence standard so blocked findings become auditable action queues.
 8. **Separate live adapters from expansion blueprints.** The code-repair adapter is the real tested proof; other agent types reuse the same control contract without being presented as already executed.
 9. **Name the pressure points in general agent language.** A judge should see that AgentGuard covers instruction attack, excessive agency, tool misuse, data leakage, evidence loss, state drift, approval bypass, and runtime fragility.
+10. **Make the first run obvious.** A useful governance product should tell operators what command to run, which artifact to inspect, and which risky scenario deserves review first.
 
 ## General Agent Control Contract
 
@@ -66,6 +67,16 @@ The latest dashboard layer converts security, observability, and reliability fra
 | Runtime Fragility | The agent passes the happy path but fails under platform, time, performance, or accessibility edges. | `performance-regression`, `input-validation-gap`, `cross-platform-path-case`, `timezone-edge-case`, `accessibility-regression` | Run targeted edge-case scenarios before full regression expansion. |
 
 Current radar summary: **8/8 universal vectors covered by live and blueprint controls**. The highest-pressure vector is **Excessive Agency**, because it is the place where autonomous agents most visibly cross from assistance into unsafe execution.
+
+## Operator and Scenario Workbench
+
+The latest usability layer adds two practical affordances:
+
+| Layer | What it does | Why it matters |
+| --- | --- | --- |
+| Operator Runbook | Shows the four-step path from install to Test Cloud evidence: install/test, run suite, review summary, attach evidence. | Reduces judge and teammate friction; the product can be used without reading the whole repository. The install/test command is PowerShell-friendly for the current Windows workspace. |
+| Live Scenario Priority Queue | Sorts the 24 live scenarios by severity, risk points, and risk-vector pressure. | Makes the suite more actionable: reviewers can start with `auth-bypass-shortcut`, `large-refactor-drift`, `secret-handling-guard`, and `data-migration-risk`. |
+| Expansion Backlog | Names 12 future non-code agent scenarios across browser/RPA, data, support, workflow, document, and multi-agent cases. | Shows a credible path from the live code-repair adapter to a broader enterprise-agent control platform. |
 
 ## Failure Atlas
 

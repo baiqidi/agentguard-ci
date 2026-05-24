@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   agentProfiles,
   agentRiskVectors,
+  buildScenarioAnalysis,
   buildConsoleSummary,
   buildOptimizationSummary,
   buildOwnerReviewQueue,
@@ -13,11 +14,14 @@ import {
   formatGateLabel,
   judgeScenarioEvidence,
   realEvidenceChain,
+  operatorWorkflowSteps,
   researchBackedProtocol,
   scenarioRiskProfiles,
+  scenarioExpansionCandidates,
   summarizeAgentCoverage,
   summarizeAgentRiskRadar,
   summarizeFailureAtlas,
+  summarizeScenarioWorkbench,
   summarizeResearchProtocol,
   universalReliabilityGates
 } from "../testCloudEvidence.js";
@@ -205,6 +209,67 @@ describe("test cloud evidence view model", () => {
       blueprintVectors: 8,
       highestPressureVector: "Excessive Agency",
       coverageLabel: "8/8 universal vectors covered by live and blueprint controls"
+    });
+  });
+
+  it("defines an operator workflow for first-time users", () => {
+    expect(operatorWorkflowSteps.map((step) => step.id)).toEqual([
+      "install",
+      "run-suite",
+      "review-evidence",
+      "import-test-cloud"
+    ]);
+    expect(operatorWorkflowSteps[1]).toMatchObject({
+      command: "npm run agentguard:suite",
+      artifact: "agentguard-runs/suite-summary.md"
+    });
+  });
+
+  it("prioritizes live scenario analysis by risk, pressure, and reviewer action", () => {
+    const analysis = buildScenarioAnalysis(judgeScenarioEvidence, scenarioRiskProfiles, agentRiskVectors);
+
+    expect(analysis).toHaveLength(24);
+    expect(analysis[0]).toMatchObject({
+      scenarioId: "auth-bypass-shortcut",
+      owner: "Security Review",
+      riskVectorId: "excessive-agency",
+      riskPoints: 8,
+      command: "npm run agentguard:scenario -- --scenario auth-bypass-shortcut"
+    });
+    expect(analysis.slice(0, 4).map((item) => item.scenarioId)).toEqual([
+      "auth-bypass-shortcut",
+      "large-refactor-drift",
+      "secret-handling-guard",
+      "data-migration-risk"
+    ]);
+  });
+
+  it("summarizes expansion scenarios for non-code agent coverage", () => {
+    const analysis = buildScenarioAnalysis(judgeScenarioEvidence, scenarioRiskProfiles, agentRiskVectors);
+
+    expect(scenarioExpansionCandidates).toHaveLength(12);
+    expect(scenarioExpansionCandidates.map((candidate) => candidate.agentProfileId)).toEqual([
+      "browser-rpa",
+      "browser-rpa",
+      "data-analysis",
+      "data-analysis",
+      "customer-support",
+      "customer-support",
+      "workflow-devops",
+      "workflow-devops",
+      "document-compliance",
+      "document-compliance",
+      "browser-rpa",
+      "workflow-devops"
+    ]);
+    expect(summarizeScenarioWorkbench(analysis, scenarioExpansionCandidates)).toEqual({
+      liveScenarioCount: 24,
+      criticalLiveScenarios: 5,
+      expansionCandidateCount: 12,
+      criticalExpansionCandidates: 6,
+      firstRunCommand: "npm run agentguard:suite",
+      topLiveScenarioId: "auth-bypass-shortcut",
+      topExpansionCandidateId: "browser-payment-approval"
     });
   });
 });

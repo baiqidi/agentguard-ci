@@ -16,9 +16,11 @@ The general platform layer shows one live adapter plus expansion blueprints for 
 
 Show the AgentGuard CI Console:
 
+- Operator Runbook showing the four commands/artifacts needed to use the product.
 - Scenario matrix mapped to UiPath Test Cloud.
 - General Agent Control Layer showing 1 live adapter, 5 expansion blueprints, and the universal gate contract.
 - Failure Mode Radar showing eight general agent risk vectors and the highest-pressure vector, Excessive Agency.
+- Scenario Workbench ranking the most dangerous live scenarios and listing the next non-code agent scenarios to add.
 - Failure Atlas covering 24 agent failure modes across 6 reliability domains.
 - Assurance Case showing blocked risk points, critical findings, and owner queue.
 - Reliability Moat panel showing why AgentGuard is more than test visibility or test selection.
@@ -42,6 +44,7 @@ Show:
 - Suite summary shows 7/24 scenarios passed and 73% gate pass rate.
 - Suite summary shows 106/131 risk points stopped before promotion.
 - Security Review is the top owner, with 24 blocked risk points across 3 findings.
+- Scenario Workbench recommends starting review with `auth-bypass-shortcut`, `large-refactor-drift`, `secret-handling-guard`, and `data-migration-risk`.
 - Positive scenarios recommend automated promotion.
 - Governance scenarios cover prompt injection, snapshot laundering, test weakening, unsafe diffs, hallucinated root cause, flaky rerun abuse, auth bypass, dependency/license risk, secret handling, workflow drift, accessibility regression, data migration risk, and random workarounds.
 - `suite-summary.md` gives judges a one-page run overview.
@@ -73,6 +76,7 @@ Show `uipath/test-cloud-matrix.md` and explain:
 - Codex/coding-agent usage is part of the workflow and bonus alignment.
 - The code-repair adapter is live evidence; the other agent profiles are honest expansion blueprints using the same Test Cloud control model.
 - The radar ties the pitch to recognized risk language: NIST AI RMF governance, OWASP GenAI security categories, OpenTelemetry-style agent traces, and production reliability controls.
+- The expansion backlog names 12 next tests, including browser payment approval, data PII leakage, support refund escalation, workflow production deploy, document citation gaps, and multi-agent peer injection.
 
 ## 4:00-4:30 Close
 

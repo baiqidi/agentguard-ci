@@ -13,6 +13,15 @@ AgentGuard CI maps each reliability scenario to a UiPath Test Cloud test case. T
 | Workflow / DevOps Agent | Expansion blueprint | 7 | Misconfigured workflows, runaway automation, rollback loss | Route automation changes through owner-governed release cases |
 | Document / Compliance Agent | Expansion blueprint | 7 | Incorrect extraction, missing citations, policy misclassification | Attach source spans and decision evidence to compliance cases |
 
+## Operator Runbook
+
+| Step | Command or artifact | Purpose |
+| --- | --- | --- |
+| Install and verify | `npm install; npm test` | Proves the evaluator's workspace can run AgentGuard. |
+| Run full suite | `npm run agentguard:suite` | Executes the 24 live reliability scenarios. |
+| Review evidence | `agentguard-runs/suite-summary.md` | Shows auto-promotions, review routes, hard blocks, and blocked risk points. |
+| Attach to Test Cloud | `uipath/test-cloud-import.csv` plus each scenario's `test-cloud-evidence.json` | Maps AgentGuard evidence into governed Test Cloud cases. |
+
 ## Universal Failure Mode Radar
 
 | Risk vector | Live scenario examples | Blueprint agent coverage | Test Cloud control |
@@ -25,6 +34,23 @@ AgentGuard CI maps each reliability scenario to a UiPath Test Cloud test case. T
 | State Drift | `data-migration-risk`, `concurrency-race`, `timezone-edge-case`, `config-env-drift` | Browser/RPA, Workflow/DevOps, Data Analysis | Require reversible state-safety controls |
 | Approval Bypass | `dependency-upgrade-risk`, `secret-handling-guard`, `auth-bypass-shortcut`, `rollback-flag-missing`, `license-policy-risk` | Code Repair, Customer Support, Workflow/DevOps, Document/Compliance | Block promotion until owner approval evidence exists |
 | Runtime Fragility | `performance-regression`, `input-validation-gap`, `cross-platform-path-case`, `timezone-edge-case`, `accessibility-regression` | Code Repair, Browser/RPA, Workflow/DevOps, Customer Support | Run targeted edge cases before full regression expansion |
+
+## Scenario Expansion Backlog
+
+| Candidate | Agent profile | Priority | Risk vector | Evidence to collect |
+| --- | --- | --- | --- | --- |
+| `browser-payment-approval` | Browser/RPA | Critical | Excessive Agency | Action trace, final-state screenshot, finance-owner approval artifact |
+| `browser-selector-drift` | Browser/RPA | High | Tool Misuse | DOM snapshot, tenant id trace, blocked action reason |
+| `data-pii-query-leak` | Data Analysis | Critical | Data Leakage | Query log, redaction check, data-owner approval route |
+| `data-metric-definition-drift` | Data Analysis | High | Evidence Loss | Metric contract diff, query result sample, reviewer note |
+| `support-refund-escalation` | Customer Support | Critical | Approval Bypass | Conversation transcript, policy match, manager approval artifact |
+| `support-policy-hallucination` | Customer Support | High | Instruction Attack | Policy citation spans, unsupported-claim list, review decision |
+| `workflow-production-deploy` | Workflow/DevOps | Critical | State Drift | Workflow diff, rollback plan, release-owner approval |
+| `workflow-secret-rotation` | Workflow/DevOps | Critical | Data Leakage | Secret-store trace, environment diff, security review route |
+| `document-citation-gap` | Document/Compliance | High | Evidence Loss | Source spans, extracted claims, missing-citation list |
+| `document-policy-misclassification` | Document/Compliance | High | Instruction Attack | Classification trace, policy taxonomy match, embedded instruction note |
+| `multi-agent-peer-injection` | Browser/RPA | Critical | Instruction Attack | Peer message trace, policy precedence decision, blocked action |
+| `agent-span-missing` | Workflow/DevOps | Medium | Tool Misuse | Agent span list, tool call trace, missing-telemetry finding |
 
 ## 24-Scenario Failure Atlas
 

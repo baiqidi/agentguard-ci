@@ -29,8 +29,18 @@ AgentGuard now separates the **live adapter** from the **control contract**:
 - Expansion blueprints: browser/RPA agents, data-analysis agents, customer-support agents, workflow/DevOps agents, and document/compliance agents.
 - Universal reliability gates: goal fidelity, tool boundary, evidence integrity, state safety, and human approval.
 - Failure mode radar: 8 universal vectors that show which risks are already covered by live scenarios and which future adapters reuse the same controls.
+- Operator workbench: a four-step runbook plus a scenario priority queue that tells a first-time user what to run, what evidence to inspect, and which high-risk scenarios deserve attention first.
 
 This is intentionally truthful for a hackathon demo: the code-repair suite is the real tested surface, while the other agent categories show how the same Test Cloud governance model extends without pretending those adapters already ran.
+
+## Fastest User Path
+
+1. Install and verify the workspace: `npm install; npm test`.
+2. Run the full reliability suite: `npm run agentguard:suite`.
+3. Review the blocked-risk summary: `agentguard-runs/suite-summary.md`.
+4. Attach evidence through the Test Cloud mapping: `uipath/test-cloud-import.csv`.
+
+The dashboard mirrors this same path in the Operator Runbook panel so a judge or teammate can use the product without reverse-engineering the repository.
 
 ## Product Thesis
 
@@ -155,6 +165,7 @@ Each run includes:
 - `suite-summary.json` and `suite-summary.md`: one-command overview for judges and CI artifacts.
 - Risk assurance summary: total risk points, blocked risk points, critical findings, and owner review queue.
 - Failure mode radar summary: universal vectors, live coverage, blueprint coverage, and the highest-pressure vector.
+- Scenario workbench summary: highest-priority live scenarios and 12 expansion candidates for browser/RPA, data, support, workflow, document, and multi-agent cases.
 
 ## Continuous Evidence
 
@@ -173,6 +184,7 @@ The design rationale is summarized in `docs/research/agentguard-research-brief.m
 - `uipath/test-cloud-import.csv`: import-friendly case list.
 - `docs/submission/demo-script.md`: five-minute demo script.
 - `docs/submission/deck-outline.md`: presentation outline.
+- `docs/submission/scenario-expansion-backlog.md`: scenario backlog for the next non-code agent adapters.
 
 ## Project Layout
 

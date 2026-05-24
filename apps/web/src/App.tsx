@@ -3,6 +3,7 @@ import { priorityTone, type IssueSummary } from "./issueModel.js";
 import {
   agentProfiles,
   agentRiskVectors,
+  buildScenarioAnalysis,
   buildConsoleSummary,
   buildOptimizationSummary,
   buildOwnerReviewQueue,
@@ -13,12 +14,15 @@ import {
   failureModeTaxonomy,
   findScenarioRiskProfile,
   judgeScenarioEvidence,
+  operatorWorkflowSteps,
   realEvidenceChain,
   researchBackedProtocol,
+  scenarioExpansionCandidates,
   scenarioRiskProfiles,
   summarizeAgentCoverage,
   summarizeAgentRiskRadar,
   summarizeFailureAtlas,
+  summarizeScenarioWorkbench,
   summarizeResearchProtocol,
   universalReliabilityGates,
   type AgentCoverageSummary,
@@ -28,11 +32,15 @@ import {
   type CompetitiveAdvantageCard,
   type EvidenceTone,
   type FailureModeDomain,
+  type OperatorWorkflowStep,
   type OwnerReviewQueueItem,
   type RealEvidenceStep,
   type ResearchProtocolPrinciple,
   type RiskAssuranceSummary,
+  type ScenarioAnalysisItem,
   type ScenarioEvidence,
+  type ScenarioExpansionCandidate,
+  type ScenarioWorkbenchSummary,
   type UniversalReliabilityGate
 } from "./testCloudEvidence.js";
 import {
@@ -50,12 +58,16 @@ import {
   formatIssueLabelParts,
   formatIssueSummaryParts,
   formatOptimizationRecommendation,
+  formatOperatorWorkflowStepForLocale,
   formatOwner,
   formatReleaseDecisionForLocale,
   formatResearchCardForLocale,
   formatResearchHeadline,
   formatRiskAssuranceForLocale,
+  formatScenarioAnalysisItemForLocale,
   formatScenarioAction,
+  formatScenarioExpansionCandidateForLocale,
+  formatScenarioExpansionPriority,
   formatScenarioTitle,
   formatShortText,
   formatToneLabel,
@@ -102,6 +114,14 @@ export function App() {
   const summary = useMemo(() => buildConsoleSummary(judgeScenarioEvidence), []);
   const agentCoverageSummary = useMemo(() => summarizeAgentCoverage(agentProfiles), []);
   const riskRadarSummary = useMemo(() => summarizeAgentRiskRadar(agentRiskVectors), []);
+  const scenarioAnalysis = useMemo(
+    () => buildScenarioAnalysis(judgeScenarioEvidence, scenarioRiskProfiles, agentRiskVectors),
+    []
+  );
+  const scenarioWorkbenchSummary = useMemo(
+    () => summarizeScenarioWorkbench(scenarioAnalysis, scenarioExpansionCandidates),
+    [scenarioAnalysis]
+  );
   const releaseDecision = useMemo(() => buildReleaseDecisionSummary(judgeScenarioEvidence), []);
   const optimizationSummary = useMemo(() => buildOptimizationSummary(judgeScenarioEvidence), []);
   const protocolSummary = useMemo(() => summarizeResearchProtocol(researchBackedProtocol), []);
@@ -177,11 +197,19 @@ export function App() {
         <p className="decision-threshold">{localizedReleaseDecision.thresholdLabel}</p>
       </section>
 
+      <OperatorRunbookPanel locale={locale} />
+
       <AgentCoveragePanel coverageSummary={agentCoverageSummary} locale={locale} />
 
       <UniversalGatePanel locale={locale} />
 
       <RiskRadarPanel locale={locale} riskRadarSummary={riskRadarSummary} />
+
+      <ScenarioWorkbenchPanel
+        locale={locale}
+        scenarioAnalysis={scenarioAnalysis}
+        workbenchSummary={scenarioWorkbenchSummary}
+      />
 
       <RiskAssurancePanel locale={locale} ownerQueue={ownerQueue} riskAssurance={localizedRiskAssurance} />
 
@@ -294,6 +322,50 @@ function Metric({ label, value, detail }: { label: string; value: string; detail
       <span>{label}</span>
       <strong>{value}</strong>
       <small>{detail}</small>
+    </article>
+  );
+}
+
+function OperatorRunbookPanel({ locale }: { locale: Locale }) {
+  return (
+    <section className="operator-runbook-panel" aria-label={t(locale, "runbook.aria")}>
+      <div className="operator-runbook-copy">
+        <span>{t(locale, "runbook.kicker")}</span>
+        <h2>{t(locale, "runbook.title")}</h2>
+        <p>{t(locale, "runbook.body")}</p>
+      </div>
+      <div className="operator-step-grid">
+        {operatorWorkflowSteps.map((step, index) => (
+          <OperatorStepCard index={index + 1} key={step.id} locale={locale} step={step} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function OperatorStepCard({ index, locale, step }: { index: number; locale: Locale; step: OperatorWorkflowStep }) {
+  const localizedStep = formatOperatorWorkflowStepForLocale(step, locale);
+
+  return (
+    <article className="operator-step-card">
+      <div className="operator-step-index">{String(index).padStart(2, "0")}</div>
+      <h3>{localizedStep.title}</h3>
+      <dl>
+        <div>
+          <dt>{t(locale, "runbook.command")}</dt>
+          <dd>
+            <code>{localizedStep.command}</code>
+          </dd>
+        </div>
+        <div>
+          <dt>{t(locale, "runbook.artifact")}</dt>
+          <dd>{localizedStep.artifact}</dd>
+        </div>
+        <div>
+          <dt>{t(locale, "runbook.why")}</dt>
+          <dd>{localizedStep.why}</dd>
+        </div>
+      </dl>
     </article>
   );
 }
@@ -467,6 +539,144 @@ function RiskVectorCard({ locale, vector }: { locale: Locale; vector: AgentRiskV
         <div>
           <dt>{t(locale, "radar.payoff")}</dt>
           <dd>{localizedVector.productPayoff}</dd>
+        </div>
+      </dl>
+    </article>
+  );
+}
+
+function ScenarioWorkbenchPanel({
+  locale,
+  scenarioAnalysis,
+  workbenchSummary
+}: {
+  locale: Locale;
+  scenarioAnalysis: ScenarioAnalysisItem[];
+  workbenchSummary: ScenarioWorkbenchSummary;
+}) {
+  const topLiveScenarios = scenarioAnalysis.slice(0, 6);
+  const topExpansionCandidates = scenarioExpansionCandidates.slice(0, 6);
+
+  return (
+    <section className="scenario-workbench-panel" aria-label={t(locale, "workbench.aria")}>
+      <div className="scenario-workbench-copy">
+        <span>{t(locale, "workbench.kicker")}</span>
+        <h2>{t(locale, "workbench.title")}</h2>
+        <p>{t(locale, "workbench.body")}</p>
+      </div>
+      <div className="scenario-workbench-metrics">
+        <Metric
+          label={t(locale, "workbench.liveScenarios")}
+          value={String(workbenchSummary.liveScenarioCount)}
+          detail={workbenchSummary.firstRunCommand}
+        />
+        <Metric
+          label={t(locale, "workbench.criticalLive")}
+          value={String(workbenchSummary.criticalLiveScenarios)}
+          detail={workbenchSummary.topLiveScenarioId}
+        />
+        <Metric
+          label={t(locale, "workbench.expansionCandidates")}
+          value={String(workbenchSummary.expansionCandidateCount)}
+          detail={t(locale, "workbench.expansionBacklog")}
+        />
+        <Metric
+          label={t(locale, "workbench.criticalCandidates")}
+          value={String(workbenchSummary.criticalExpansionCandidates)}
+          detail={workbenchSummary.topExpansionCandidateId}
+        />
+      </div>
+      <div className="scenario-workbench-columns">
+        <div className="scenario-workbench-column">
+          <div className="scenario-workbench-heading">
+            <span>{t(locale, "workbench.livePriority")}</span>
+            <strong>{workbenchSummary.topLiveScenarioId}</strong>
+          </div>
+          <div className="scenario-analysis-list">
+            {topLiveScenarios.map((item) => (
+              <ScenarioAnalysisCard item={item} key={item.scenarioId} locale={locale} />
+            ))}
+          </div>
+        </div>
+        <div className="scenario-workbench-column">
+          <div className="scenario-workbench-heading">
+            <span>{t(locale, "workbench.expansionBacklog")}</span>
+            <strong>{workbenchSummary.topExpansionCandidateId}</strong>
+          </div>
+          <div className="scenario-analysis-list">
+            {topExpansionCandidates.map((candidate) => (
+              <ScenarioExpansionCard candidate={candidate} key={candidate.id} locale={locale} />
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ScenarioAnalysisCard({ item, locale }: { item: ScenarioAnalysisItem; locale: Locale }) {
+  const localizedItem = formatScenarioAnalysisItemForLocale(item, locale);
+
+  return (
+    <article className={`scenario-analysis-card is-${item.severity}`}>
+      <div className="scenario-analysis-topline">
+        <span>{item.riskPoints}</span>
+        <strong>{localizedItem.title}</strong>
+      </div>
+      <dl>
+        <div>
+          <dt>{t(locale, "workbench.owner")}</dt>
+          <dd>{localizedItem.owner}</dd>
+        </div>
+        <div>
+          <dt>{t(locale, "workbench.vector")}</dt>
+          <dd>{localizedItem.riskVectorName}</dd>
+        </div>
+        <div>
+          <dt>{t(locale, "workbench.action")}</dt>
+          <dd>{localizedItem.recommendedAction}</dd>
+        </div>
+        <div>
+          <dt>{t(locale, "runbook.command")}</dt>
+          <dd>
+            <code>{localizedItem.command}</code>
+          </dd>
+        </div>
+      </dl>
+    </article>
+  );
+}
+
+function ScenarioExpansionCard({ candidate, locale }: { candidate: ScenarioExpansionCandidate; locale: Locale }) {
+  const localizedCandidate = formatScenarioExpansionCandidateForLocale(candidate, locale);
+  const vector = agentRiskVectors.find((item) => item.id === candidate.riskVectorId) ?? agentRiskVectors[0];
+  const profile = agentProfiles.find((item) => item.id === candidate.agentProfileId) ?? agentProfiles[0];
+  const localizedVector = formatAgentRiskVectorForLocale(vector, locale);
+  const localizedProfile = formatAgentProfileForLocale(profile, locale);
+
+  return (
+    <article className={`scenario-expansion-card is-${candidate.priority}`}>
+      <div className="scenario-expansion-topline">
+        <span>{formatScenarioExpansionPriority(candidate.priority, locale)}</span>
+        <strong>{localizedCandidate.title}</strong>
+      </div>
+      <p>{localizedCandidate.userStory}</p>
+      <dl>
+        <div>
+          <dt>{t(locale, "workbench.agentProfile")}</dt>
+          <dd>{localizedProfile.name}</dd>
+        </div>
+        <div>
+          <dt>{t(locale, "workbench.vector")}</dt>
+          <dd>{localizedVector.name}</dd>
+        </div>
+        <div>
+          <dt>{t(locale, "workbench.case")}</dt>
+          <dd>{localizedCandidate.testCloudCase}</dd>
+        </div>
+        <div>
+          <dt>{t(locale, "workbench.expectedEvidence")}</dt>
+          <dd>{localizedCandidate.expectedEvidence}</dd>
         </div>
       </dl>
     </article>
