@@ -11,7 +11,6 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@agentguard/codefix-agent": "0.1.0",
     "execa": "^9.6.0"
   },
   "devDependencies": {

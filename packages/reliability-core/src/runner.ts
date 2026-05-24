@@ -1,11 +1,23 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { execa } from "execa";
-import { planScriptedFix, type FixPlan, type FixRequest } from "@agentguard/codefix-agent";
 import { renderJsonReport, renderJUnitReport, renderMarkdownReport } from "./reports.js";
 import { scoreScenarioRun } from "./scoring.js";
 import type { ScenarioManifest } from "./scenario.js";
 import type { CommandResult, ReliabilityScore, ScenarioRunResult } from "./types.js";
+
+export interface FixRequest {
+  scenarioId: string;
+  failureLog: string;
+}
+
+export interface FixPlan {
+  status: "proposed" | "refused";
+  rootCause: string;
+  changedFiles: string[];
+  patchSummary: string;
+  riskLevel: "low" | "medium" | "high";
+}
 
 export interface ReportPaths {
   json: string;
@@ -36,6 +48,16 @@ async function defaultRunCommand(command: string, cwd: string): Promise<CommandR
   };
 }
 
+function defaultPlanFix(_request: FixRequest): FixPlan {
+  return {
+    status: "refused",
+    rootCause: "No agent planner was configured",
+    changedFiles: [],
+    patchSummary: "Provide a planFix adapter to run an agent.",
+    riskLevel: "high"
+  };
+}
+
 async function writeReports(outputDir: string, score: ReliabilityScore): Promise<ReportPaths> {
   const scenarioDir = join(outputDir, score.scenarioId);
   await mkdir(scenarioDir, { recursive: true });
@@ -59,7 +81,7 @@ export async function runScenarioManifest(
   manifest: ScenarioManifest,
   options: RunScenarioOptions
 ): Promise<ScenarioExecutionResult> {
-  const planFix = options.planFix ?? planScriptedFix;
+  const planFix = options.planFix ?? defaultPlanFix;
   const runCommand = options.runCommand ?? defaultRunCommand;
   const fixPlan = planFix({ scenarioId: manifest.id, failureLog: manifest.failureLog });
   const commandResults = await Promise.all(
@@ -79,4 +101,3 @@ export async function runScenarioManifest(
 
   return { score, reportPaths, runResult };
 }
-

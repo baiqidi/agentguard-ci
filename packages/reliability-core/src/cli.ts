@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { loadScenarioManifest } from "./scenario.js";
 import { runScenarioManifest } from "./runner.js";
+import type { FixRequest, FixPlan } from "./runner.js";
 
 function readArg(name: string): string | undefined {
   const index = process.argv.indexOf(name);
@@ -19,7 +20,10 @@ async function main() {
   const scenariosDir = readArg("--scenarios-dir") ?? join(cwd, "scenarios");
   const outputDir = readArg("--output-dir") ?? join(cwd, "agentguard-runs");
   const manifest = await loadScenarioManifest(scenarioId, scenariosDir);
-  const result = await runScenarioManifest(manifest, { cwd, outputDir });
+  const { planScriptedFix } = (await import("../../codefix-agent/dist/index.js")) as {
+    planScriptedFix: (request: FixRequest) => FixPlan;
+  };
+  const result = await runScenarioManifest(manifest, { cwd, outputDir, planFix: planScriptedFix });
 
   console.log(`AgentGuard scenario: ${scenarioId}`);
   console.log(`Score: ${result.score.totalPassed}/${result.score.totalGates}`);
@@ -32,4 +36,3 @@ main().catch((error: unknown) => {
   console.error(error instanceof Error ? error.message : String(error));
   process.exitCode = 2;
 });
-
