@@ -10,12 +10,15 @@ AI coding agents can fix CI failures, but enterprises need evidence that the fix
 
 AgentGuard CI uses UiPath Test Cloud as the governance layer for code-fixing agents. It runs a 24-mode failure atlas, scores agent behavior across five gates, and outputs JUnit, JSON, Markdown, and a Test Cloud evidence packet.
 
+The newest assurance layer also gives each scenario a severity, named owner, control, and evidence standard. That lets the demo say exactly what risk was stopped and who must review it.
+
 ## 1:00-1:45 Demo Target
 
 Show the AgentGuard CI Console:
 
 - Scenario matrix mapped to UiPath Test Cloud.
 - Failure Atlas covering 24 agent failure modes across 6 reliability domains.
+- Assurance Case showing blocked risk points, critical findings, and owner queue.
 - Reliability Moat panel showing why AgentGuard is more than test visibility or test selection.
 - Evidence packet preview for each scenario.
 - Gate detail panel with human-review decisions.
@@ -35,6 +38,8 @@ npm run agentguard:suite
 Show:
 
 - Suite summary shows 7/24 scenarios passed and 73% gate pass rate.
+- Suite summary shows 106/131 risk points stopped before promotion.
+- Security Review is the top owner, with 24 blocked risk points across 3 findings.
 - Positive scenarios recommend automated promotion.
 - Governance scenarios cover prompt injection, snapshot laundering, test weakening, unsafe diffs, hallucinated root cause, flaky rerun abuse, auth bypass, dependency/license risk, secret handling, workflow drift, accessibility regression, data migration risk, and random workarounds.
 - `suite-summary.md` gives judges a one-page run overview.

@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import {
   buildConsoleSummary,
   buildOptimizationSummary,
+  buildOwnerReviewQueue,
+  buildRiskAssuranceSummary,
   buildReleaseDecisionSummary,
   competitiveAdvantageCards,
   evidenceTone,
@@ -10,6 +12,7 @@ import {
   judgeScenarioEvidence,
   realEvidenceChain,
   researchBackedProtocol,
+  scenarioRiskProfiles,
   summarizeFailureAtlas,
   summarizeResearchProtocol
 } from "../testCloudEvidence.js";
@@ -112,6 +115,26 @@ describe("test cloud evidence view model", () => {
       "uipath/test-cloud-import.csv"
     ]);
     expect(realEvidenceChain[2].proof).toContain("24 scenarios");
+  });
+
+  it("summarizes risk assurance for executive review", () => {
+    expect(buildRiskAssuranceSummary(judgeScenarioEvidence, scenarioRiskProfiles)).toEqual({
+      totalRiskPoints: 131,
+      blockedRiskPoints: 106,
+      criticalFindings: 5,
+      topReviewOwner: "Security Review",
+      assuranceLabel: "106 risk points stopped before promotion",
+      controlLabel: "5 critical findings need named-owner approval"
+    });
+  });
+
+  it("builds a review queue ordered by blocked risk", () => {
+    expect(buildOwnerReviewQueue(judgeScenarioEvidence, scenarioRiskProfiles).slice(0, 4)).toEqual([
+      { owner: "Security Review", riskPoints: 24, findings: 3 },
+      { owner: "Test Governance", riskPoints: 17, findings: 3 },
+      { owner: "Release Owner", riskPoints: 16, findings: 3 },
+      { owner: "Architecture Review", riskPoints: 14, findings: 2 }
+    ]);
   });
 
   it("formats gate keys for dashboard labels", () => {

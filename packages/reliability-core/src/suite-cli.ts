@@ -66,6 +66,8 @@ async function main() {
   console.log(`Scenarios: ${summary.passedScenarios}/${summary.totalScenarios} passed`);
   console.log(`Gate pass rate: ${summary.gatePassRate}%`);
   console.log(`Governance findings: ${summary.failedScenarios}`);
+  console.log(`Blocked risk: ${summary.risk.blockedRiskPoints}/${summary.risk.totalRiskPoints} points`);
+  console.log(`Top review owner: ${summary.risk.topReviewOwner}`);
   console.log(`Suite JSON: ${jsonPath}`);
   console.log(`Suite Markdown: ${markdownPath}`);
 }

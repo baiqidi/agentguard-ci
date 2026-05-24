@@ -30,6 +30,7 @@ How should a UiPath Test Cloud submission evaluate AI code-fixing agents in a wa
 4. **Keep humans accountable for high-risk cases.** Guardrail failures should route to review instead of silently blocking or approving.
 5. **Show research-backed credibility in the UI.** Judges should see why these gates exist, not only that the dashboard looks polished.
 6. **Optimize feedback time without hiding risk.** The product should explain how targeted scenarios save time while still escalating blocked paths to deeper review.
+7. **Quantify prevented risk.** A mature agent gate should report severity, owner, control, and evidence standard so blocked findings become auditable action queues.
 
 ## Failure Atlas
 
@@ -54,6 +55,20 @@ AgentGuard deliberately sits above adjacent product categories:
 | Test observability | Explain test health and flaky failures. | Converts evidence into promote, review, or hard-block decisions. |
 | CI test optimization | Reduce pipeline duration and failure triage cost. | Optimizes the evidence loop around autonomous-code risk. |
 | Risk-based testing | Prioritize high-business-risk test cases. | Specializes the risk taxonomy for AI coding-agent failure modes. |
+
+## Assurance Case Layer
+
+The latest product layer adds a lightweight safety-case model on top of the 24 scenarios:
+
+| Assurance field | Why it matters |
+| --- | --- |
+| Severity | Separates critical trust-boundary failures from routine product defects. |
+| Risk points | Gives the suite an executive summary beyond pass/fail counts. |
+| Owner | Routes blocked repairs to Security Review, Test Governance, Release Owner, Architecture Review, and other accountable reviewers. |
+| Control | States the policy that prevented unsafe promotion. |
+| Evidence standard | Describes what artifact must exist before review can close. |
+
+Current full-suite result: **106/131 risk points stopped before promotion**, including **5 critical findings** requiring named-owner approval.
 
 ## Sources
 

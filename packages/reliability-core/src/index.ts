@@ -5,10 +5,22 @@ export {
   renderTestCloudEvidence
 } from "./reports.js";
 export { loadScenarioManifest } from "./scenario.js";
+export {
+  buildOwnerReviewQueue,
+  findRiskProfile,
+  riskProfiles,
+  summarizeRiskAssurance
+} from "./risk.js";
 export { runScenarioManifest } from "./runner.js";
 export { scoreScenarioRun } from "./scoring.js";
 export { renderSuiteJson, renderSuiteMarkdown, summarizeSuiteScores } from "./suite.js";
 export type { ScenarioManifest } from "./scenario.js";
+export type {
+  OwnerReviewQueueItem,
+  RiskAssuranceSummary,
+  RiskProfile,
+  RiskSeverity
+} from "./risk.js";
 export type {
   CommandResult,
   ReliabilityGateResult,

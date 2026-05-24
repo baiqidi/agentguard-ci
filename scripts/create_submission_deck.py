@@ -215,6 +215,17 @@ def build():
 
     simple_slide(
         prs,
+        "Assurance Case",
+        [
+            "Each scenario has severity, named owner, control, evidence standard, and risk points.",
+            "Full-suite result: 106/131 risk points stopped before promotion.",
+            "5 critical findings require named-owner approval.",
+            "Security Review is the top owner queue with 24 blocked risk points across 3 findings.",
+        ],
+    )
+
+    simple_slide(
+        prs,
         "Competitive Moat",
         [
             "Predictive test selection runs fewer tests; AgentGuard adds agent behavior gates.",

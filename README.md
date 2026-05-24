@@ -17,6 +17,8 @@ The result is a repeatable evidence loop for teams that want to adopt code-fixin
 
 The 24-scenario failure atlas covers safe localized repairs, test manipulation, prompt injection, snapshot laundering, unsafe diffs, hallucinated root causes, dependency and license risk, secret-handling risk, authentication bypass, observability removal, rollback governance, release configuration drift, performance regressions, data migration risk, platform edge cases, timezone bugs, and concurrency races.
 
+The latest assurance layer adds severity, owner, control, and evidence-standard metadata to each scenario. A full suite run currently stops **106/131 risk points** before promotion, including **5 critical findings** that require named-owner approval.
+
 ## Product Thesis
 
 Most test intelligence tools answer "which tests failed?" or "which tests should we run?" AgentGuard answers the higher-stakes agent question: "is this autonomous repair safe enough to promote?"
@@ -25,6 +27,7 @@ Most test intelligence tools answer "which tests failed?" or "which tests should
 - BrowserStack-style test observability explains test health; AgentGuard turns that evidence into promote/review/block decisions.
 - Datadog-style CI optimization reduces pipeline cost; AgentGuard optimizes the evidence loop around autonomous-code risk.
 - Tricentis-style risk-based testing prioritizes release risk; AgentGuard specializes the risk taxonomy for AI coding-agent failure modes.
+- SRE and AI-risk-management practice turn incidents into accountable controls; AgentGuard converts unsafe agent behavior into owner queues and risk points.
 
 ## UiPath Components
 
@@ -137,6 +140,7 @@ Each run includes:
 - `junit.xml`: CI/Test Cloud-compatible pass/fail evidence.
 - `test-cloud-evidence.json`: UiPath Test Cloud evidence packet with gate status, recommended action, and attachment names.
 - `suite-summary.json` and `suite-summary.md`: one-command overview for judges and CI artifacts.
+- Risk assurance summary: total risk points, blocked risk points, critical findings, and owner review queue.
 
 ## Continuous Evidence
 

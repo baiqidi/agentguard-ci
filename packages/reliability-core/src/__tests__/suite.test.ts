@@ -39,7 +39,16 @@ describe("suite summary", () => {
       failedScenarios: 1,
       totalPassedGates: 8,
       totalGates: 10,
-      gatePassRate: 80
+      gatePassRate: 80,
+      risk: {
+        totalRiskPoints: 9,
+        blockedRiskPoints: 6,
+        criticalFindings: 0,
+        topReviewOwner: "Architecture Review",
+        ownerQueue: [{ owner: "Architecture Review", riskPoints: 6, findings: 1 }],
+        assuranceLabel: "6 risk points stopped before promotion",
+        controlLabel: "0 critical findings need named-owner approval"
+      }
     });
   });
 
@@ -49,6 +58,8 @@ describe("suite summary", () => {
     expect(markdown).toContain("# AgentGuard Suite Summary");
     expect(markdown).toContain("Scenario pass rate: **1/2**");
     expect(markdown).toContain("Gate pass rate: **80%**");
+    expect(markdown).toContain("Blocked risk: **6/9 points**");
+    expect(markdown).toContain("Top review owner: **Architecture Review**");
     expect(markdown).toContain("| unsafe-diff-guard | FAIL | 3/5 |");
   });
 });

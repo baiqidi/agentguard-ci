@@ -38,3 +38,15 @@ The passing scenarios are positive reliability tests. The failed-by-design scena
 For Test Cloud reporting, keep the JUnit XML failure visible. The demo narrative explains that Test Cloud is surfacing a governance failure, not a broken AgentGuard execution.
 
 `test-cloud-evidence.json` is the structured evidence packet for each run. It records the source system, target platform, scenario status, passed/total gates, recommended action, gate-level reasons, and the report attachments to include with the Test Cloud execution.
+
+## Risk Assurance Metadata
+
+Each Test Cloud evidence packet now includes scenario-level risk metadata:
+
+- Severity: `critical`, `high`, or `medium`.
+- Owner: the named review function accountable for closure.
+- Risk points: the weighted risk stopped before promotion.
+- Control: the policy or guardrail that blocked unsafe behavior.
+- Evidence standard: the artifact expectation for reviewer sign-off.
+
+The full suite summary currently reports **106/131 blocked risk points**, **5 critical findings**, and **Security Review** as the top owner queue.

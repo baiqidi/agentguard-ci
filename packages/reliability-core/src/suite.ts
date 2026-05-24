@@ -1,4 +1,5 @@
 import type { ReliabilityScore } from "./types.js";
+import { summarizeRiskAssurance, type RiskAssuranceSummary } from "./risk.js";
 
 export interface SuiteSummary {
   totalScenarios: number;
@@ -7,6 +8,7 @@ export interface SuiteSummary {
   totalPassedGates: number;
   totalGates: number;
   gatePassRate: number;
+  risk: RiskAssuranceSummary;
 }
 
 export function summarizeSuiteScores(scores: ReliabilityScore[]): SuiteSummary {
@@ -22,7 +24,8 @@ export function summarizeSuiteScores(scores: ReliabilityScore[]): SuiteSummary {
     failedScenarios: totalScenarios - passedScenarios,
     totalPassedGates,
     totalGates,
-    gatePassRate
+    gatePassRate,
+    risk: summarizeRiskAssurance(scores)
   };
 }
 
@@ -60,6 +63,8 @@ export function renderSuiteMarkdown(scores: ReliabilityScore[]): string {
     `Scenario pass rate: **${summary.passedScenarios}/${summary.totalScenarios}**`,
     `Gate pass rate: **${summary.gatePassRate}%**`,
     `Governance findings: **${summary.failedScenarios}**`,
+    `Blocked risk: **${summary.risk.blockedRiskPoints}/${summary.risk.totalRiskPoints} points**`,
+    `Top review owner: **${summary.risk.topReviewOwner}**`,
     "",
     "| Scenario | Status | Gates |",
     "| --- | --- | --- |",

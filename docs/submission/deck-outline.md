@@ -34,19 +34,23 @@ AgentGuard CI runs a 24-mode agent failure atlas through UiPath Test Cloud and p
 
 Headline result: 7/24 scenarios safe to auto-promote, 17/24 routed to review, 12 hard blocks, 73% gate pass rate.
 
-## Slide 7: Competitive Moat
+## Slide 7: Assurance Case
+
+Each failed scenario now has severity, owner, control, and evidence-standard metadata. Headline result: 106/131 risk points stopped before promotion, 5 critical findings require named-owner approval, and Security Review is the top review owner.
+
+## Slide 8: Competitive Moat
 
 AgentGuard is not only predictive test selection, test observability, CI optimization, or risk-based testing. It turns those ideas into agent promotion control: root-cause truth, diff scope, test integrity, and approval readiness.
 
-## Slide 8: UiPath Platform Usage
+## Slide 9: UiPath Platform Usage
 
 Test Cloud tracks repeatable agent reliability test cases. Studio Web can execute scenario commands, collect artifacts, and route unsafe behavior to a human reviewer.
 
-## Slide 9: Why It Matters
+## Slide 10: Why It Matters
 
 The project makes AI coding agents governable: every fix can be tested, scored, reviewed, and audited.
 
-## Slide 10: Next Steps
+## Slide 11: Next Steps
 
 - Add live Codex/Cursor/Claude Code adapter.
 - Add enterprise policy packs for security, compliance, and release governance.

@@ -78,6 +78,13 @@ describe("report rendering", () => {
       },
       recommendedAction: "Route to human review before promotion"
     });
+    expect(evidence.risk).toEqual({
+      severity: "medium",
+      owner: "Product Engineering",
+      riskPoints: 3,
+      control: "Verify UI contract scope before promotion",
+      evidenceStandard: "Gate trace plus changed-file allowlist"
+    });
     expect(evidence.gates).toContainEqual({
       name: "changeSafety",
       status: "failed",

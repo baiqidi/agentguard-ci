@@ -3,21 +3,27 @@ import { formatIssueLabel, priorityTone, summarizeIssue, type IssueSummary } fro
 import {
   buildConsoleSummary,
   buildOptimizationSummary,
+  buildOwnerReviewQueue,
+  buildRiskAssuranceSummary,
   buildReleaseDecisionSummary,
   competitiveAdvantageCards,
   evidenceTone,
   failureModeTaxonomy,
+  findScenarioRiskProfile,
   formatGateLabel,
   judgeScenarioEvidence,
   realEvidenceChain,
   researchBackedProtocol,
+  scenarioRiskProfiles,
   summarizeFailureAtlas,
   summarizeResearchProtocol,
   type CompetitiveAdvantageCard,
   type EvidenceTone,
   type FailureModeDomain,
+  type OwnerReviewQueueItem,
   type RealEvidenceStep,
   type ResearchProtocolPrinciple,
+  type RiskAssuranceSummary,
   type ScenarioEvidence
 } from "./testCloudEvidence.js";
 import "./App.css";
@@ -56,6 +62,8 @@ export function App() {
   const optimizationSummary = useMemo(() => buildOptimizationSummary(judgeScenarioEvidence), []);
   const protocolSummary = useMemo(() => summarizeResearchProtocol(researchBackedProtocol), []);
   const atlasSummary = useMemo(() => summarizeFailureAtlas(failureModeTaxonomy), []);
+  const riskAssurance = useMemo(() => buildRiskAssuranceSummary(judgeScenarioEvidence, scenarioRiskProfiles), []);
+  const ownerQueue = useMemo(() => buildOwnerReviewQueue(judgeScenarioEvidence, scenarioRiskProfiles), []);
   const selectedScenario =
     judgeScenarioEvidence.find((scenario) => scenario.id === selectedScenarioId) ?? judgeScenarioEvidence[0];
 
@@ -88,6 +96,8 @@ export function App() {
         </div>
         <p className="decision-threshold">{releaseDecision.thresholdLabel}</p>
       </section>
+
+      <RiskAssurancePanel ownerQueue={ownerQueue} riskAssurance={riskAssurance} />
 
       <section className="trace-band" aria-label="AgentGuard reliability flow">
         <TraceStep index="01" title="Replay failure" detail="Realistic repository scenario" />
@@ -209,6 +219,7 @@ function ScenarioRow({
 
 function EvidencePanel({ scenario }: { scenario: ScenarioEvidence }) {
   const tone = evidenceTone(scenario);
+  const riskProfile = findScenarioRiskProfile(scenario.id);
   const evidencePreview = {
     sourceSystem: "AgentGuard CI",
     targetPlatform: "UiPath Test Cloud",
@@ -216,6 +227,14 @@ function EvidencePanel({ scenario }: { scenario: ScenarioEvidence }) {
     status: scenario.status,
     score: scenario.score,
     recommendedAction: scenario.recommendedAction,
+    risk: riskProfile
+      ? {
+          severity: riskProfile.severity,
+          owner: riskProfile.owner,
+          riskPoints: riskProfile.riskPoints,
+          control: riskProfile.control
+        }
+      : undefined,
     attachments: ["report.json", "report.md", "junit.xml", "test-cloud-evidence.json"]
   };
 
@@ -234,6 +253,65 @@ function EvidencePanel({ scenario }: { scenario: ScenarioEvidence }) {
       </div>
       <pre>{JSON.stringify(evidencePreview, null, 2)}</pre>
     </section>
+  );
+}
+
+function RiskAssurancePanel({
+  ownerQueue,
+  riskAssurance
+}: {
+  ownerQueue: OwnerReviewQueueItem[];
+  riskAssurance: RiskAssuranceSummary;
+}) {
+  return (
+    <section className="assurance-panel" aria-label="Risk assurance case">
+      <div className="assurance-claim">
+        <span>Assurance Case</span>
+        <h2>{riskAssurance.assuranceLabel}</h2>
+        <p>
+          Risk is scored with named owners, controls, and evidence standards so every failed agent repair has a
+          next reviewer, not just a red badge.
+        </p>
+      </div>
+      <div className="owner-queue-card">
+        <div className="owner-queue-heading">
+          <span>Review queue</span>
+          <strong>Named owners by blocked risk</strong>
+        </div>
+        <div className="owner-queue">
+          {ownerQueue.slice(0, 4).map((item) => (
+            <OwnerQueueItem item={item} key={item.owner} />
+          ))}
+        </div>
+      </div>
+      <div className="assurance-metrics">
+        <AssuranceMetric label="Total risk library" value={`${riskAssurance.totalRiskPoints} pts`} />
+        <AssuranceMetric label="Critical findings" value={String(riskAssurance.criticalFindings)} />
+        <AssuranceMetric label="Top review owner" value={riskAssurance.topReviewOwner} />
+      </div>
+      <p className="assurance-control">{riskAssurance.controlLabel}</p>
+    </section>
+  );
+}
+
+function AssuranceMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <article className="assurance-metric">
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </article>
+  );
+}
+
+function OwnerQueueItem({ item }: { item: OwnerReviewQueueItem }) {
+  return (
+    <article className="owner-queue-item">
+      <div>
+        <strong>{item.owner}</strong>
+        <span>{item.findings} findings</span>
+      </div>
+      <b>{item.riskPoints}</b>
+    </article>
   );
 }
 

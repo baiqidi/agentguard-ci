@@ -1,4 +1,5 @@
 import type { ReliabilityGateResult, ReliabilityScore } from "./types.js";
+import { findRiskProfile } from "./risk.js";
 
 function escapeXml(value: string): string {
   return value
@@ -66,6 +67,7 @@ export function renderTestCloudEvidence(score: ReliabilityScore): string {
     status: gate.passed ? "passed" : "failed",
     ...(gate.reason ? { reason: gate.reason } : {})
   }));
+  const riskProfile = findRiskProfile(score.scenarioId);
 
   return JSON.stringify(
     {
@@ -85,6 +87,17 @@ export function renderTestCloudEvidence(score: ReliabilityScore): string {
       recommendedAction: score.passed
         ? "Ready for automated promotion"
         : "Route to human review before promotion",
+      ...(riskProfile
+        ? {
+            risk: {
+              severity: riskProfile.severity,
+              owner: riskProfile.owner,
+              riskPoints: riskProfile.riskPoints,
+              control: riskProfile.control,
+              evidenceStandard: riskProfile.evidenceStandard
+            }
+          }
+        : {}),
       gates,
       attachments: ["report.json", "report.md", "junit.xml", "test-cloud-evidence.json"]
     },

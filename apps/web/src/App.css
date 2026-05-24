@@ -96,7 +96,9 @@ button {
 .trace-band,
 .research-grid,
 .decision-metrics,
-.optimization-grid {
+.optimization-grid,
+.assurance-metrics,
+.owner-queue {
   display: grid;
   gap: 16px;
 }
@@ -245,7 +247,8 @@ button {
 .optimization-panel,
 .moat-panel,
 .atlas-panel,
-.evidence-chain-panel {
+.evidence-chain-panel,
+.assurance-panel {
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: rgba(255, 255, 255, 0.78);
   box-shadow: 0 22px 62px rgba(0, 0, 0, 0.08);
@@ -305,7 +308,8 @@ button {
 .optimization-panel,
 .moat-panel,
 .atlas-panel,
-.evidence-chain-panel {
+.evidence-chain-panel,
+.assurance-panel {
   border-radius: 8px;
   padding: 20px;
 }
@@ -459,6 +463,147 @@ button {
   border-radius: 8px;
   background: #1d1d1f;
   color: #f5f5f7;
+}
+
+.assurance-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(360px, 0.62fr);
+  gap: 18px 22px;
+  align-items: stretch;
+  margin-bottom: 16px;
+  background:
+    linear-gradient(135deg, rgba(255, 59, 48, 0.06), rgba(0, 113, 227, 0.06)),
+    rgba(255, 255, 255, 0.82);
+}
+
+.assurance-claim {
+  min-height: 210px;
+  padding: 20px;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.assurance-claim span {
+  display: block;
+  color: #ff3b30;
+  font-size: 12px;
+  font-weight: 820;
+  text-transform: uppercase;
+}
+
+.assurance-claim h2 {
+  max-width: 640px;
+  margin: 10px 0 12px;
+  color: #1d1d1f;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.02;
+}
+
+.assurance-claim p,
+.assurance-control {
+  margin: 0;
+  color: #6e6e73;
+  line-height: 1.48;
+}
+
+.assurance-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-column: 1 / -1;
+}
+
+.assurance-metric,
+.owner-queue-item {
+  min-height: 92px;
+  padding: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.assurance-metric span {
+  display: block;
+  color: #86868b;
+  font-size: 11px;
+  font-weight: 820;
+  text-transform: uppercase;
+}
+
+.assurance-metric strong {
+  display: block;
+  margin-top: 9px;
+  color: #1d1d1f;
+  font-size: clamp(22px, 3vw, 32px);
+  line-height: 1;
+}
+
+.owner-queue-card {
+  align-self: stretch;
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.64);
+}
+
+.owner-queue-heading {
+  margin-bottom: 12px;
+}
+
+.owner-queue-heading span {
+  display: block;
+  color: #86868b;
+  font-size: 11px;
+  font-weight: 820;
+  text-transform: uppercase;
+}
+
+.owner-queue-heading strong {
+  display: block;
+  margin-top: 6px;
+  color: #1d1d1f;
+  font-size: 16px;
+}
+
+.owner-queue {
+  gap: 10px;
+}
+
+.owner-queue-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  padding: 12px 14px;
+}
+
+.owner-queue-item strong {
+  display: block;
+  color: #1d1d1f;
+  font-size: 14px;
+}
+
+.owner-queue-item span {
+  display: block;
+  margin-top: 4px;
+  color: #86868b;
+  font-size: 12px;
+  font-weight: 760;
+}
+
+.owner-queue-item b {
+  display: grid;
+  place-items: center;
+  min-width: 38px;
+  height: 32px;
+  border-radius: 7px;
+  background: #ff3b30;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+.assurance-control {
+  grid-column: 1 / -1;
+  font-size: 13px;
+  font-weight: 760;
 }
 
 .moat-panel {
@@ -930,6 +1075,7 @@ button {
   .details-grid,
   .decision-hero,
   .optimization-panel,
+  .assurance-panel,
   .moat-panel,
   .atlas-header,
   .evidence-chain-panel {
@@ -951,6 +1097,7 @@ button {
   .trace-band,
   .research-grid,
   .optimization-grid,
+  .assurance-metrics,
   .atlas-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1007,6 +1154,7 @@ button {
   .trace-band,
   .research-grid,
   .optimization-grid,
+  .assurance-metrics,
   .moat-grid,
   .atlas-grid {
     grid-template-columns: 1fr;
@@ -1018,6 +1166,7 @@ button {
   .target-panel,
   .research-panel,
   .optimization-panel,
+  .assurance-panel,
   .moat-panel,
   .atlas-panel,
   .evidence-chain-panel {
@@ -1027,6 +1176,15 @@ button {
   .moat-lead {
     min-height: auto;
     padding: 16px;
+  }
+
+  .assurance-claim {
+    min-height: auto;
+    padding: 16px;
+  }
+
+  .owner-queue-card {
+    padding: 12px;
   }
 
   .advantage-card:nth-child(1),
