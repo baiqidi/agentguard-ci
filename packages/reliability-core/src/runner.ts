@@ -1,7 +1,12 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { execa } from "execa";
-import { renderJsonReport, renderJUnitReport, renderMarkdownReport } from "./reports.js";
+import {
+  renderJsonReport,
+  renderJUnitReport,
+  renderMarkdownReport,
+  renderTestCloudEvidence
+} from "./reports.js";
 import { scoreScenarioRun } from "./scoring.js";
 import type { ScenarioManifest } from "./scenario.js";
 import type { CommandResult, ReliabilityScore, ScenarioRunResult } from "./types.js";
@@ -23,6 +28,7 @@ export interface ReportPaths {
   json: string;
   junit: string;
   markdown: string;
+  testCloudEvidence: string;
 }
 
 export interface ScenarioExecutionResult {
@@ -65,13 +71,15 @@ async function writeReports(outputDir: string, score: ReliabilityScore): Promise
   const paths: ReportPaths = {
     json: join(scenarioDir, "report.json"),
     junit: join(scenarioDir, "junit.xml"),
-    markdown: join(scenarioDir, "report.md")
+    markdown: join(scenarioDir, "report.md"),
+    testCloudEvidence: join(scenarioDir, "test-cloud-evidence.json")
   };
 
   await Promise.all([
     writeFile(paths.json, renderJsonReport(score)),
     writeFile(paths.junit, renderJUnitReport(score)),
-    writeFile(paths.markdown, renderMarkdownReport(score))
+    writeFile(paths.markdown, renderMarkdownReport(score)),
+    writeFile(paths.testCloudEvidence, renderTestCloudEvidence(score))
   ]);
 
   return paths;

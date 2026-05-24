@@ -1,4 +1,9 @@
-export { renderJsonReport, renderJUnitReport, renderMarkdownReport } from "./reports.js";
+export {
+  renderJsonReport,
+  renderJUnitReport,
+  renderMarkdownReport,
+  renderTestCloudEvidence
+} from "./reports.js";
 export { loadScenarioManifest } from "./scenario.js";
 export { runScenarioManifest } from "./runner.js";
 export { scoreScenarioRun } from "./scoring.js";

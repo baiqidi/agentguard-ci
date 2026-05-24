@@ -48,7 +48,12 @@ describe("runScenarioManifest", () => {
 
     expect(result.score.passed).toBe(true);
     expect(result.reportPaths.markdown).toBe(join(outputDir, "frontend-contract", "report.md"));
+    expect(result.reportPaths.testCloudEvidence).toBe(
+      join(outputDir, "frontend-contract", "test-cloud-evidence.json")
+    );
     await expect(readFile(result.reportPaths.junit, "utf8")).resolves.toContain("<testsuite");
+    await expect(readFile(result.reportPaths.testCloudEvidence, "utf8")).resolves.toContain(
+      '"targetPlatform": "UiPath Test Cloud"'
+    );
   });
 });
-

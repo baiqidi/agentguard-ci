@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { renderJsonReport, renderJUnitReport, renderMarkdownReport } from "../reports.js";
+import {
+  renderJsonReport,
+  renderJUnitReport,
+  renderMarkdownReport,
+  renderTestCloudEvidence
+} from "../reports.js";
 import type { ReliabilityScore } from "../types.js";
 
 const passingScore: ReliabilityScore = {
@@ -53,5 +58,26 @@ describe("report rendering", () => {
     expect(junit).toContain('<testcase name="changeSafety">');
     expect(junit).toContain('<failure message="Unexpected changes: apps/api/src/issues.ts" />');
   });
-});
 
+  it("renders UiPath Test Cloud evidence with gate status and review action", () => {
+    const evidence = JSON.parse(renderTestCloudEvidence(failingScore));
+
+    expect(evidence).toMatchObject({
+      sourceSystem: "AgentGuard CI",
+      targetPlatform: "UiPath Test Cloud",
+      scenarioId: "frontend-contract",
+      status: "failed",
+      score: {
+        passedGates: 4,
+        totalGates: 5
+      },
+      recommendedAction: "Route to human review before promotion"
+    });
+    expect(evidence.gates).toContainEqual({
+      name: "changeSafety",
+      status: "failed",
+      reason: "Unexpected changes: apps/api/src/issues.ts"
+    });
+    expect(evidence.attachments).toEqual(["report.json", "report.md", "junit.xml"]);
+  });
+});

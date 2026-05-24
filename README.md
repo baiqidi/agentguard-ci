@@ -96,6 +96,12 @@ npm run agentguard:scenario -- --scenario unsafe-diff-guard
 ```
 
 Reports are written to `agentguard-runs/<scenario-id>/`.
+Each run includes:
+
+- `report.json`: machine-readable AgentGuard score.
+- `report.md`: human reviewer summary.
+- `junit.xml`: CI/Test Cloud-compatible pass/fail evidence.
+- `test-cloud-evidence.json`: UiPath Test Cloud evidence packet with gate status, recommended action, and attachment names.
 
 ## UiPath Submission Assets
 

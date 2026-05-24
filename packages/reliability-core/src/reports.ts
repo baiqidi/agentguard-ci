@@ -60,3 +60,30 @@ export function renderJUnitReport(score: ReliabilityScore): string {
   ].join("\n");
 }
 
+export function renderTestCloudEvidence(score: ReliabilityScore): string {
+  const gates = gateEntries(score).map(([name, gate]) => ({
+    name,
+    status: gate.passed ? "passed" : "failed",
+    ...(gate.reason ? { reason: gate.reason } : {})
+  }));
+
+  return JSON.stringify(
+    {
+      sourceSystem: "AgentGuard CI",
+      targetPlatform: "UiPath Test Cloud",
+      scenarioId: score.scenarioId,
+      status: score.passed ? "passed" : "failed",
+      score: {
+        passedGates: score.totalPassed,
+        totalGates: score.totalGates
+      },
+      recommendedAction: score.passed
+        ? "Ready for automated promotion"
+        : "Route to human review before promotion",
+      gates,
+      attachments: ["report.json", "report.md", "junit.xml"]
+    },
+    null,
+    2
+  );
+}
