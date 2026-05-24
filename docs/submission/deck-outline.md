@@ -10,7 +10,7 @@ AI agents can repair builds, operate browsers, query data, draft replies, and ru
 
 ## Slide 3: Solution
 
-AgentGuard CI runs a 24-mode live code-repair failure atlas through UiPath Test Cloud and turns the same gate contract into a general reliability layer for enterprise agents.
+AgentGuard CI runs a 24-mode command-backed code-repair failure atlas through UiPath Test Cloud and turns the same gate contract into a general reliability layer for enterprise agents.
 
 ## Slide 4: Architecture
 
@@ -18,6 +18,7 @@ AgentGuard CI runs a 24-mode live code-repair failure atlas through UiPath Test 
 - Scripted code-fixing agent adapter.
 - Reliability core with five gates.
 - Reports: JSON, Markdown, JUnit XML.
+- Browser/data/support/workflow/document live-local adapter suite.
 - Operator Runbook and Scenario Workbench in the dashboard.
 - UiPath Test Cloud orchestration.
 
@@ -41,9 +42,9 @@ General agent gates:
 
 ## Slide 6: General Agent Control Layer
 
-- Live adapter: Code Repair Agent, 24 command-backed scenarios.
-- Expansion blueprints: Browser/RPA Agent, Data Analysis Agent, Customer Support Agent, Workflow/DevOps Agent, Document/Compliance Agent.
-- Honest positioning: one tested adapter today, one reusable Test Cloud governance contract for future adapters.
+- Command-backed adapter: Code Repair Agent, 24 scenarios.
+- Live-local adapters: Browser/RPA Agent, Data Analysis Agent, Customer Support Agent, Workflow/DevOps Agent, Document/Compliance Agent.
+- Honest positioning: local adapter traces are verified; hosted cloud installation still requires user credentials.
 
 ## Slide 7: Demo Scenarios
 
@@ -53,15 +54,15 @@ Headline result: 7/24 scenarios safe to auto-promote, 17/24 routed to review, 12
 
 ## Slide 8: Failure Mode Radar
 
-Eight universal vectors translate external risk language into product controls: Instruction Attack, Excessive Agency, Tool Misuse, Data Leakage, Evidence Loss, State Drift, Approval Bypass, and Runtime Fragility. The radar shows 8/8 vectors covered by live code-repair scenarios and by blueprint controls for future agent profiles. Highest-pressure vector: Excessive Agency.
+Eight universal vectors translate external risk language into product controls: Instruction Attack, Excessive Agency, Tool Misuse, Data Leakage, Evidence Loss, State Drift, Approval Bypass, and Runtime Fragility. The radar shows 8/8 vectors covered by command-backed code-repair scenarios and live-local controls for non-code agent profiles. Highest-pressure vector: Excessive Agency.
 
 ## Slide 9: Operator Workbench
 
-The product is usable without reading the repository: install and test, run `npm run agentguard:suite`, inspect `agentguard-runs/suite-summary.md`, then attach Test Cloud evidence. The scenario queue ranks live cases by severity, risk points, and risk-vector pressure so reviewers know what to inspect first.
+The product is usable without reading the repository: install and test, run `npm run agentguard:suite`, run `npm run agentguard:agent-suite`, inspect the two suite summaries, then attach Test Cloud evidence. The scenario queue ranks live cases by severity, risk points, and risk-vector pressure so reviewers know what to inspect first.
 
 ## Slide 10: Scenario Expansion Backlog
 
-12 next scenarios extend coverage beyond code repair: browser payment approval, selector drift, data PII query leakage, metric definition drift, support refund escalation, policy hallucination, workflow production deploy, secret rotation, document citation gaps, policy misclassification, multi-agent peer injection, and missing agent spans.
+Five live-local scenarios extend coverage beyond code repair today: browser payment approval, data PII query leakage, support refund escalation, workflow production deploy, and document citation gaps. The next backlog adds selector drift, metric definition drift, policy hallucination, secret rotation, policy misclassification, multi-agent peer injection, and missing agent spans.
 
 ## Slide 11: Assurance Case
 
@@ -73,7 +74,7 @@ AgentGuard is not only predictive test selection, test observability, CI optimiz
 
 ## Slide 13: UiPath Platform Usage
 
-Test Cloud tracks repeatable agent reliability test cases. Studio Web can execute scenario commands, collect artifacts, and route unsafe behavior to a human reviewer. The live adapter is code repair; the platform model can extend to RPA/browser, data, support, workflow, and document agents.
+Test Cloud tracks repeatable agent reliability test cases. Studio Web can execute scenario commands, collect artifacts, and route unsafe behavior to a human reviewer. The command-backed adapter is code repair; live-local adapters cover RPA/browser, data, support, workflow, and document agents.
 
 ## Slide 14: Why It Matters
 
@@ -82,7 +83,7 @@ The project makes AI agents governable: every high-risk action can be tested, sc
 ## Slide 15: Next Steps
 
 - Add live Codex/Cursor/Claude Code adapter.
-- Add live browser/RPA and data-analysis adapters.
+- Connect hosted browser/RPA, data-analysis, support, workflow, and document agents with real user credentials.
 - Add enterprise policy packs for security, compliance, and release governance.
 - Push reports directly into Test Cloud APIs.
 - Add trend analytics for agent reliability over time.

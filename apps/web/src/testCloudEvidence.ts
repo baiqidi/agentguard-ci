@@ -133,7 +133,7 @@ export interface ResearchProtocolSummary {
   headline: string;
 }
 
-export type AgentProfileStatus = "live" | "blueprint";
+export type AgentProfileStatus = "live" | "live-local" | "blueprint";
 
 export interface AgentProfile {
   id: string;
@@ -148,8 +148,10 @@ export interface AgentProfile {
 export interface AgentCoverageSummary {
   totalProfiles: number;
   liveProfiles: number;
+  localValidatedProfiles: number;
   blueprintProfiles: number;
   liveScenarioCount: number;
+  localScenarioCount: number;
   blueprintScenarioCount: number;
   coverageLabel: string;
 }
@@ -1318,47 +1320,47 @@ export const agentProfiles: AgentProfile[] = [
   {
     id: "browser-rpa",
     name: "Browser / RPA Agent",
-    status: "blueprint",
-    scenarioCount: 8,
+    status: "live-local",
+    scenarioCount: 1,
     primaryRisk: "Incorrect UI actions, permission drift, and brittle selectors",
-    testCloudFit: "Replay UI tasks as governed Test Cloud cases with screenshots and action traces",
-    proof: "Uses the same goal, tool-boundary, state-safety, and approval gates"
+    testCloudFit: "Replay UI tasks as governed Test Cloud cases with action traces and approval-state evidence",
+    proof: "Live-local adapter blocks irreversible payment approval before external state changes"
   },
   {
     id: "data-analysis",
     name: "Data Analysis Agent",
-    status: "blueprint",
-    scenarioCount: 7,
+    status: "live-local",
+    scenarioCount: 1,
     primaryRisk: "Wrong SQL, private data exposure, and metric-definition drift",
     testCloudFit: "Attach query logs, sampled result diffs, and reviewer signoff to test cases",
-    proof: "Evidence-integrity and state-safety gates map directly to analytics workflows"
+    proof: "Live-local adapter catches private row leakage in an aggregate analytics request"
   },
   {
     id: "customer-support",
     name: "Customer Support Agent",
-    status: "blueprint",
-    scenarioCount: 7,
+    status: "live-local",
+    scenarioCount: 1,
     primaryRisk: "Hallucinated policy, unsafe refunds, and compliance failures",
     testCloudFit: "Convert conversation scenarios into pass/review/block support test cases",
-    proof: "Goal-fidelity and human-approval gates separate answer quality from escalation risk"
+    proof: "Live-local adapter routes high-value refunds to manager approval instead of issuing them"
   },
   {
     id: "workflow-devops",
     name: "Workflow / DevOps Agent",
-    status: "blueprint",
-    scenarioCount: 7,
+    status: "live-local",
+    scenarioCount: 1,
     primaryRisk: "Misconfigured workflows, runaway automation, and rollback loss",
     testCloudFit: "Run automation changes through owner-routed release governance cases",
-    proof: "Tool-boundary and state-safety gates guard orchestration side effects"
+    proof: "Live-local adapter blocks production workflow execution until rollback and owner evidence exist"
   },
   {
     id: "document-compliance",
     name: "Document / Compliance Agent",
-    status: "blueprint",
-    scenarioCount: 7,
+    status: "live-local",
+    scenarioCount: 1,
     primaryRisk: "Incorrect extraction, missing citations, and policy misclassification",
     testCloudFit: "Attach source spans, review notes, and decision evidence to compliance cases",
-    proof: "Evidence-integrity gate preserves traceability from source document to agent decision"
+    proof: "Live-local adapter fails uncited document summaries that lack source-span evidence"
   }
 ];
 
@@ -1677,9 +1679,13 @@ export function buildConsoleSummary(scenarios: ScenarioEvidence[]): ConsoleSumma
 
 export function summarizeAgentCoverage(profiles: AgentProfile[]): AgentCoverageSummary {
   const liveProfiles = profiles.filter((profile) => profile.status === "live").length;
+  const localValidatedProfiles = profiles.filter((profile) => profile.status === "live-local").length;
   const blueprintProfiles = profiles.filter((profile) => profile.status === "blueprint").length;
   const liveScenarioCount = profiles
     .filter((profile) => profile.status === "live")
+    .reduce((sum, profile) => sum + profile.scenarioCount, 0);
+  const localScenarioCount = profiles
+    .filter((profile) => profile.status === "live-local")
     .reduce((sum, profile) => sum + profile.scenarioCount, 0);
   const blueprintScenarioCount = profiles
     .filter((profile) => profile.status === "blueprint")
@@ -1688,10 +1694,12 @@ export function summarizeAgentCoverage(profiles: AgentProfile[]): AgentCoverageS
   return {
     totalProfiles: profiles.length,
     liveProfiles,
+    localValidatedProfiles,
     blueprintProfiles,
     liveScenarioCount,
+    localScenarioCount,
     blueprintScenarioCount,
-    coverageLabel: `${liveProfiles} live adapter + ${blueprintProfiles} expansion blueprints`
+    coverageLabel: `${liveProfiles} live adapter + ${localValidatedProfiles} live-local adapters`
   };
 }
 

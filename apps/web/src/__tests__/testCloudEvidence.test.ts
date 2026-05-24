@@ -173,10 +173,12 @@ describe("test cloud evidence view model", () => {
     expect(summarizeAgentCoverage(agentProfiles)).toEqual({
       totalProfiles: 6,
       liveProfiles: 1,
-      blueprintProfiles: 5,
+      localValidatedProfiles: 5,
+      blueprintProfiles: 0,
       liveScenarioCount: 24,
-      blueprintScenarioCount: 36,
-      coverageLabel: "1 live adapter + 5 expansion blueprints"
+      localScenarioCount: 5,
+      blueprintScenarioCount: 0,
+      coverageLabel: "1 live adapter + 5 live-local adapters"
     });
   });
 
