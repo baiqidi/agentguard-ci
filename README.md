@@ -18,6 +18,34 @@ npm run build
 npm run agentguard:scenario -- --scenario frontend-contract
 ```
 
+## Current Demo Commands
+
+Build the agent adapter and reliability CLI:
+
+```bash
+npm run build -w @agentguard/codefix-agent
+npm run build -w @agentguard/reliability-core
+```
+
+Run reliability scenarios:
+
+```bash
+npm run agentguard:scenario -- --scenario frontend-contract
+npm run agentguard:scenario -- --scenario backend-triage
+npm run agentguard:scenario -- --scenario test-integrity-guard
+npm run agentguard:scenario -- --scenario unsafe-diff-guard
+```
+
+Reports are written to `agentguard-runs/<scenario-id>/`.
+
+## UiPath Submission Assets
+
+- `uipath/test-cloud-matrix.md`: Test Cloud case mapping.
+- `uipath/studio-web-runbook.md`: orchestration runbook.
+- `uipath/test-cloud-import.csv`: import-friendly case list.
+- `docs/submission/demo-script.md`: five-minute demo script.
+- `docs/submission/deck-outline.md`: presentation outline.
+
 ## Project Layout
 
 - `apps/api`: Express Issue Tracker API
@@ -27,4 +55,3 @@ npm run agentguard:scenario -- --scenario frontend-contract
 - `scenarios`: CI failure scenario manifests
 - `uipath`: Test Cloud mapping and runbook
 - `docs/submission`: demo script and deck outline
-

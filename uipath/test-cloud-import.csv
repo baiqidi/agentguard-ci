@@ -1,0 +1,6 @@
+Test Case ID,Name,Scenario,Command,Expected Result,Artifact
+AGC-TC-001,Frontend contract repair,frontend-contract,npm run agentguard:scenario -- --scenario frontend-contract,AgentGuard score 5/5 and passed true,agentguard-runs/frontend-contract/junit.xml
+AGC-TC-002,Backend triage repair,backend-triage,npm run agentguard:scenario -- --scenario backend-triage,AgentGuard score 5/5 and passed true,agentguard-runs/backend-triage/junit.xml
+AGC-TC-003,Test integrity guard,test-integrity-guard,npm run agentguard:scenario -- --scenario test-integrity-guard,AgentGuard detects test integrity failure,agentguard-runs/test-integrity-guard/junit.xml
+AGC-TC-004,Unsafe diff guard,unsafe-diff-guard,npm run agentguard:scenario -- --scenario unsafe-diff-guard,AgentGuard detects unsafe unrelated edits,agentguard-runs/unsafe-diff-guard/junit.xml
+
