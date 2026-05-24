@@ -11,11 +11,20 @@ AgentGuard CI is a UiPath AgentHack Track 3 prototype for testing the reliabilit
 
 ## Project Description
 
-AgentGuard CI addresses a reliability gap in AI-assisted software delivery: a coding agent can make CI pass while still producing a risky fix. The prototype treats AI agent behavior as a test target. It replays 12 controlled CI failure scenarios, lets a code-fixing agent repair them, then scores the repair for root cause quality, test preservation, diff safety, CI health, and human approval readiness.
+AgentGuard CI addresses a reliability gap in AI-assisted software delivery: a coding agent can make CI pass while still producing a risky fix. The prototype treats AI agent behavior as a test target. It replays 24 controlled CI failure scenarios, lets a code-fixing agent repair them, then scores the repair for root cause quality, test preservation, diff safety, CI health, and human approval readiness.
 
 The result is a repeatable evidence loop for teams that want to adopt code-fixing agents without trusting a one-off demo.
 
-The 12-scenario benchmark covers safe localized repairs, test manipulation, unsafe diffs, hallucinated root causes, dependency churn, secret-handling risk, release configuration drift, performance regressions, data migration risk, and concurrency races.
+The 24-scenario failure atlas covers safe localized repairs, test manipulation, prompt injection, snapshot laundering, unsafe diffs, hallucinated root causes, dependency and license risk, secret-handling risk, authentication bypass, observability removal, rollback governance, release configuration drift, performance regressions, data migration risk, platform edge cases, timezone bugs, and concurrency races.
+
+## Product Thesis
+
+Most test intelligence tools answer "which tests failed?" or "which tests should we run?" AgentGuard answers the higher-stakes agent question: "is this autonomous repair safe enough to promote?"
+
+- CloudBees/Launchable-style predictive selection runs fewer relevant tests; AgentGuard adds agent behavior gates.
+- BrowserStack-style test observability explains test health; AgentGuard turns that evidence into promote/review/block decisions.
+- Datadog-style CI optimization reduces pipeline cost; AgentGuard optimizes the evidence loop around autonomous-code risk.
+- Tricentis-style risk-based testing prioritizes release risk; AgentGuard specializes the risk taxonomy for AI coding-agent failure modes.
 
 ## UiPath Components
 
@@ -56,7 +65,7 @@ npm run build
 Run the Judge Demo Console locally:
 
 ```bash
-npm run dev
+npm run dev -w @agentguard/web
 ```
 
 Run reliability scenarios:
@@ -80,6 +89,18 @@ npm run agentguard:scenario -- --scenario config-env-drift
 npm run agentguard:scenario -- --scenario performance-regression
 npm run agentguard:scenario -- --scenario data-migration-risk
 npm run agentguard:scenario -- --scenario concurrency-race
+npm run agentguard:scenario -- --scenario prompt-injection-override
+npm run agentguard:scenario -- --scenario snapshot-blessing-abuse
+npm run agentguard:scenario -- --scenario auth-bypass-shortcut
+npm run agentguard:scenario -- --scenario input-validation-gap
+npm run agentguard:scenario -- --scenario observability-removal
+npm run agentguard:scenario -- --scenario rollback-flag-missing
+npm run agentguard:scenario -- --scenario cross-platform-path-case
+npm run agentguard:scenario -- --scenario timezone-edge-case
+npm run agentguard:scenario -- --scenario accessibility-regression
+npm run agentguard:scenario -- --scenario license-policy-risk
+npm run agentguard:scenario -- --scenario large-refactor-drift
+npm run agentguard:scenario -- --scenario nondeterministic-random-fix
 ```
 
 Scenario reports are written to `agentguard-runs/<scenario-id>/`.
@@ -125,7 +146,7 @@ This makes the submission reviewable from GitHub even before UiPath Labs access 
 
 ## Research Backing
 
-The design rationale is summarized in `docs/research/agentguard-research-brief.md`. It translates UiPath Test Cloud/Test Manager documentation and recent agent-evaluation research into AgentGuard's product principles: realistic repository-level scenarios, interactive execution evidence, traceable artifacts, structured feedback, and human review for high-risk repairs.
+The design rationale is summarized in `docs/research/agentguard-research-brief.md`. It translates UiPath Test Cloud/Test Manager documentation, agent-evaluation research, NIST AI risk management, SRE practice, and high-reliability operations into AgentGuard's product principles: realistic repository-level scenarios, interactive execution evidence, traceable artifacts, structured feedback, and human review for high-risk repairs.
 
 ## UiPath Submission Assets
 

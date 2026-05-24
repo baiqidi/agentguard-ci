@@ -18,6 +18,9 @@ How should a UiPath Test Cloud submission evaluate AI code-fixing agents in a wa
 | BrowserStack Test Observability | Test observability products group failures, expose quality signals, and help teams prioritize triage. | AgentGuard labels failure class, selection signal, and highest-risk area for each scenario. |
 | Datadog CI Visibility | CI visibility products combine flaky test management, failure analysis, and performance trends. | AgentGuard reports the reliability decision and the time cost of collecting evidence. |
 | Tricentis risk-based testing | Enterprise testing suites prioritize test effort around business and release risk. | AgentGuard treats unsafe diffs and test weakening as promotion blockers even when CI can be made green. |
+| NIST AI RMF | AI systems need governance, mapping, measurement, and risk management across their lifecycle. | AgentGuard turns agent repairs into govern/map/measure/manage evidence: scenario taxonomy, five gates, and review actions. |
+| Google SRE | Reliability practice uses objective budgets and risk tradeoffs instead of chasing perfect uptime. | AgentGuard treats agent autonomy as a reliability budget: only all-gate repairs auto-promote; the rest consume review budget. |
+| High Reliability Organization theory | Reliable operations cultivate preoccupation with failure, reluctance to simplify, and deference to expertise. | AgentGuard intentionally includes failed-by-design cases and routes trust-boundary changes to expert review. |
 
 ## Product Principles
 
@@ -28,18 +31,29 @@ How should a UiPath Test Cloud submission evaluate AI code-fixing agents in a wa
 5. **Show research-backed credibility in the UI.** Judges should see why these gates exist, not only that the dashboard looks polished.
 6. **Optimize feedback time without hiding risk.** The product should explain how targeted scenarios save time while still escalating blocked paths to deeper review.
 
-## Failure Mode Coverage
+## Failure Atlas
 
-The current benchmark covers 12 AI coding-agent failure modes:
+The current benchmark covers 24 AI coding-agent failure modes across 6 reliability domains:
 
-| Coverage area | Scenario examples |
+| Domain | Principle | Scenario examples |
 | --- | --- |
-| Safe localized repairs | `frontend-contract`, `backend-triage`, `performance-regression`, `concurrency-race` |
-| Test manipulation | `test-integrity-guard`, `flaky-rerun-abuse` |
-| Unsafe or unrelated diffs | `unsafe-diff-guard`, `secret-handling-guard` |
-| Explanation quality | `hallucinated-root-cause` |
-| Supply-chain and configuration risk | `dependency-upgrade-risk`, `config-env-drift` |
-| Data safety | `data-migration-risk` |
+| Intent and truthfulness | Do not trust a green build until the explanation matches the failure. | `frontend-contract`, `backend-triage`, `hallucinated-root-cause`, `nondeterministic-random-fix` |
+| Test integrity | The test suite is evidence, not something the agent may bargain with. | `test-integrity-guard`, `flaky-rerun-abuse`, `snapshot-blessing-abuse`, `accessibility-regression` |
+| Change containment | Small, reversible patches beat impressive but unbounded repairs. | `unsafe-diff-guard`, `dependency-upgrade-risk`, `large-refactor-drift`, `license-policy-risk` |
+| Security and governance | Any agent that crosses a trust boundary must stop at a human gate. | `secret-handling-guard`, `prompt-injection-override`, `auth-bypass-shortcut`, `observability-removal` |
+| Release operations | CI fixes must preserve the operator's ability to detect, reverse, and explain releases. | `config-env-drift`, `performance-regression`, `rollback-flag-missing`, `data-migration-risk` |
+| Runtime edge cases | Agents must survive the boring boundary conditions where production actually breaks. | `concurrency-race`, `input-validation-gap`, `cross-platform-path-case`, `timezone-edge-case` |
+
+## Competitive Positioning
+
+AgentGuard deliberately sits above adjacent product categories:
+
+| Category | What it usually optimizes | AgentGuard extension |
+| --- | --- | --- |
+| Predictive test selection | Run fewer relevant tests faster. | Adds agent behavior gates before promotion. |
+| Test observability | Explain test health and flaky failures. | Converts evidence into promote, review, or hard-block decisions. |
+| CI test optimization | Reduce pipeline duration and failure triage cost. | Optimizes the evidence loop around autonomous-code risk. |
+| Risk-based testing | Prioritize high-business-risk test cases. | Specializes the risk taxonomy for AI coding-agent failure modes. |
 
 ## Sources
 
@@ -55,3 +69,5 @@ The current benchmark covers 12 AI coding-agent failure modes:
 - BrowserStack Test Observability: https://www.browserstack.com/test-observability
 - Datadog CI Visibility: https://docs.datadoghq.com/tests/
 - Tricentis risk-based test optimization: https://www.tricentis.com/products/automate-continuous-testing-tosca/risk-based-testing
+- NIST AI Risk Management Framework: https://www.nist.gov/itl/ai-risk-management-framework
+- Google SRE, embracing risk: https://sre.google/sre-book/embracing-risk/

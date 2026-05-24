@@ -242,7 +242,10 @@ button {
 .gate-panel,
 .target-panel,
 .research-panel,
-.optimization-panel {
+.optimization-panel,
+.moat-panel,
+.atlas-panel,
+.evidence-chain-panel {
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: rgba(255, 255, 255, 0.78);
   box-shadow: 0 22px 62px rgba(0, 0, 0, 0.08);
@@ -299,7 +302,10 @@ button {
 .gate-panel,
 .target-panel,
 .research-panel,
-.optimization-panel {
+.optimization-panel,
+.moat-panel,
+.atlas-panel,
+.evidence-chain-panel {
   border-radius: 8px;
   padding: 20px;
 }
@@ -329,6 +335,13 @@ button {
 .issue-list {
   display: grid;
   gap: 10px;
+}
+
+.scenario-list {
+  max-height: 820px;
+  overflow: auto;
+  padding-right: 4px;
+  scrollbar-color: rgba(0, 113, 227, 0.38) rgba(0, 0, 0, 0.06);
 }
 
 .scenario-row {
@@ -448,6 +461,172 @@ button {
   color: #f5f5f7;
 }
 
+.moat-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(520px, 1fr);
+  gap: 24px;
+  align-items: stretch;
+  margin-bottom: 16px;
+  background:
+    linear-gradient(135deg, rgba(29, 29, 31, 0.03), rgba(0, 113, 227, 0.07)),
+    rgba(255, 255, 255, 0.82);
+}
+
+.moat-lead {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 320px;
+  padding: 20px;
+  border-radius: 8px;
+  background: #1d1d1f;
+  color: #f5f5f7;
+}
+
+.moat-lead span,
+.atlas-header span,
+.evidence-chain-copy span {
+  display: block;
+  color: #0071e3;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.moat-lead span {
+  color: #6bb7ff;
+}
+
+.moat-lead h2,
+.atlas-header h2,
+.evidence-chain-copy h2 {
+  margin: 10px 0 0;
+  color: inherit;
+  font-size: clamp(26px, 3.8vw, 42px);
+  line-height: 1.02;
+}
+
+.moat-lead p {
+  max-width: 520px;
+  margin: 22px 0 0;
+  color: rgba(245, 245, 247, 0.74);
+  line-height: 1.5;
+}
+
+.moat-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 12px;
+}
+
+.advantage-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 154px;
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.advantage-card:nth-child(1),
+.advantage-card:nth-child(4) {
+  min-height: 190px;
+}
+
+.advantage-card span,
+.atlas-domain span {
+  color: #0071e3;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.advantage-card h3,
+.atlas-domain h3 {
+  margin: 8px 0 7px;
+  color: #1d1d1f;
+  font-size: 17px;
+  line-height: 1.18;
+}
+
+.advantage-card p,
+.atlas-domain p,
+.chain-step p {
+  margin: 0;
+  color: #6e6e73;
+  font-size: 13px;
+  line-height: 1.42;
+}
+
+.advantage-card strong {
+  display: block;
+  margin-top: 12px;
+  color: #1d1d1f;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.advantage-card small {
+  display: block;
+  margin-top: auto;
+  padding-top: 14px;
+  color: #86868b;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.atlas-panel {
+  margin-bottom: 16px;
+  background:
+    linear-gradient(135deg, rgba(52, 199, 89, 0.06), rgba(255, 149, 0, 0.05)),
+    rgba(255, 255, 255, 0.82);
+}
+
+.atlas-header {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(300px, 0.62fr);
+  gap: 18px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.atlas-header h2,
+.evidence-chain-copy h2 {
+  color: #1d1d1f;
+}
+
+.atlas-header p {
+  margin: 0;
+  color: #6e6e73;
+  font-size: 14px;
+  line-height: 1.48;
+}
+
+.atlas-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.atlas-domain {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 188px;
+  padding: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.atlas-domain small {
+  display: block;
+  margin-top: 18px;
+  color: #86868b;
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .optimization-panel {
   display: grid;
   grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.52fr);
@@ -540,6 +719,65 @@ button {
   color: #1d1d1f;
   font-size: 15px;
   line-height: 1.32;
+}
+
+.evidence-chain-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.66fr) minmax(520px, 1fr);
+  gap: 22px;
+  align-items: start;
+  margin-top: 16px;
+}
+
+.evidence-chain-copy {
+  position: sticky;
+  top: 18px;
+}
+
+.evidence-chain {
+  display: grid;
+  gap: 10px;
+}
+
+.chain-step {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 12px;
+  min-height: 92px;
+  padding: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background: rgba(245, 245, 247, 0.72);
+}
+
+.chain-step > span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #1d1d1f;
+  color: #f5f5f7;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.chain-step strong {
+  display: block;
+  color: #1d1d1f;
+  font-size: 14px;
+}
+
+.chain-step code {
+  display: inline-block;
+  margin: 7px 0 8px;
+  padding: 4px 7px;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #0071e3;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  overflow-wrap: anywhere;
 }
 
 .research-panel {
@@ -691,7 +929,10 @@ button {
   .console-grid,
   .details-grid,
   .decision-hero,
-  .optimization-panel {
+  .optimization-panel,
+  .moat-panel,
+  .atlas-header,
+  .evidence-chain-panel {
     grid-template-columns: 1fr;
   }
 
@@ -709,8 +950,21 @@ button {
 
   .trace-band,
   .research-grid,
-  .optimization-grid {
+  .optimization-grid,
+  .atlas-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .moat-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .moat-lead {
+    min-height: 240px;
+  }
+
+  .evidence-chain-copy {
+    position: static;
   }
 
   .research-intro {
@@ -752,7 +1006,9 @@ button {
 
   .trace-band,
   .research-grid,
-  .optimization-grid {
+  .optimization-grid,
+  .moat-grid,
+  .atlas-grid {
     grid-template-columns: 1fr;
   }
 
@@ -761,8 +1017,22 @@ button {
   .gate-panel,
   .target-panel,
   .research-panel,
-  .optimization-panel {
+  .optimization-panel,
+  .moat-panel,
+  .atlas-panel,
+  .evidence-chain-panel {
     padding: 14px;
+  }
+
+  .moat-lead {
+    min-height: auto;
+    padding: 16px;
+  }
+
+  .advantage-card:nth-child(1),
+  .advantage-card:nth-child(4),
+  .atlas-domain {
+    min-height: auto;
   }
 
   .meter-labels {
@@ -772,6 +1042,12 @@ button {
 
   .scenario-row {
     grid-template-columns: 7px minmax(0, 1fr) 48px;
+  }
+
+  .scenario-list {
+    max-height: none;
+    overflow: visible;
+    padding-right: 0;
   }
 
   .scenario-state {

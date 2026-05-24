@@ -51,7 +51,27 @@ describe("planScriptedFix", () => {
       ["config-env-drift", [".github/workflows/agentguard-evidence.yml"], "medium"],
       ["performance-regression", ["apps/api/src/issues.ts"], "medium"],
       ["data-migration-risk", ["apps/api/src/migrations/2026-risk.sql"], "high"],
-      ["concurrency-race", ["apps/api/src/issues.ts"], "medium"]
+      ["concurrency-race", ["apps/api/src/issues.ts"], "medium"],
+      [
+        "prompt-injection-override",
+        ["apps/api/src/issues.ts", ".github/workflows/agentguard-evidence.yml"],
+        "high"
+      ],
+      ["snapshot-blessing-abuse", ["apps/web/src/__tests__/__snapshots__/App.test.ts.snap"], "high"],
+      ["auth-bypass-shortcut", ["apps/api/src/issues.ts", "apps/api/src/server.ts"], "high"],
+      ["input-validation-gap", ["apps/api/src/issues.ts"], "medium"],
+      ["observability-removal", ["apps/api/src/issues.ts", "apps/api/src/server.ts"], "high"],
+      ["rollback-flag-missing", [".github/workflows/agentguard-evidence.yml"], "medium"],
+      ["cross-platform-path-case", ["packages/reliability-core/src/scenario.ts"], "medium"],
+      ["timezone-edge-case", ["apps/web/src/issueModel.ts"], "low"],
+      ["accessibility-regression", ["apps/web/src/App.tsx", "apps/web/src/App.css"], "medium"],
+      ["license-policy-risk", ["package.json", "package-lock.json"], "high"],
+      [
+        "large-refactor-drift",
+        ["apps/web/src/issueModel.ts", "apps/api/src/issues.ts", "apps/web/src/__tests__/issueModel.test.ts"],
+        "high"
+      ],
+      ["nondeterministic-random-fix", ["apps/api/src/issues.ts"], "high"]
     ] as const;
 
     for (const [scenarioId, changedFiles, riskLevel] of expectedPlans) {

@@ -16,7 +16,13 @@ Use UiPath as the orchestration layer for AgentGuard CI reliability checks. Stud
 ## Process Outline
 
 1. Start AgentGuard reliability run.
-2. For each scenario id, execute:
+2. Execute the full 24-scenario suite:
+
+   ```bash
+   npm run agentguard:suite
+   ```
+
+   Or, for each scenario id, execute:
 
    ```bash
    npm run agentguard:scenario -- --scenario <scenario-id>
@@ -34,7 +40,7 @@ Use UiPath as the orchestration layer for AgentGuard CI reliability checks. Stud
 
 - Use a command-line execution activity to invoke npm commands.
 - Use file activities to collect report artifacts.
-- Use Test Cloud to track the four test cases in `uipath/test-cloud-import.csv`.
+- Use Test Cloud to track the 24 test cases in `uipath/test-cloud-import.csv`.
 - Use `test-cloud-evidence.json` as the structured evidence packet for gate status, attachments, and recommended action.
 - Use an approval step when AgentGuard reports `Passed: false` for a governance scenario.
 
@@ -42,9 +48,9 @@ Use UiPath as the orchestration layer for AgentGuard CI reliability checks. Stud
 
 In the video, show:
 
-1. Test Cloud matrix with the four cases.
-2. A scenario run for `frontend-contract`.
+1. Test Cloud matrix with the 24-case failure atlas.
+2. A full `npm run agentguard:suite` run.
 3. The Markdown reliability report.
 4. The `test-cloud-evidence.json` packet that Test Cloud can attach to the run.
-5. A governance failure such as `unsafe-diff-guard`.
+5. A governance failure such as `unsafe-diff-guard` or `prompt-injection-override`.
 6. Human approval routing for unsafe agent behavior.

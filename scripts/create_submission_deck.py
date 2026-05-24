@@ -92,13 +92,13 @@ def title_slide(prs):
 
     subtitle = slide.shapes.add_textbox(Inches(0.76), Inches(2.75), Inches(8.3), Inches(1.0))
     p = subtitle.text_frame.paragraphs[0]
-    p.text = "Reliability testing for AI code-fixing agents"
+    p.text = "Reliability firewall for AI code-fixing agents"
     p.font.size = Pt(24)
     p.font.color.rgb = MINT
 
     body = slide.shapes.add_textbox(Inches(0.78), Inches(4.2), Inches(7.8), Inches(1.2))
     p = body.text_frame.paragraphs[0]
-    p.text = "A governed scenario runner that turns agent fixes into auditable Test Cloud evidence."
+    p.text = "A 24-mode failure atlas that turns agent fixes into auditable Test Cloud evidence."
     p.font.size = Pt(18)
     p.font.color.rgb = WHITE
     return slide
@@ -157,7 +157,7 @@ def build():
         prs,
         "Solution",
         [
-            "AgentGuard CI runs controlled failure scenarios against a React and Express issue tracker.",
+            "AgentGuard CI runs 24 controlled failure scenarios against a React and Express issue tracker.",
             "A code-fixing agent repairs the scenario, then AgentGuard scores the result across five gates.",
             "Each run emits Markdown, JSON, and JUnit evidence for governance and audit.",
         ],
@@ -176,7 +176,7 @@ def build():
         "Evidence outputs",
         [
             "agentguard-runs/<scenario>/report.md",
-            "agentguard-runs/<scenario>/result.json",
+            "agentguard-runs/<scenario>/report.json",
             "agentguard-runs/<scenario>/junit.xml",
             "uipath/test-cloud-import.csv",
         ],
@@ -196,16 +196,31 @@ def build():
 
     two_column_slide(
         prs,
-        "Scenario Matrix",
+        "Failure Atlas",
         "Positive scenarios",
         [
             "frontend-contract: expected score 5/5",
             "backend-triage: expected score 5/5",
+            "input-validation-gap: expected score 5/5",
+            "timezone-edge-case: expected score 5/5",
         ],
         "Governance scenarios",
         [
-            "test-integrity-guard: fails by design when tests are weakened",
-            "unsafe-diff-guard: fails by design on unrelated risky edits",
+            "prompt-injection-override: blocks policy override attempts",
+            "snapshot-blessing-abuse: blocks golden-output laundering",
+            "large-refactor-drift: blocks over-broad repairs",
+            "nondeterministic-random-fix: detects random workaround drift",
+        ],
+    )
+
+    simple_slide(
+        prs,
+        "Competitive Moat",
+        [
+            "Predictive test selection runs fewer tests; AgentGuard adds agent behavior gates.",
+            "Test observability explains failures; AgentGuard decides promote, review, or hard block.",
+            "CI optimization saves time; AgentGuard optimizes the evidence loop around autonomous-code risk.",
+            "Risk-based testing prioritizes releases; AgentGuard specializes the taxonomy for coding-agent failures.",
         ],
     )
 
@@ -225,10 +240,10 @@ def build():
         "Demo Flow",
         [
             "1. Show the Issue Tracker sample app and CI failure.",
-            "2. Run npm run agentguard:scenario -- --scenario frontend-contract.",
-            "3. Show a 5/5 safe repair with scoped changes.",
-            "4. Run unsafe-diff-guard and show governance failure evidence.",
-            "5. Connect the reports to UiPath Test Cloud cases.",
+            "2. Run npm run agentguard:suite.",
+            "3. Show 7/24 auto-promotions, 17 review routes, 12 hard blocks, and 73% gate pass rate.",
+            "4. Open unsafe-diff-guard or prompt-injection-override and show governance failure evidence.",
+            "5. Connect the reports and CSV to UiPath Test Cloud cases.",
         ],
     )
 
@@ -238,7 +253,7 @@ def build():
         [
             "Connect the runner to UiPath Orchestrator and Test Cloud APIs.",
             "Add adapters for more coding agents and enterprise CI providers.",
-            "Expand the scenario library for security, data integrity, and compliance workflows.",
+            "Add enterprise policy packs for security, compliance, and release governance.",
             "Use the same evidence loop for production agent release gates.",
         ],
     )

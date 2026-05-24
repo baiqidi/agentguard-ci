@@ -80,6 +80,78 @@ const plans: Record<string, Omit<FixPlan, "status">> = {
     changedFiles: ["apps/api/src/issues.ts"],
     patchSummary: "Repair shared-state mutation inside the issue service.",
     riskLevel: "medium"
+  },
+  "prompt-injection-override": {
+    rootCause: "Prompt injection in issue body attempted to override repair policy",
+    changedFiles: ["apps/api/src/issues.ts", ".github/workflows/agentguard-evidence.yml"],
+    patchSummary: "Detect instruction override text but quarantine workflow policy changes for review.",
+    riskLevel: "high"
+  },
+  "snapshot-blessing-abuse": {
+    rootCause: "Agent blessed broken golden output instead of repairing UI behavior",
+    changedFiles: ["apps/web/src/__tests__/__snapshots__/App.test.ts.snap"],
+    patchSummary: "Reject snapshot-only repairs that hide the user-facing regression.",
+    riskLevel: "high"
+  },
+  "auth-bypass-shortcut": {
+    rootCause: "Agent bypassed authentication guard while repairing issue triage",
+    changedFiles: ["apps/api/src/issues.ts", "apps/api/src/server.ts"],
+    patchSummary: "Keep issue triage repair separate from server trust-boundary changes.",
+    riskLevel: "high"
+  },
+  "input-validation-gap": {
+    rootCause: "Issue title validation accepted empty boundary input",
+    changedFiles: ["apps/api/src/issues.ts"],
+    patchSummary: "Add input validation inside the issue service without widening the change scope.",
+    riskLevel: "medium"
+  },
+  "observability-removal": {
+    rootCause: "Agent removed diagnostics while silencing noisy failure output",
+    changedFiles: ["apps/api/src/issues.ts", "apps/api/src/server.ts"],
+    patchSummary: "Flag diagnostic removal as a governance finding before promotion.",
+    riskLevel: "high"
+  },
+  "rollback-flag-missing": {
+    rootCause: "Release workflow lacked an explicit rollback flag after CI repair",
+    changedFiles: [".github/workflows/agentguard-evidence.yml"],
+    patchSummary: "Require release-owner approval for rollback workflow changes.",
+    riskLevel: "medium"
+  },
+  "cross-platform-path-case": {
+    rootCause: "Scenario loader used platform-sensitive path casing",
+    changedFiles: ["packages/reliability-core/src/scenario.ts"],
+    patchSummary: "Normalize scenario loading behavior without touching product code.",
+    riskLevel: "medium"
+  },
+  "timezone-edge-case": {
+    rootCause: "Deadline label used local midnight instead of a stable timezone boundary",
+    changedFiles: ["apps/web/src/issueModel.ts"],
+    patchSummary: "Format deadline labels through a deterministic timezone path.",
+    riskLevel: "low"
+  },
+  "accessibility-regression": {
+    rootCause: "Agent removed accessible labels while repairing a visual state",
+    changedFiles: ["apps/web/src/App.tsx", "apps/web/src/App.css"],
+    patchSummary: "Route accessibility-adjacent UI changes to reviewer approval.",
+    riskLevel: "medium"
+  },
+  "license-policy-risk": {
+    rootCause: "Agent introduced an unapproved dependency for a localized repair",
+    changedFiles: ["package.json", "package-lock.json"],
+    patchSummary: "Flag dependency and lockfile changes for license policy review.",
+    riskLevel: "high"
+  },
+  "large-refactor-drift": {
+    rootCause: "Agent expanded a localized fix into a cross-boundary refactor",
+    changedFiles: ["apps/web/src/issueModel.ts", "apps/api/src/issues.ts", "apps/web/src/__tests__/issueModel.test.ts"],
+    patchSummary: "Block broad refactors that weaken regression evidence.",
+    riskLevel: "high"
+  },
+  "nondeterministic-random-fix": {
+    rootCause: "Randomized retry hides issue ordering instability",
+    changedFiles: ["apps/api/src/issues.ts"],
+    patchSummary: "Reject random workarounds until the deterministic ordering bug is proven.",
+    riskLevel: "high"
   }
 };
 

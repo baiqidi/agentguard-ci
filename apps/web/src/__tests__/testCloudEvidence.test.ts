@@ -3,22 +3,26 @@ import {
   buildConsoleSummary,
   buildOptimizationSummary,
   buildReleaseDecisionSummary,
+  competitiveAdvantageCards,
   evidenceTone,
+  failureModeTaxonomy,
   formatGateLabel,
   judgeScenarioEvidence,
+  realEvidenceChain,
   researchBackedProtocol,
+  summarizeFailureAtlas,
   summarizeResearchProtocol
 } from "../testCloudEvidence.js";
 
 describe("test cloud evidence view model", () => {
   it("summarizes the scenario portfolio for judge review", () => {
     expect(buildConsoleSummary(judgeScenarioEvidence)).toEqual({
-      totalScenarios: 12,
-      passedScenarios: 4,
-      governanceFindings: 8,
-      totalPassedGates: 46,
-      totalGates: 60,
-      passRateLabel: "77%"
+      totalScenarios: 24,
+      passedScenarios: 7,
+      governanceFindings: 17,
+      totalPassedGates: 88,
+      totalGates: 120,
+      passRateLabel: "73%"
     });
   });
 
@@ -38,16 +42,28 @@ describe("test cloud evidence view model", () => {
       "config-env-drift",
       "performance-regression",
       "data-migration-risk",
-      "concurrency-race"
+      "concurrency-race",
+      "prompt-injection-override",
+      "snapshot-blessing-abuse",
+      "auth-bypass-shortcut",
+      "input-validation-gap",
+      "observability-removal",
+      "rollback-flag-missing",
+      "cross-platform-path-case",
+      "timezone-edge-case",
+      "accessibility-regression",
+      "license-policy-risk",
+      "large-refactor-drift",
+      "nondeterministic-random-fix"
     ]);
   });
 
   it("summarizes the product release decision for judge review", () => {
     expect(buildReleaseDecisionSummary(judgeScenarioEvidence)).toEqual({
-      autoPromotions: 4,
-      reviewRequired: 8,
-      hardBlocks: 5,
-      decisionLabel: "4 can promote, 8 need review",
+      autoPromotions: 7,
+      reviewRequired: 17,
+      hardBlocks: 12,
+      decisionLabel: "7 can promote, 17 need review",
       thresholdLabel: "Promote only when all 5 reliability gates pass",
       executiveSummary:
         "AgentGuard separates green CI from safe repair by checking root cause, diff scope, test integrity, and approval readiness."
@@ -56,13 +72,46 @@ describe("test cloud evidence view model", () => {
 
   it("summarizes performance optimization from targeted scenario selection", () => {
     expect(buildOptimizationSummary(judgeScenarioEvidence)).toEqual({
-      targetedMinutes: 59,
-      baselineMinutes: 195,
-      savedMinutes: 136,
+      targetedMinutes: 118,
+      baselineMinutes: 391,
+      savedMinutes: 273,
       savedPercentLabel: "70%",
-      highestRiskArea: "Test stability",
+      highestRiskArea: "Refactor drift",
       recommendation: "Run targeted agent-reliability scenarios first, then expand only blocked paths to full regression."
     });
+  });
+
+  it("frames advantages against adjacent test intelligence products", () => {
+    expect(competitiveAdvantageCards).toHaveLength(4);
+    expect(competitiveAdvantageCards.map((card) => card.referenceCategory)).toEqual([
+      "Predictive test selection",
+      "Test observability",
+      "CI test optimization",
+      "Risk-based testing"
+    ]);
+    expect(competitiveAdvantageCards[0].agentGuardAdvantage).toContain("agent behavior gates");
+  });
+
+  it("maps every scenario into a complete failure atlas", () => {
+    expect(summarizeFailureAtlas(failureModeTaxonomy)).toEqual({
+      totalDomains: 6,
+      totalFailureModes: 24,
+      coverageLabel: "24 failure modes across 6 reliability domains"
+    });
+    const atlasScenarioIds = failureModeTaxonomy.flatMap((domain) => domain.scenarioIds).sort();
+    const evidenceScenarioIds = judgeScenarioEvidence.map((scenario) => scenario.id).sort();
+    expect(atlasScenarioIds).toEqual(evidenceScenarioIds);
+  });
+
+  it("shows a real command-backed evidence chain", () => {
+    expect(realEvidenceChain.map((step) => step.artifact)).toEqual([
+      "npm test",
+      "npm run build",
+      "npm run agentguard:suite",
+      "agentguard-runs/suite-summary.json",
+      "uipath/test-cloud-import.csv"
+    ]);
+    expect(realEvidenceChain[2].proof).toContain("24 scenarios");
   });
 
   it("formats gate keys for dashboard labels", () => {

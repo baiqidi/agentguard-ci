@@ -17,7 +17,19 @@ const defaultScenarioIds = [
   "config-env-drift",
   "performance-regression",
   "data-migration-risk",
-  "concurrency-race"
+  "concurrency-race",
+  "prompt-injection-override",
+  "snapshot-blessing-abuse",
+  "auth-bypass-shortcut",
+  "input-validation-gap",
+  "observability-removal",
+  "rollback-flag-missing",
+  "cross-platform-path-case",
+  "timezone-edge-case",
+  "accessibility-regression",
+  "license-policy-risk",
+  "large-refactor-drift",
+  "nondeterministic-random-fix"
 ];
 
 function readArg(name: string): string | undefined {

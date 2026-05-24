@@ -4,12 +4,19 @@ import {
   buildConsoleSummary,
   buildOptimizationSummary,
   buildReleaseDecisionSummary,
+  competitiveAdvantageCards,
   evidenceTone,
+  failureModeTaxonomy,
   formatGateLabel,
   judgeScenarioEvidence,
+  realEvidenceChain,
   researchBackedProtocol,
+  summarizeFailureAtlas,
   summarizeResearchProtocol,
+  type CompetitiveAdvantageCard,
   type EvidenceTone,
+  type FailureModeDomain,
+  type RealEvidenceStep,
   type ResearchProtocolPrinciple,
   type ScenarioEvidence
 } from "./testCloudEvidence.js";
@@ -48,6 +55,7 @@ export function App() {
   const releaseDecision = useMemo(() => buildReleaseDecisionSummary(judgeScenarioEvidence), []);
   const optimizationSummary = useMemo(() => buildOptimizationSummary(judgeScenarioEvidence), []);
   const protocolSummary = useMemo(() => summarizeResearchProtocol(researchBackedProtocol), []);
+  const atlasSummary = useMemo(() => summarizeFailureAtlas(failureModeTaxonomy), []);
   const selectedScenario =
     judgeScenarioEvidence.find((scenario) => scenario.id === selectedScenarioId) ?? judgeScenarioEvidence[0];
 
@@ -57,8 +65,8 @@ export function App() {
         <div className="hero-copy">
           <h1>AgentGuard CI</h1>
           <p>
-            Research-backed Test Cloud console for proving whether AI code-fixing agents are safe enough to
-            promote.
+            Agent reliability firewall for proving whether AI code-fixing agents deserve promotion, review,
+            or a hard block.
           </p>
         </div>
         <div className="topbar-actions" aria-label="Submission status">
@@ -95,6 +103,10 @@ export function App() {
         <Metric label="Protocol" value={String(protocolSummary.principleCount)} detail="research principles" />
       </section>
 
+      <MoatPanel />
+
+      <FailureAtlasPanel atlasSummary={atlasSummary} />
+
       <section className="console-grid">
         <section className="scenario-panel" aria-label="Reliability scenario matrix">
           <div className="panel-heading">
@@ -124,6 +136,8 @@ export function App() {
       </section>
 
       <OptimizationPanel selectedScenario={selectedScenario} optimizationSummary={optimizationSummary} />
+
+      <EvidenceChainPanel />
 
       <ResearchPanel protocolSummary={protocolSummary.headline} />
     </main>
@@ -312,6 +326,102 @@ function MethodCard({ label, value }: { label: string; value: string }) {
     <article className="method-card">
       <span>{label}</span>
       <strong>{value}</strong>
+    </article>
+  );
+}
+
+function MoatPanel() {
+  return (
+    <section className="moat-panel" aria-label="Competitive advantage">
+      <div className="moat-lead">
+        <span>Reliability Moat</span>
+        <h2>Not test visibility. Agent promotion control.</h2>
+        <p>
+          Existing tools help teams see tests and save CI time. AgentGuard decides whether an autonomous
+          repair can be trusted after it crosses real engineering, security, and release boundaries.
+        </p>
+      </div>
+      <div className="moat-grid">
+        {competitiveAdvantageCards.map((card, index) => (
+          <AdvantageCard card={card} index={index + 1} key={card.referenceCategory} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function AdvantageCard({ card, index }: { card: CompetitiveAdvantageCard; index: number }) {
+  return (
+    <article className="advantage-card">
+      <span>{`0${index}`}</span>
+      <h3>{card.referenceCategory}</h3>
+      <p>{card.incumbentPattern}</p>
+      <strong>{card.agentGuardAdvantage}</strong>
+      <small>{card.proofPoint}</small>
+    </article>
+  );
+}
+
+function FailureAtlasPanel({ atlasSummary }: { atlasSummary: ReturnType<typeof summarizeFailureAtlas> }) {
+  return (
+    <section className="atlas-panel" aria-label="Agent failure mode atlas">
+      <div className="atlas-header">
+        <div>
+          <span>Failure Atlas</span>
+          <h2>{atlasSummary.coverageLabel}</h2>
+        </div>
+        <p>
+          Built from software engineering benchmarks, AI risk management, SRE practice, high-reliability
+          operations, and classic adversarial thinking: verify the agent's intent before trusting the patch.
+        </p>
+      </div>
+      <div className="atlas-grid">
+        {failureModeTaxonomy.map((domain) => (
+          <AtlasDomain domain={domain} key={domain.id} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function AtlasDomain({ domain }: { domain: FailureModeDomain }) {
+  return (
+    <article className="atlas-domain">
+      <div>
+        <span>{domain.scenarioIds.length} modes</span>
+        <h3>{domain.name}</h3>
+        <p>{domain.principle}</p>
+      </div>
+      <small>{domain.inspiredBy}</small>
+    </article>
+  );
+}
+
+function EvidenceChainPanel() {
+  return (
+    <section className="evidence-chain-panel" aria-label="Real test evidence chain">
+      <div className="evidence-chain-copy">
+        <span>Real Evidence</span>
+        <h2>Every claim is backed by commands, reports, and importable Test Cloud rows.</h2>
+      </div>
+      <div className="evidence-chain">
+        {realEvidenceChain.map((step, index) => (
+          <EvidenceStep index={index + 1} step={step} key={step.artifact} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function EvidenceStep({ index, step }: { index: number; step: RealEvidenceStep }) {
+  return (
+    <article className="chain-step">
+      <span>{String(index).padStart(2, "0")}</span>
+      <div>
+        <strong>{step.stage}</strong>
+        <code>{step.artifact}</code>
+        <p>{step.proof}</p>
+      </div>
     </article>
   );
 }
