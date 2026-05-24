@@ -1,32 +1,42 @@
 # AgentGuard CI
 
-AgentGuard CI is a UiPath AgentHack Track 3 prototype for testing the reliability of code-fixing agents. It uses a mixed frontend/backend Issue Tracker as a CI failure playground, then scores whether an agent repaired the failure safely.
+AgentGuard CI is a UiPath AgentHack Track 3 prototype for testing whether enterprise AI agents are safe enough to run, promote, or route to human review. The current live adapter focuses on code-repair agents: it uses a mixed frontend/backend Issue Tracker as a CI failure playground, then scores whether an agent repaired the failure safely. The broader product is a general AgentGuard control layer for RPA/browser agents, data-analysis agents, support agents, workflow/DevOps agents, and document/compliance agents.
 
 ## Competition Focus
 
 - Track: UiPath Test Cloud
-- Project: CI failure triage and repair reliability testing for code/DevOps agents
+- Project: General AI-agent reliability firewall, with code-repair agents as the first live adapter
 - UiPath role: Test Cloud orchestration and governance for repeatable agent reliability scenarios
 - Bonus alignment: demonstrates Codex/coding-agent use in the build and demo workflow
 
 ## Project Description
 
-AgentGuard CI addresses a reliability gap in AI-assisted software delivery: a coding agent can make CI pass while still producing a risky fix. The prototype treats AI agent behavior as a test target. It replays 24 controlled CI failure scenarios, lets a code-fixing agent repair them, then scores the repair for root cause quality, test preservation, diff safety, CI health, and human approval readiness.
+AgentGuard CI addresses a reliability gap in AI-assisted work: an agent can appear successful while still taking unsafe action. The prototype treats AI agent behavior as a test target. Its first live adapter replays 24 controlled CI failure scenarios, lets a code-fixing agent repair them, then scores the repair for root cause quality, test preservation, diff safety, CI health, and human approval readiness.
 
-The result is a repeatable evidence loop for teams that want to adopt code-fixing agents without trusting a one-off demo.
+The result is a repeatable evidence loop for teams that want to adopt agents without trusting a one-off demo.
 
 The 24-scenario failure atlas covers safe localized repairs, test manipulation, prompt injection, snapshot laundering, unsafe diffs, hallucinated root causes, dependency and license risk, secret-handling risk, authentication bypass, observability removal, rollback governance, release configuration drift, performance regressions, data migration risk, platform edge cases, timezone bugs, and concurrency races.
 
 The latest assurance layer adds severity, owner, control, and evidence-standard metadata to each scenario. A full suite run currently stops **106/131 risk points** before promotion, including **5 critical findings** that require named-owner approval.
 
+## General Agent Platform
+
+AgentGuard now separates the **live adapter** from the **control contract**:
+
+- Live adapter: code-repair agent reliability with 24 command-backed scenarios.
+- Expansion blueprints: browser/RPA agents, data-analysis agents, customer-support agents, workflow/DevOps agents, and document/compliance agents.
+- Universal reliability gates: goal fidelity, tool boundary, evidence integrity, state safety, and human approval.
+
+This is intentionally truthful for a hackathon demo: the code-repair suite is the real tested surface, while the other agent categories show how the same Test Cloud governance model extends without pretending those adapters already ran.
+
 ## Product Thesis
 
-Most test intelligence tools answer "which tests failed?" or "which tests should we run?" AgentGuard answers the higher-stakes agent question: "is this autonomous repair safe enough to promote?"
+Most test intelligence tools answer "which tests failed?" or "which tests should we run?" AgentGuard answers the higher-stakes agent question: "is this autonomous action safe enough to approve?"
 
 - CloudBees/Launchable-style predictive selection runs fewer relevant tests; AgentGuard adds agent behavior gates.
 - BrowserStack-style test observability explains test health; AgentGuard turns that evidence into promote/review/block decisions.
-- Datadog-style CI optimization reduces pipeline cost; AgentGuard optimizes the evidence loop around autonomous-code risk.
-- Tricentis-style risk-based testing prioritizes release risk; AgentGuard specializes the risk taxonomy for AI coding-agent failure modes.
+- Datadog-style CI optimization reduces pipeline cost; AgentGuard optimizes the evidence loop around autonomous-agent risk.
+- Tricentis-style risk-based testing prioritizes release risk; AgentGuard specializes the risk taxonomy for AI-agent failure modes.
 - SRE and AI-risk-management practice turn incidents into accountable controls; AgentGuard converts unsafe agent behavior into owner queues and risk points.
 
 ## UiPath Components
@@ -38,7 +48,7 @@ Most test intelligence tools answer "which tests failed?" or "which tests should
 
 ## Agent Type
 
-This solution demonstrates a coded-agent reliability workflow. The prototype includes a scripted TypeScript code-fixing agent adapter in `packages/codefix-agent`, and the Test Cloud layer governs the behavior of that agent through repeatable reliability scenarios. It does not depend on low-code agents in the current prototype, but the same scenario runner can be extended to low-code or hybrid agents.
+This solution demonstrates a coded-agent reliability workflow as the first live adapter. The prototype includes a scripted TypeScript code-fixing agent adapter in `packages/codefix-agent`, and the Test Cloud layer governs the behavior of that agent through repeatable reliability scenarios. It does not depend on low-code agents in the current prototype, but the same gate contract can extend to low-code, RPA, data, support, workflow, document, or hybrid agents.
 
 ## Setup Instructions
 

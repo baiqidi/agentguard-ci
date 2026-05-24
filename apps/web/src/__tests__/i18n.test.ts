@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { GateKey } from "../testCloudEvidence.js";
 import {
+  formatAgentProfileStatus,
   formatGateLabelForLocale,
   formatReleaseDecisionForLocale,
   formatScenarioTitle,
@@ -29,7 +30,7 @@ describe("dashboard internationalization", () => {
   });
 
   it("translates dashboard chrome into Chinese", () => {
-    expect(t("zh", "hero.subtitle")).toContain("AI 代码修复 Agent");
+    expect(t("zh", "hero.subtitle")).toContain("企业 AI Agent");
     expect(t("zh", "language.switchLabel")).toBe("切换界面语言");
   });
 
@@ -60,5 +61,14 @@ describe("dashboard internationalization", () => {
       "测试完整性",
       "人工批准"
     ]);
+  });
+
+  it("translates general agent platform copy", () => {
+    expect(t("en", "platform.kicker")).toBe("General Agent Control Layer");
+    expect(t("zh", "platform.kicker")).toBe("通用 Agent 控制层");
+    expect(t("en", "platform.liveScenarios.detail")).toBe("command backed");
+    expect(t("zh", "platform.liveScenarios.detail")).toBe("命令支撑");
+    expect(formatAgentProfileStatus("live", "en")).toBe("Live adapter");
+    expect(formatAgentProfileStatus("blueprint", "zh")).toBe("扩展蓝图");
   });
 });

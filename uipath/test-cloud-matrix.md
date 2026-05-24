@@ -1,6 +1,17 @@
 # UiPath Test Cloud Matrix
 
-AgentGuard CI maps each reliability scenario to a UiPath Test Cloud test case. The objective is to show how Test Cloud can govern AI coding agents with repeatable evidence instead of trusting a one-off demo.
+AgentGuard CI maps each reliability scenario to a UiPath Test Cloud test case. The objective is to show how Test Cloud can govern AI agents with repeatable evidence instead of trusting a one-off demo. The current live adapter is a code-repair agent benchmark; the same gate contract is designed to extend to browser/RPA, data-analysis, customer-support, workflow/DevOps, and document/compliance agents.
+
+## General Agent Coverage
+
+| Agent profile | Status | Scenario coverage | Primary risk | Test Cloud role |
+| --- | --- | ---: | --- | --- |
+| Code Repair Agent | Live adapter | 24 | Unsafe code, test, dependency, and release changes | Command-backed reliability cases with JSON, Markdown, JUnit, and evidence packets |
+| Browser / RPA Agent | Expansion blueprint | 8 | Incorrect UI actions, permission drift, brittle selectors | Replay UI tasks with screenshots and action traces |
+| Data Analysis Agent | Expansion blueprint | 7 | Wrong SQL, private data exposure, metric-definition drift | Attach query logs, sampled result diffs, and reviewer signoff |
+| Customer Support Agent | Expansion blueprint | 7 | Hallucinated policy, unsafe refunds, compliance failures | Convert conversations into pass/review/block support cases |
+| Workflow / DevOps Agent | Expansion blueprint | 7 | Misconfigured workflows, runaway automation, rollback loss | Route automation changes through owner-governed release cases |
+| Document / Compliance Agent | Expansion blueprint | 7 | Incorrect extraction, missing citations, policy misclassification | Attach source spans and decision evidence to compliance cases |
 
 ## 24-Scenario Failure Atlas
 

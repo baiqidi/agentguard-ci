@@ -1,9 +1,12 @@
 import type {
+  AgentProfile,
+  AgentProfileStatus,
   EvidenceTone,
   GateKey,
   GateStatus,
   ReleaseDecisionSummary,
-  RiskAssuranceSummary
+  RiskAssuranceSummary,
+  UniversalReliabilityGate
 } from "./testCloudEvidence.js";
 import type { IssuePriority, IssueStatus } from "./issueModel.js";
 
@@ -16,7 +19,7 @@ const enMessages = {
   "language.zh": "中文",
   "topbar.status": "Submission status",
   "hero.subtitle":
-    "Agent reliability firewall for proving whether AI code-fixing agents deserve promotion, review, or a hard block.",
+    "Reliability firewall for proving whether enterprise AI agents deserve execution, promotion, review, or a hard block.",
   "track.label": "Track 3",
   "track.value": "Test Cloud",
   "release.aria": "Release decision summary",
@@ -87,6 +90,24 @@ const enMessages = {
   "chain.aria": "Real test evidence chain",
   "chain.kicker": "Real Evidence",
   "chain.title": "Every claim is backed by commands, reports, and importable Test Cloud rows.",
+  "platform.aria": "General agent coverage",
+  "platform.kicker": "General Agent Control Layer",
+  "platform.title": "One live adapter, one control contract for every enterprise agent.",
+  "platform.body":
+    "AgentGuard keeps the code-repair suite as the proven adapter, then applies the same gate contract to RPA, data, support, workflow, and document agents without pretending those blueprints have already run.",
+  "platform.liveAdapters": "Live adapters",
+  "platform.liveAdapters.detail": "truthful proof",
+  "platform.blueprints": "Expansion blueprints",
+  "platform.blueprints.detail": "adapter roadmap",
+  "platform.liveScenarios": "Live scenarios",
+  "platform.liveScenarios.detail": "command backed",
+  "platform.blueprintScenarios": "Blueprint scenarios",
+  "platform.blueprintScenarios.detail": "mapped controls",
+  "universal.aria": "Universal reliability gates",
+  "universal.kicker": "Universal Gates",
+  "universal.title": "The gate vocabulary is no longer code-only.",
+  "universal.body":
+    "Every agent is judged by goal fidelity, tool boundaries, evidence integrity, state safety, and human approval.",
   "research.aria": "Research backed protocol",
   "research.title": "Research-Backed Protocol"
 } as const;
@@ -98,7 +119,7 @@ const zhMessages: Record<MessageKey, string> = {
   "language.en": "English",
   "language.zh": "中文",
   "topbar.status": "提交状态",
-  "hero.subtitle": "面向 AI 代码修复 Agent 的可靠性防火墙，用证据判断它该自动发布、进入复核，还是被强制阻断。",
+  "hero.subtitle": "面向企业 AI Agent 的可靠性防火墙，用证据判断它该执行、自动发布、进入复核，还是被强制阻断。",
   "track.label": "赛道 3",
   "track.value": "Test Cloud",
   "release.aria": "发布决策摘要",
@@ -166,6 +187,23 @@ const zhMessages: Record<MessageKey, string> = {
   "chain.aria": "真实测试证据链",
   "chain.kicker": "真实证据",
   "chain.title": "每个判断都由命令、报告和可导入 Test Cloud 的行级证据支撑。",
+  "platform.aria": "通用 Agent 覆盖范围",
+  "platform.kicker": "通用 Agent 控制层",
+  "platform.title": "一个真实适配器，一套覆盖企业 Agent 的控制契约。",
+  "platform.body":
+    "AgentGuard 保留代码修复套件作为已验证适配器，再把同一套闸门契约扩展到 RPA、数据、客服、工作流和文档 Agent，同时不把蓝图伪装成已经运行过的真实测试。",
+  "platform.liveAdapters": "真实适配器",
+  "platform.liveAdapters.detail": "真实证据",
+  "platform.blueprints": "扩展蓝图",
+  "platform.blueprints.detail": "适配路线",
+  "platform.liveScenarios": "真实场景",
+  "platform.liveScenarios.detail": "命令支撑",
+  "platform.blueprintScenarios": "蓝图场景",
+  "platform.blueprintScenarios.detail": "控制映射",
+  "universal.aria": "通用可靠性闸门",
+  "universal.kicker": "通用闸门",
+  "universal.title": "闸门语言不再只属于代码。",
+  "universal.body": "每类 Agent 都按目标一致性、工具边界、证据完整性、状态安全和人工批准来判断。",
   "research.aria": "研究支撑协议",
   "research.title": "研究支撑协议"
 };
@@ -523,6 +561,68 @@ const researchTranslationsZh: Record<string, { title: string; productTranslation
   }
 };
 
+const agentProfileTranslationsZh: Record<string, Pick<AgentProfile, "name" | "primaryRisk" | "testCloudFit" | "proof">> = {
+  "code-repair": {
+    name: "代码修复 Agent",
+    primaryRisk: "危险代码、测试、依赖和发布变更",
+    testCloudFit: "已运行的 Test Cloud 证据适配器，覆盖 24 个命令级场景",
+    proof: "当前套件输出 JSON、Markdown、JUnit 和 Test Cloud 证据包"
+  },
+  "browser-rpa": {
+    name: "浏览器 / RPA Agent",
+    primaryRisk: "错误 UI 操作、权限漂移和脆弱选择器",
+    testCloudFit: "把 UI 任务重放为带截图和动作轨迹的治理测试用例",
+    proof: "复用目标、工具边界、状态安全和批准闸门"
+  },
+  "data-analysis": {
+    name: "数据分析 Agent",
+    primaryRisk: "错误 SQL、隐私暴露和指标口径漂移",
+    testCloudFit: "把查询日志、结果差异和复核签名附到测试用例",
+    proof: "证据完整性和状态安全闸门直接映射到分析工作流"
+  },
+  "customer-support": {
+    name: "客服 Agent",
+    primaryRisk: "幻觉政策、危险退款和合规失败",
+    testCloudFit: "把对话场景转为通过、复核或阻断的支持测试用例",
+    proof: "目标一致性和人工批准闸门区分答复质量与升级风险"
+  },
+  "workflow-devops": {
+    name: "工作流 / DevOps Agent",
+    primaryRisk: "错误工作流、失控自动化和回滚能力丢失",
+    testCloudFit: "让自动化变更进入负责人路由的发布治理用例",
+    proof: "工具边界和状态安全闸门保护编排副作用"
+  },
+  "document-compliance": {
+    name: "文档 / 合规 Agent",
+    primaryRisk: "错误抽取、引用缺失和策略误分类",
+    testCloudFit: "把来源片段、复核笔记和决策证据附到合规用例",
+    proof: "证据完整性闸门保留从源文档到 Agent 决策的可追溯性"
+  }
+};
+
+const universalGateTranslationsZh: Record<string, Pick<UniversalReliabilityGate, "name" | "question">> = {
+  "goal-fidelity": {
+    name: "目标一致性",
+    question: "Agent 是否完成了真实用户或业务目标，而不是自行替换任务？"
+  },
+  "tool-boundary": {
+    name: "工具边界",
+    question: "Agent 是否停留在批准的工具、权限、系统和所有权边界内？"
+  },
+  "evidence-integrity": {
+    name: "证据完整性",
+    question: "判断是否由保留的轨迹、输出、引用、截图或测试产物支撑？"
+  },
+  "state-safety": {
+    name: "状态安全",
+    question: "Agent 是否避免了危险外部状态变更，或提供了可逆路径？"
+  },
+  "human-approval": {
+    name: "人工批准",
+    question: "高风险动作是否在发布或执行前路由给具名负责人？"
+  }
+};
+
 export function isSupportedLocale(value: string | null | undefined): value is Locale {
   return supportedLocales.includes(value as Locale);
 }
@@ -543,6 +643,36 @@ export function t(locale: Locale, key: MessageKey): string {
 
 export function formatToneLabel(tone: EvidenceTone, locale: Locale): string {
   return toneLabels[locale][tone];
+}
+
+export function formatAgentProfileStatus(status: AgentProfileStatus, locale: Locale): string {
+  if (locale === "zh") {
+    return status === "live" ? "真实适配器" : "扩展蓝图";
+  }
+  return status === "live" ? "Live adapter" : "Expansion blueprint";
+}
+
+export function formatAgentProfileForLocale(profile: AgentProfile, locale: Locale): AgentProfile {
+  const localized = locale === "zh" ? agentProfileTranslationsZh[profile.id] : undefined;
+  return {
+    ...profile,
+    name: localized?.name ?? profile.name,
+    primaryRisk: localized?.primaryRisk ?? profile.primaryRisk,
+    testCloudFit: localized?.testCloudFit ?? profile.testCloudFit,
+    proof: localized?.proof ?? profile.proof
+  };
+}
+
+export function formatUniversalGateForLocale(
+  gate: UniversalReliabilityGate,
+  locale: Locale
+): UniversalReliabilityGate {
+  const localized = locale === "zh" ? universalGateTranslationsZh[gate.id] : undefined;
+  return {
+    ...gate,
+    name: localized?.name ?? gate.name,
+    question: localized?.question ?? gate.question
+  };
 }
 
 export function formatGateLabelForLocale(gate: GateKey, locale: Locale): string {

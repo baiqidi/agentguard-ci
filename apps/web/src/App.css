@@ -312,6 +312,173 @@ button {
   border-radius: 8px;
 }
 
+.agent-platform-panel,
+.universal-gate-panel {
+  margin-bottom: 16px;
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 22px 62px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(28px);
+}
+
+.agent-platform-panel {
+  background:
+    linear-gradient(135deg, rgba(0, 113, 227, 0.08), rgba(52, 199, 89, 0.06)),
+    rgba(255, 255, 255, 0.82);
+}
+
+.platform-lead,
+.universal-gate-copy {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+  margin-bottom: 16px;
+}
+
+.platform-lead span,
+.universal-gate-copy span {
+  color: #0071e3;
+  font-size: 12px;
+  font-weight: 820;
+  text-transform: uppercase;
+}
+
+.platform-lead h2,
+.universal-gate-copy h2 {
+  max-width: 820px;
+  margin: 0;
+  color: #1d1d1f;
+  font-size: clamp(28px, 4vw, 44px);
+  line-height: 1.02;
+  overflow-wrap: anywhere;
+}
+
+.platform-lead p,
+.universal-gate-copy p {
+  max-width: 780px;
+  margin: 0;
+  color: #6e6e73;
+  line-height: 1.48;
+}
+
+.platform-metrics,
+.agent-profile-grid,
+.universal-gate-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.platform-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-bottom: 14px;
+}
+
+.agent-profile-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.agent-profile-card,
+.universal-gate-card {
+  min-height: 214px;
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.agent-profile-card.is-live {
+  border-color: rgba(52, 199, 89, 0.34);
+  background: linear-gradient(180deg, rgba(52, 199, 89, 0.08), rgba(255, 255, 255, 0.86));
+}
+
+.agent-profile-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.agent-profile-heading span {
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: rgba(0, 113, 227, 0.1);
+  color: #0071e3;
+  font-size: 11px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.agent-profile-card.is-live .agent-profile-heading span {
+  background: rgba(52, 199, 89, 0.16);
+  color: #198038;
+}
+
+.agent-profile-heading strong {
+  color: #1d1d1f;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.agent-profile-card h3,
+.universal-gate-card h3 {
+  margin: 16px 0 8px;
+  color: #1d1d1f;
+  font-size: 17px;
+  line-height: 1.18;
+}
+
+.agent-profile-card p,
+.universal-gate-card p {
+  margin: 0;
+  color: #6e6e73;
+  font-size: 13px;
+  line-height: 1.42;
+}
+
+.agent-profile-card small,
+.agent-profile-card b {
+  display: block;
+  margin-top: 12px;
+  color: #6e6e73;
+  font-size: 12px;
+  line-height: 1.36;
+}
+
+.agent-profile-card b {
+  color: #1d1d1f;
+  font-weight: 760;
+}
+
+.universal-gate-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.58fr) minmax(560px, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.universal-gate-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.universal-gate-card {
+  min-height: 178px;
+  background: rgba(245, 245, 247, 0.72);
+}
+
+.universal-gate-card span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #1d1d1f;
+  color: #f5f5f7;
+  font-size: 13px;
+  font-weight: 900;
+}
+
 .metric span,
 .metric small,
 .evidence-command span {
@@ -1147,6 +1314,7 @@ button {
   .assurance-panel,
   .moat-panel,
   .atlas-header,
+  .universal-gate-panel,
   .evidence-chain-panel {
     grid-template-columns: 1fr;
   }
@@ -1168,6 +1336,9 @@ button {
   .research-grid,
   .optimization-grid,
   .assurance-metrics,
+  .platform-metrics,
+  .agent-profile-grid,
+  .universal-gate-grid,
   .atlas-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1244,6 +1415,9 @@ button {
   .research-grid,
   .optimization-grid,
   .assurance-metrics,
+  .platform-metrics,
+  .agent-profile-grid,
+  .universal-gate-grid,
   .moat-grid,
   .atlas-grid {
     grid-template-columns: 1fr;
@@ -1256,6 +1430,8 @@ button {
   .research-panel,
   .optimization-panel,
   .assurance-panel,
+  .agent-platform-panel,
+  .universal-gate-panel,
   .moat-panel,
   .atlas-panel,
   .evidence-chain-panel {

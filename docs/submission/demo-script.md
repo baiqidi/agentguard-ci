@@ -4,19 +4,20 @@ Target length: 4 minutes 30 seconds.
 
 ## 0:00-0:30 Problem
 
-AI coding agents can fix CI failures, but enterprises need evidence that the fix is safe. A green build is not enough if the agent deleted tests, changed unrelated files, or skipped human approval.
+AI agents can complete tasks, click through systems, query data, draft support replies, or fix CI failures, but enterprises need evidence that the action is safe. A green build, successful automation run, or plausible answer is not enough if the agent crossed a tool boundary, changed protected state, invented evidence, or skipped human approval.
 
 ## 0:30-1:00 Product
 
-AgentGuard CI uses UiPath Test Cloud as the governance layer for code-fixing agents. It runs a 24-mode failure atlas, scores agent behavior across five gates, and outputs JUnit, JSON, Markdown, and a Test Cloud evidence packet.
+AgentGuard CI uses UiPath Test Cloud as the governance layer for enterprise AI agents. The live adapter is a code-repair agent benchmark: it runs a 24-mode failure atlas, scores agent behavior across five gates, and outputs JUnit, JSON, Markdown, and a Test Cloud evidence packet.
 
-The newest assurance layer also gives each scenario a severity, named owner, control, and evidence standard. That lets the demo say exactly what risk was stopped and who must review it.
+The general platform layer shows one live adapter plus expansion blueprints for browser/RPA, data-analysis, customer-support, workflow/DevOps, and document/compliance agents. The newest assurance layer also gives each scenario a severity, named owner, control, and evidence standard. That lets the demo say exactly what risk was stopped and who must review it.
 
 ## 1:00-1:45 Demo Target
 
 Show the AgentGuard CI Console:
 
 - Scenario matrix mapped to UiPath Test Cloud.
+- General Agent Control Layer showing 1 live adapter, 5 expansion blueprints, and the universal gate contract.
 - Failure Atlas covering 24 agent failure modes across 6 reliability domains.
 - Assurance Case showing blocked risk points, critical findings, and owner queue.
 - Reliability Moat panel showing why AgentGuard is more than test visibility or test selection.
@@ -25,7 +26,7 @@ Show the AgentGuard CI Console:
 - Issue Tracker target used by the reliability scenarios.
 - GitHub Actions workflow that publishes the same evidence artifacts.
 
-Explain that this is the controlled enterprise-style playground used to test the agent.
+Explain that this is the controlled enterprise-style playground used to test one live agent adapter, and that the same gate contract can govern RPA, data, support, workflow, and document agents.
 
 ## 1:45-2:30 Positive Scenario
 
@@ -69,7 +70,8 @@ Show `uipath/test-cloud-matrix.md` and explain:
 - GitHub Actions already produces the same `agentguard-evidence` artifact for repository review.
 - Governance failures are routed to a human reviewer.
 - Codex/coding-agent usage is part of the workflow and bonus alignment.
+- The code-repair adapter is live evidence; the other agent profiles are honest expansion blueprints using the same Test Cloud control model.
 
 ## 4:00-4:30 Close
 
-AgentGuard CI turns AI coding agents from a black box into a testable, auditable system. The result is not just "the agent fixed it," but "we know exactly why this fix is safe enough to approve."
+AgentGuard CI turns AI agents from black boxes into testable, auditable systems. The result is not just "the agent did it," but "we know exactly why this action is safe enough to approve."

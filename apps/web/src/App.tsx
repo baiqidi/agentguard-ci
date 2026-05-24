@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { priorityTone, type IssueSummary } from "./issueModel.js";
 import {
+  agentProfiles,
   buildConsoleSummary,
   buildOptimizationSummary,
   buildOwnerReviewQueue,
@@ -14,8 +15,12 @@ import {
   realEvidenceChain,
   researchBackedProtocol,
   scenarioRiskProfiles,
+  summarizeAgentCoverage,
   summarizeFailureAtlas,
   summarizeResearchProtocol,
+  universalReliabilityGates,
+  type AgentCoverageSummary,
+  type AgentProfile,
   type CompetitiveAdvantageCard,
   type EvidenceTone,
   type FailureModeDomain,
@@ -23,10 +28,13 @@ import {
   type RealEvidenceStep,
   type ResearchProtocolPrinciple,
   type RiskAssuranceSummary,
-  type ScenarioEvidence
+  type ScenarioEvidence,
+  type UniversalReliabilityGate
 } from "./testCloudEvidence.js";
 import {
   formatAdvantageCardForLocale,
+  formatAgentProfileForLocale,
+  formatAgentProfileStatus,
   formatDomainForLocale,
   formatEvidenceStepForLocale,
   formatFailureAtlasLabel,
@@ -45,6 +53,7 @@ import {
   formatScenarioTitle,
   formatShortText,
   formatToneLabel,
+  formatUniversalGateForLocale,
   getInitialLocale,
   supportedLocales,
   t,
@@ -85,6 +94,7 @@ export function App() {
   const [selectedScenarioId, setSelectedScenarioId] = useState(judgeScenarioEvidence[0].id);
   const [locale, setLocale] = useState<Locale>(readInitialLocale);
   const summary = useMemo(() => buildConsoleSummary(judgeScenarioEvidence), []);
+  const agentCoverageSummary = useMemo(() => summarizeAgentCoverage(agentProfiles), []);
   const releaseDecision = useMemo(() => buildReleaseDecisionSummary(judgeScenarioEvidence), []);
   const optimizationSummary = useMemo(() => buildOptimizationSummary(judgeScenarioEvidence), []);
   const protocolSummary = useMemo(() => summarizeResearchProtocol(researchBackedProtocol), []);
@@ -159,6 +169,10 @@ export function App() {
         </div>
         <p className="decision-threshold">{localizedReleaseDecision.thresholdLabel}</p>
       </section>
+
+      <AgentCoveragePanel coverageSummary={agentCoverageSummary} locale={locale} />
+
+      <UniversalGatePanel locale={locale} />
 
       <RiskAssurancePanel locale={locale} ownerQueue={ownerQueue} riskAssurance={localizedRiskAssurance} />
 
@@ -271,6 +285,97 @@ function Metric({ label, value, detail }: { label: string; value: string; detail
       <span>{label}</span>
       <strong>{value}</strong>
       <small>{detail}</small>
+    </article>
+  );
+}
+
+function AgentCoveragePanel({
+  coverageSummary,
+  locale
+}: {
+  coverageSummary: AgentCoverageSummary;
+  locale: Locale;
+}) {
+  return (
+    <section className="agent-platform-panel" aria-label={t(locale, "platform.aria")}>
+      <div className="platform-lead">
+        <span>{t(locale, "platform.kicker")}</span>
+        <h2>{t(locale, "platform.title")}</h2>
+        <p>{t(locale, "platform.body")}</p>
+      </div>
+      <div className="platform-metrics">
+        <Metric
+          label={t(locale, "platform.liveAdapters")}
+          value={String(coverageSummary.liveProfiles)}
+          detail={t(locale, "platform.liveAdapters.detail")}
+        />
+        <Metric
+          label={t(locale, "platform.blueprints")}
+          value={String(coverageSummary.blueprintProfiles)}
+          detail={t(locale, "platform.blueprints.detail")}
+        />
+        <Metric
+          label={t(locale, "platform.liveScenarios")}
+          value={String(coverageSummary.liveScenarioCount)}
+          detail={t(locale, "platform.liveScenarios.detail")}
+        />
+        <Metric
+          label={t(locale, "platform.blueprintScenarios")}
+          value={String(coverageSummary.blueprintScenarioCount)}
+          detail={t(locale, "platform.blueprintScenarios.detail")}
+        />
+      </div>
+      <div className="agent-profile-grid">
+        {agentProfiles.map((profile) => (
+          <AgentProfileCard key={profile.id} locale={locale} profile={profile} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function AgentProfileCard({ locale, profile }: { locale: Locale; profile: AgentProfile }) {
+  const localizedProfile = formatAgentProfileForLocale(profile, locale);
+
+  return (
+    <article className={`agent-profile-card is-${profile.status}`}>
+      <div className="agent-profile-heading">
+        <span>{formatAgentProfileStatus(profile.status, locale)}</span>
+        <strong>{profile.scenarioCount}</strong>
+      </div>
+      <h3>{localizedProfile.name}</h3>
+      <p>{localizedProfile.primaryRisk}</p>
+      <small>{localizedProfile.testCloudFit}</small>
+      <b>{localizedProfile.proof}</b>
+    </article>
+  );
+}
+
+function UniversalGatePanel({ locale }: { locale: Locale }) {
+  return (
+    <section className="universal-gate-panel" aria-label={t(locale, "universal.aria")}>
+      <div className="universal-gate-copy">
+        <span>{t(locale, "universal.kicker")}</span>
+        <h2>{t(locale, "universal.title")}</h2>
+        <p>{t(locale, "universal.body")}</p>
+      </div>
+      <div className="universal-gate-grid">
+        {universalReliabilityGates.map((gate) => (
+          <UniversalGateCard gate={gate} key={gate.id} locale={locale} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function UniversalGateCard({ gate, locale }: { gate: UniversalReliabilityGate; locale: Locale }) {
+  const localizedGate = formatUniversalGateForLocale(gate, locale);
+
+  return (
+    <article className="universal-gate-card">
+      <span>{gate.appliesTo.length}</span>
+      <h3>{localizedGate.name}</h3>
+      <p>{localizedGate.question}</p>
     </article>
   );
 }

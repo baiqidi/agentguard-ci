@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  agentProfiles,
   buildConsoleSummary,
   buildOptimizationSummary,
   buildOwnerReviewQueue,
@@ -13,8 +14,10 @@ import {
   realEvidenceChain,
   researchBackedProtocol,
   scenarioRiskProfiles,
+  summarizeAgentCoverage,
   summarizeFailureAtlas,
-  summarizeResearchProtocol
+  summarizeResearchProtocol,
+  universalReliabilityGates
 } from "../testCloudEvidence.js";
 
 describe("test cloud evidence view model", () => {
@@ -150,5 +153,36 @@ describe("test cloud evidence view model", () => {
       uipathControlCount: 3,
       headline: "5 principles from 5 agent-evaluation papers + 3 UiPath controls"
     });
+  });
+
+  it("frames AgentGuard as a general agent reliability platform with truthful live coverage", () => {
+    expect(agentProfiles.map((profile) => profile.id)).toEqual([
+      "code-repair",
+      "browser-rpa",
+      "data-analysis",
+      "customer-support",
+      "workflow-devops",
+      "document-compliance"
+    ]);
+    expect(summarizeAgentCoverage(agentProfiles)).toEqual({
+      totalProfiles: 6,
+      liveProfiles: 1,
+      blueprintProfiles: 5,
+      liveScenarioCount: 24,
+      blueprintScenarioCount: 36,
+      coverageLabel: "1 live adapter + 5 expansion blueprints"
+    });
+  });
+
+  it("defines universal reliability gates that apply beyond code repair", () => {
+    expect(universalReliabilityGates.map((gate) => gate.id)).toEqual([
+      "goal-fidelity",
+      "tool-boundary",
+      "evidence-integrity",
+      "state-safety",
+      "human-approval"
+    ]);
+    expect(universalReliabilityGates[1].appliesTo).toContain("browser-rpa");
+    expect(universalReliabilityGates[2].appliesTo).toContain("data-analysis");
   });
 });
