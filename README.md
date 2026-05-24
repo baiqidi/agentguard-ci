@@ -9,6 +9,65 @@ AgentGuard CI is a UiPath AgentHack Track 3 prototype for testing the reliabilit
 - UiPath role: Test Cloud orchestration and governance for repeatable agent reliability scenarios
 - Bonus alignment: demonstrates Codex/coding-agent use in the build and demo workflow
 
+## Project Description
+
+AgentGuard CI addresses a reliability gap in AI-assisted software delivery: a coding agent can make CI pass while still producing a risky fix. The prototype treats AI agent behavior as a test target. It replays controlled CI failure scenarios, lets a code-fixing agent repair them, then scores the repair for root cause quality, test preservation, diff safety, CI health, and human approval readiness.
+
+The result is a repeatable evidence loop for teams that want to adopt code-fixing agents without trusting a one-off demo.
+
+## UiPath Components
+
+- UiPath Test Cloud: target governance layer for importing and running AgentGuard scenarios as test cases.
+- UiPath Test Manager-style evidence model: AgentGuard emits JUnit XML, Markdown, and JSON reports that can be attached to scenario executions.
+- UiPath Studio Web / Orchestrator runbook: `uipath/studio-web-runbook.md` describes how the scenario runner can be orchestrated as a governed workflow.
+- UiPath Labs environment: expected hosted environment for the final hackathon submission once access is provisioned.
+
+## Agent Type
+
+This solution demonstrates a coded-agent reliability workflow. The prototype includes a scripted TypeScript code-fixing agent adapter in `packages/codefix-agent`, and the Test Cloud layer governs the behavior of that agent through repeatable reliability scenarios. It does not depend on low-code agents in the current prototype, but the same scenario runner can be extended to low-code or hybrid agents.
+
+## Setup Instructions
+
+Prerequisites:
+
+- Node.js 20+
+- npm 10+
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run tests:
+
+```bash
+npm test
+```
+
+Build all packages:
+
+```bash
+npm run build
+```
+
+Run the sample app locally:
+
+```bash
+npm run dev
+```
+
+Run reliability scenarios:
+
+```bash
+npm run agentguard:scenario -- --scenario frontend-contract
+npm run agentguard:scenario -- --scenario backend-triage
+npm run agentguard:scenario -- --scenario test-integrity-guard
+npm run agentguard:scenario -- --scenario unsafe-diff-guard
+```
+
+Scenario reports are written to `agentguard-runs/<scenario-id>/`.
+
 ## Planned Commands
 
 ```bash
