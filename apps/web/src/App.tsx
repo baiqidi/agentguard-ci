@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { formatIssueLabel, priorityTone, summarizeIssue, type IssueSummary } from "./issueModel.js";
 import {
   buildConsoleSummary,
+  buildReleaseDecisionSummary,
   evidenceTone,
   formatGateLabel,
   judgeScenarioEvidence,
@@ -43,6 +44,7 @@ const toneLabels: Record<EvidenceTone, string> = {
 export function App() {
   const [selectedScenarioId, setSelectedScenarioId] = useState(judgeScenarioEvidence[0].id);
   const summary = useMemo(() => buildConsoleSummary(judgeScenarioEvidence), []);
+  const releaseDecision = useMemo(() => buildReleaseDecisionSummary(judgeScenarioEvidence), []);
   const protocolSummary = useMemo(() => summarizeResearchProtocol(researchBackedProtocol), []);
   const selectedScenario =
     judgeScenarioEvidence.find((scenario) => scenario.id === selectedScenarioId) ?? judgeScenarioEvidence[0];
@@ -62,6 +64,20 @@ export function App() {
           <strong>Test Cloud</strong>
         </div>
       </header>
+
+      <section className="decision-hero" aria-label="Release decision summary">
+        <div className="decision-copy">
+          <span>Release Decision</span>
+          <h2>{releaseDecision.decisionLabel}</h2>
+          <p>{releaseDecision.executiveSummary}</p>
+        </div>
+        <div className="decision-metrics">
+          <DecisionMetric label="Auto-promote" value={releaseDecision.autoPromotions} tone="safe" />
+          <DecisionMetric label="Needs review" value={releaseDecision.reviewRequired} tone="watch" />
+          <DecisionMetric label="Hard block" value={releaseDecision.hardBlocks} tone="stop" />
+        </div>
+        <p className="decision-threshold">{releaseDecision.thresholdLabel}</p>
+      </section>
 
       <section className="trace-band" aria-label="AgentGuard reliability flow">
         <TraceStep index="01" title="Replay failure" detail="Realistic repository scenario" />
@@ -107,6 +123,23 @@ export function App() {
 
       <ResearchPanel protocolSummary={protocolSummary.headline} />
     </main>
+  );
+}
+
+function DecisionMetric({
+  label,
+  value,
+  tone
+}: {
+  label: string;
+  value: number;
+  tone: "safe" | "watch" | "stop";
+}) {
+  return (
+    <article className={`decision-metric decision-${tone}`}>
+      <strong>{value}</strong>
+      <span>{label}</span>
+    </article>
   );
 }
 
@@ -165,7 +198,7 @@ function EvidencePanel({ scenario }: { scenario: ScenarioEvidence }) {
     status: scenario.status,
     score: scenario.score,
     recommendedAction: scenario.recommendedAction,
-    attachments: ["report.json", "report.md", "junit.xml"]
+    attachments: ["report.json", "report.md", "junit.xml", "test-cloud-evidence.json"]
   };
 
   return (

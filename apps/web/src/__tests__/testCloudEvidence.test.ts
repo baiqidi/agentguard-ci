@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildConsoleSummary,
+  buildReleaseDecisionSummary,
   evidenceTone,
   formatGateLabel,
   judgeScenarioEvidence,
@@ -24,6 +25,18 @@ describe("test cloud evidence view model", () => {
     expect(evidenceTone(judgeScenarioEvidence[0])).toBe("success");
     expect(evidenceTone(judgeScenarioEvidence[2])).toBe("warning");
     expect(evidenceTone(judgeScenarioEvidence[3])).toBe("danger");
+  });
+
+  it("summarizes the product release decision for judge review", () => {
+    expect(buildReleaseDecisionSummary(judgeScenarioEvidence)).toEqual({
+      autoPromotions: 2,
+      reviewRequired: 2,
+      hardBlocks: 1,
+      decisionLabel: "2 can promote, 2 need review",
+      thresholdLabel: "Promote only when all 5 reliability gates pass",
+      executiveSummary:
+        "AgentGuard separates green CI from safe repair by checking root cause, diff scope, test integrity, and approval readiness."
+    });
   });
 
   it("formats gate keys for dashboard labels", () => {

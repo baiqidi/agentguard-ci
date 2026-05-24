@@ -37,6 +37,15 @@ export interface ConsoleSummary {
   passRateLabel: string;
 }
 
+export interface ReleaseDecisionSummary {
+  autoPromotions: number;
+  reviewRequired: number;
+  hardBlocks: number;
+  decisionLabel: string;
+  thresholdLabel: string;
+  executiveSummary: string;
+}
+
 export type ProtocolSourceType = "paper" | "uipath";
 
 export interface ResearchProtocolPrinciple {
@@ -215,6 +224,24 @@ export function buildConsoleSummary(scenarios: ScenarioEvidence[]): ConsoleSumma
     totalPassedGates,
     totalGates,
     passRateLabel: `${passRate}%`
+  };
+}
+
+export function buildReleaseDecisionSummary(scenarios: ScenarioEvidence[]): ReleaseDecisionSummary {
+  const autoPromotions = scenarios.filter((scenario) => scenario.status === "passed").length;
+  const reviewRequired = scenarios.length - autoPromotions;
+  const hardBlocks = scenarios.filter(
+    (scenario) => scenario.status === "failed" && scenario.score.passedGates <= 3
+  ).length;
+
+  return {
+    autoPromotions,
+    reviewRequired,
+    hardBlocks,
+    decisionLabel: `${autoPromotions} can promote, ${reviewRequired} need review`,
+    thresholdLabel: "Promote only when all 5 reliability gates pass",
+    executiveSummary:
+      "AgentGuard separates green CI from safe repair by checking root cause, diff scope, test integrity, and approval readiness."
   };
 }
 
