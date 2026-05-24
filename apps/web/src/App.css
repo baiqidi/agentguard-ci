@@ -36,6 +36,7 @@ button {
 
 .hero-copy {
   max-width: 760px;
+  min-width: 0;
 }
 
 .topbar h1,
@@ -68,10 +69,10 @@ button {
 
 .topbar-actions {
   display: grid;
-  min-width: 150px;
-  justify-items: end;
-  gap: 4px;
-  padding: 14px 16px;
+  min-width: 224px;
+  justify-items: stretch;
+  gap: 10px;
+  padding: 10px;
   border: 1px solid rgba(0, 113, 227, 0.16);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.72);
@@ -79,13 +80,51 @@ button {
   backdrop-filter: blur(24px);
 }
 
-.topbar-actions span {
+.language-switch {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  padding: 3px;
+  border-radius: 8px;
+  background: rgba(245, 245, 247, 0.92);
+}
+
+.language-switch button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #6e6e73;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.language-switch button:hover {
+  color: #0071e3;
+}
+
+.language-switch button.is-active {
+  background: #ffffff;
+  color: #0071e3;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+}
+
+.track-badge {
+  display: grid;
+  justify-items: end;
+  gap: 4px;
+  padding: 2px 6px 4px;
+}
+
+.track-badge span {
   font-size: 13px;
   font-weight: 700;
   text-transform: uppercase;
 }
 
-.topbar-actions strong {
+.track-badge strong {
   color: #0071e3;
   font-size: 18px;
 }
@@ -126,11 +165,23 @@ button {
   text-transform: uppercase;
 }
 
+.decision-copy,
+.optimization-copy,
+.atlas-header > div,
+.evidence-chain-copy,
+.research-intro,
+.assurance-claim,
+.moat-lead {
+  min-width: 0;
+}
+
 .decision-copy h2 {
   margin: 8px 0 10px;
   color: #1d1d1f;
   font-size: clamp(28px, 4vw, 44px);
   line-height: 1.02;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .decision-copy p,
@@ -442,6 +493,13 @@ button {
   background: #f5f5f7;
 }
 
+.evidence-note {
+  margin: -4px 0 12px;
+  color: #86868b;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
 .evidence-command code,
 .evidence-panel pre {
   color: #1d1d1f;
@@ -497,6 +555,8 @@ button {
   color: #1d1d1f;
   font-size: clamp(28px, 4vw, 44px);
   line-height: 1.02;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .assurance-claim p,
@@ -573,6 +633,11 @@ button {
   justify-content: space-between;
   min-height: 48px;
   padding: 12px 14px;
+  gap: 10px;
+}
+
+.owner-queue-item > div {
+  min-width: 0;
 }
 
 .owner-queue-item strong {
@@ -649,6 +714,8 @@ button {
   color: inherit;
   font-size: clamp(26px, 3.8vw, 42px);
   line-height: 1.02;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .moat-lead p {
@@ -796,6 +863,8 @@ button {
   color: #1d1d1f;
   font-size: clamp(24px, 3.4vw, 36px);
   line-height: 1.05;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .optimization-copy p {
@@ -1088,6 +1157,7 @@ button {
 
   .topbar-actions {
     justify-items: start;
+    width: min(100%, 260px);
   }
 
   .summary-grid {
@@ -1122,8 +1192,9 @@ button {
 
 @media (max-width: 560px) {
   .app-shell {
-    width: min(100% - 20px, 1180px);
+    width: calc(100% - 20px);
     padding-top: 18px;
+    overflow-x: hidden;
   }
 
   .summary-grid {
@@ -1134,7 +1205,25 @@ button {
     padding: 16px;
   }
 
+  .topbar p,
+  .decision-copy h2,
+  .decision-copy p,
+  .assurance-claim h2,
+  .assurance-claim p {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-all;
+    line-break: anywhere;
+  }
+
+  .decision-copy h2,
+  .assurance-claim h2 {
+    font-size: 30px;
+    line-height: 1.12;
+  }
+
   .decision-metrics {
+    grid-template-columns: 1fr;
     gap: 10px;
   }
 
