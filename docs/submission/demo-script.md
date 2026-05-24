@@ -10,7 +10,7 @@ AI agents can complete tasks, click through systems, query data, draft support r
 
 AgentGuard CI uses UiPath Test Cloud as the governance layer for enterprise AI agents. The live adapter is a code-repair agent benchmark: it runs a 24-mode failure atlas, scores agent behavior across five gates, and outputs JUnit, JSON, Markdown, and a Test Cloud evidence packet.
 
-The general platform layer shows one live adapter plus expansion blueprints for browser/RPA, data-analysis, customer-support, workflow/DevOps, and document/compliance agents. The newest assurance layer also gives each scenario a severity, named owner, control, and evidence standard. That lets the demo say exactly what risk was stopped and who must review it.
+The general platform layer shows one live adapter plus expansion blueprints for browser/RPA, data-analysis, customer-support, workflow/DevOps, and document/compliance agents. The new failure-mode radar maps eight universal risk vectors across live and blueprint controls: instruction attack, excessive agency, tool misuse, data leakage, evidence loss, state drift, approval bypass, and runtime fragility. The assurance layer also gives each scenario a severity, named owner, control, and evidence standard. That lets the demo say exactly what risk was stopped and who must review it.
 
 ## 1:00-1:45 Demo Target
 
@@ -18,6 +18,7 @@ Show the AgentGuard CI Console:
 
 - Scenario matrix mapped to UiPath Test Cloud.
 - General Agent Control Layer showing 1 live adapter, 5 expansion blueprints, and the universal gate contract.
+- Failure Mode Radar showing eight general agent risk vectors and the highest-pressure vector, Excessive Agency.
 - Failure Atlas covering 24 agent failure modes across 6 reliability domains.
 - Assurance Case showing blocked risk points, critical findings, and owner queue.
 - Reliability Moat panel showing why AgentGuard is more than test visibility or test selection.
@@ -71,6 +72,7 @@ Show `uipath/test-cloud-matrix.md` and explain:
 - Governance failures are routed to a human reviewer.
 - Codex/coding-agent usage is part of the workflow and bonus alignment.
 - The code-repair adapter is live evidence; the other agent profiles are honest expansion blueprints using the same Test Cloud control model.
+- The radar ties the pitch to recognized risk language: NIST AI RMF governance, OWASP GenAI security categories, OpenTelemetry-style agent traces, and production reliability controls.
 
 ## 4:00-4:30 Close
 

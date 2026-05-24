@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { GateKey } from "../testCloudEvidence.js";
 import {
+  formatAgentRiskVectorForLocale,
+  formatAgentRiskRadarSummaryForLocale,
   formatAgentProfileStatus,
   formatGateLabelForLocale,
   formatReleaseDecisionForLocale,
@@ -70,5 +72,38 @@ describe("dashboard internationalization", () => {
     expect(t("zh", "platform.liveScenarios.detail")).toBe("命令支撑");
     expect(formatAgentProfileStatus("live", "en")).toBe("Live adapter");
     expect(formatAgentProfileStatus("blueprint", "zh")).toBe("扩展蓝图");
+  });
+
+  it("translates agent risk radar copy", () => {
+    expect(t("en", "radar.kicker")).toBe("Failure Mode Radar");
+    expect(t("zh", "radar.kicker")).toBe("失败模式雷达");
+    expect(
+      formatAgentRiskVectorForLocale(
+        {
+          id: "excessive-agency",
+          name: "Excessive Agency",
+          source: "OWASP excessive agency",
+          failureSignal: "The agent takes broad actions beyond the approved task.",
+          liveScenarioIds: ["unsafe-diff-guard"],
+          blueprintAgentIds: ["workflow-devops"],
+          pressureScore: 98,
+          control: "Convert autonomy into scoped gates.",
+          productPayoff: "AgentGuard is a brake for autonomous action."
+        },
+        "zh"
+      ).name
+    ).toBe("过度代理权");
+    expect(
+      formatAgentRiskRadarSummaryForLocale(
+        {
+          totalVectors: 8,
+          liveVectors: 8,
+          blueprintVectors: 8,
+          highestPressureVector: "Excessive Agency",
+          coverageLabel: "8/8 universal vectors covered by live and blueprint controls"
+        },
+        "zh"
+      ).coverageLabel
+    ).toBe("8/8 个通用向量已被真实场景和蓝图控制覆盖");
   });
 });

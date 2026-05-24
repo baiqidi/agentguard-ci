@@ -161,6 +161,26 @@ export interface UniversalReliabilityGate {
   appliesTo: string[];
 }
 
+export interface AgentRiskVector {
+  id: string;
+  name: string;
+  source: string;
+  failureSignal: string;
+  liveScenarioIds: string[];
+  blueprintAgentIds: string[];
+  pressureScore: number;
+  control: string;
+  productPayoff: string;
+}
+
+export interface AgentRiskRadarSummary {
+  totalVectors: number;
+  liveVectors: number;
+  blueprintVectors: number;
+  highestPressureVector: string;
+  coverageLabel: string;
+}
+
 export const judgeScenarioEvidence: ScenarioEvidence[] = [
   {
     id: "frontend-contract",
@@ -1330,6 +1350,115 @@ export const universalReliabilityGates: UniversalReliabilityGate[] = [
   }
 ];
 
+export const agentRiskVectors: AgentRiskVector[] = [
+  {
+    id: "instruction-attack",
+    name: "Instruction Attack",
+    source: "OWASP prompt injection + MITRE ATLAS-style adversarial behavior",
+    failureSignal: "Untrusted text tries to override policy, goals, or reviewer boundaries.",
+    liveScenarioIds: ["prompt-injection-override", "hallucinated-root-cause", "secret-handling-guard"],
+    blueprintAgentIds: ["browser-rpa", "customer-support", "document-compliance"],
+    pressureScore: 91,
+    control: "Separate user content from trusted policy and require goal-fidelity evidence.",
+    productPayoff: "Stops an agent from treating hostile instructions as operating authority."
+  },
+  {
+    id: "excessive-agency",
+    name: "Excessive Agency",
+    source: "OWASP excessive agency + NIST AI RMF govern/map/measure/manage loop",
+    failureSignal: "The agent takes broad actions beyond the approved task, owner, or release scope.",
+    liveScenarioIds: [
+      "unsafe-diff-guard",
+      "dependency-upgrade-risk",
+      "auth-bypass-shortcut",
+      "rollback-flag-missing",
+      "large-refactor-drift"
+    ],
+    blueprintAgentIds: ["code-repair", "browser-rpa", "workflow-devops", "data-analysis"],
+    pressureScore: 98,
+    control: "Convert autonomy into scoped gates, owner routing, and hard promotion blocks.",
+    productPayoff: "Makes the strongest demo claim: AgentGuard is a brake for autonomous action."
+  },
+  {
+    id: "tool-misuse",
+    name: "Tool Misuse",
+    source: "Agent tooling research + OpenTelemetry GenAI agent spans",
+    failureSignal: "The agent uses the wrong tool, weak selector, unsafe command, or hidden workflow path.",
+    liveScenarioIds: ["config-env-drift", "observability-removal", "cross-platform-path-case"],
+    blueprintAgentIds: ["browser-rpa", "workflow-devops", "document-compliance"],
+    pressureScore: 86,
+    control: "Record tool boundaries, command traces, and allowed surfaces before promotion.",
+    productPayoff: "Turns tool traces into Test Cloud evidence instead of invisible agent behavior."
+  },
+  {
+    id: "data-leakage",
+    name: "Data Leakage",
+    source: "OWASP sensitive information disclosure + privacy governance",
+    failureSignal: "The agent exposes secrets, private data, regulated records, or license-sensitive metadata.",
+    liveScenarioIds: ["secret-handling-guard", "data-migration-risk", "license-policy-risk"],
+    blueprintAgentIds: ["data-analysis", "customer-support", "document-compliance"],
+    pressureScore: 93,
+    control: "Gate sensitive flows with evidence integrity, owner approval, and data-boundary review.",
+    productPayoff: "Gives enterprises a reason to trust the platform with non-code agents."
+  },
+  {
+    id: "evidence-loss",
+    name: "Evidence Loss",
+    source: "Scientific falsifiability + Test Cloud evidence management",
+    failureSignal: "The agent weakens tests, launders snapshots, removes telemetry, or loses the audit trail.",
+    liveScenarioIds: ["test-integrity-guard", "snapshot-blessing-abuse", "observability-removal"],
+    blueprintAgentIds: ["code-repair", "data-analysis", "document-compliance"],
+    pressureScore: 88,
+    control: "Preserve failing proof, artifacts, and reviewer-readable reasons as first-class outputs.",
+    productPayoff: "Keeps the product honest by proving why a decision was made."
+  },
+  {
+    id: "state-drift",
+    name: "State Drift",
+    source: "SRE release safety + high-reliability operations",
+    failureSignal: "The agent changes external state, migrations, caches, time boundaries, or release flags unsafely.",
+    liveScenarioIds: ["data-migration-risk", "concurrency-race", "timezone-edge-case", "config-env-drift"],
+    blueprintAgentIds: ["browser-rpa", "workflow-devops", "data-analysis"],
+    pressureScore: 87,
+    control: "Require reversible paths and state-safety gates for mutations beyond local edits.",
+    productPayoff: "Extends the pitch from testing to operational resilience."
+  },
+  {
+    id: "approval-bypass",
+    name: "Approval Bypass",
+    source: "NIST AI RMF governance + zero-trust release controls",
+    failureSignal: "The agent tries to promote high-risk work without a named human owner.",
+    liveScenarioIds: [
+      "dependency-upgrade-risk",
+      "secret-handling-guard",
+      "auth-bypass-shortcut",
+      "rollback-flag-missing",
+      "license-policy-risk"
+    ],
+    blueprintAgentIds: ["code-repair", "customer-support", "workflow-devops", "document-compliance"],
+    pressureScore: 95,
+    control: "Route high-risk decisions to named owners and block promotion until approval evidence exists.",
+    productPayoff: "Makes governance visible enough for judges, managers, and security reviewers."
+  },
+  {
+    id: "runtime-fragility",
+    name: "Runtime Fragility",
+    source: "Boundary-value testing + production reliability practice",
+    failureSignal: "The agent passes the happy path but breaks under platform, time, performance, or accessibility edges.",
+    liveScenarioIds: [
+      "performance-regression",
+      "input-validation-gap",
+      "cross-platform-path-case",
+      "timezone-edge-case",
+      "accessibility-regression"
+    ],
+    blueprintAgentIds: ["code-repair", "browser-rpa", "workflow-devops", "customer-support"],
+    pressureScore: 84,
+    control: "Select targeted edge-case scenarios before expanding to full regression.",
+    productPayoff: "Shows engineering maturity beyond security buzzwords."
+  }
+];
+
 export function buildConsoleSummary(scenarios: ScenarioEvidence[]): ConsoleSummary {
   const totalScenarios = scenarios.length;
   const passedScenarios = scenarios.filter((scenario) => scenario.status === "passed").length;
@@ -1364,6 +1493,21 @@ export function summarizeAgentCoverage(profiles: AgentProfile[]): AgentCoverageS
     liveScenarioCount,
     blueprintScenarioCount,
     coverageLabel: `${liveProfiles} live adapter + ${blueprintProfiles} expansion blueprints`
+  };
+}
+
+export function summarizeAgentRiskRadar(vectors: AgentRiskVector[]): AgentRiskRadarSummary {
+  const highestPressureVector =
+    [...vectors].sort((left, right) => right.pressureScore - left.pressureScore)[0]?.name ?? "";
+  const liveVectors = vectors.filter((vector) => vector.liveScenarioIds.length > 0).length;
+  const blueprintVectors = vectors.filter((vector) => vector.blueprintAgentIds.length > 0).length;
+
+  return {
+    totalVectors: vectors.length,
+    liveVectors,
+    blueprintVectors,
+    highestPressureVector,
+    coverageLabel: `${liveVectors}/${vectors.length} universal vectors covered by live and blueprint controls`
   };
 }
 

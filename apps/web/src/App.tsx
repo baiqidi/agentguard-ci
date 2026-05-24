@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { priorityTone, type IssueSummary } from "./issueModel.js";
 import {
   agentProfiles,
+  agentRiskVectors,
   buildConsoleSummary,
   buildOptimizationSummary,
   buildOwnerReviewQueue,
@@ -16,11 +17,14 @@ import {
   researchBackedProtocol,
   scenarioRiskProfiles,
   summarizeAgentCoverage,
+  summarizeAgentRiskRadar,
   summarizeFailureAtlas,
   summarizeResearchProtocol,
   universalReliabilityGates,
   type AgentCoverageSummary,
   type AgentProfile,
+  type AgentRiskRadarSummary,
+  type AgentRiskVector,
   type CompetitiveAdvantageCard,
   type EvidenceTone,
   type FailureModeDomain,
@@ -34,6 +38,8 @@ import {
 import {
   formatAdvantageCardForLocale,
   formatAgentProfileForLocale,
+  formatAgentRiskVectorForLocale,
+  formatAgentRiskRadarSummaryForLocale,
   formatAgentProfileStatus,
   formatDomainForLocale,
   formatEvidenceStepForLocale,
@@ -95,6 +101,7 @@ export function App() {
   const [locale, setLocale] = useState<Locale>(readInitialLocale);
   const summary = useMemo(() => buildConsoleSummary(judgeScenarioEvidence), []);
   const agentCoverageSummary = useMemo(() => summarizeAgentCoverage(agentProfiles), []);
+  const riskRadarSummary = useMemo(() => summarizeAgentRiskRadar(agentRiskVectors), []);
   const releaseDecision = useMemo(() => buildReleaseDecisionSummary(judgeScenarioEvidence), []);
   const optimizationSummary = useMemo(() => buildOptimizationSummary(judgeScenarioEvidence), []);
   const protocolSummary = useMemo(() => summarizeResearchProtocol(researchBackedProtocol), []);
@@ -173,6 +180,8 @@ export function App() {
       <AgentCoveragePanel coverageSummary={agentCoverageSummary} locale={locale} />
 
       <UniversalGatePanel locale={locale} />
+
+      <RiskRadarPanel locale={locale} riskRadarSummary={riskRadarSummary} />
 
       <RiskAssurancePanel locale={locale} ownerQueue={ownerQueue} riskAssurance={localizedRiskAssurance} />
 
@@ -376,6 +385,90 @@ function UniversalGateCard({ gate, locale }: { gate: UniversalReliabilityGate; l
       <span>{gate.appliesTo.length}</span>
       <h3>{localizedGate.name}</h3>
       <p>{localizedGate.question}</p>
+    </article>
+  );
+}
+
+function RiskRadarPanel({
+  locale,
+  riskRadarSummary
+}: {
+  locale: Locale;
+  riskRadarSummary: AgentRiskRadarSummary;
+}) {
+  const localizedSummary = formatAgentRiskRadarSummaryForLocale(riskRadarSummary, locale);
+  const highestPressureVector =
+    agentRiskVectors.find((vector) => vector.name === riskRadarSummary.highestPressureVector) ?? agentRiskVectors[0];
+  const localizedHighestPressure =
+    localizedSummary.highestPressureVector === riskRadarSummary.highestPressureVector
+      ? formatAgentRiskVectorForLocale(highestPressureVector, locale).name
+      : localizedSummary.highestPressureVector;
+
+  return (
+    <section className="risk-radar-panel" aria-label={t(locale, "radar.aria")}>
+      <div className="risk-radar-lead">
+        <span>{t(locale, "radar.kicker")}</span>
+        <h2>{t(locale, "radar.title")}</h2>
+        <p>{t(locale, "radar.body")}</p>
+      </div>
+      <div className="risk-radar-metrics">
+        <Metric
+          label={t(locale, "radar.totalVectors")}
+          value={String(localizedSummary.totalVectors)}
+          detail={localizedSummary.coverageLabel}
+        />
+        <Metric
+          label={t(locale, "radar.liveVectors")}
+          value={`${localizedSummary.liveVectors}/${localizedSummary.totalVectors}`}
+          detail={t(locale, "platform.liveScenarios.detail")}
+        />
+        <Metric
+          label={t(locale, "radar.blueprintVectors")}
+          value={`${localizedSummary.blueprintVectors}/${localizedSummary.totalVectors}`}
+          detail={t(locale, "platform.blueprintScenarios.detail")}
+        />
+        <Metric
+          label={t(locale, "radar.highestPressure")}
+          value={localizedHighestPressure}
+          detail={t(locale, "radar.control")}
+        />
+      </div>
+      <div className="risk-vector-grid">
+        {agentRiskVectors.map((vector) => (
+          <RiskVectorCard key={vector.id} locale={locale} vector={vector} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function RiskVectorCard({ locale, vector }: { locale: Locale; vector: AgentRiskVector }) {
+  const localizedVector = formatAgentRiskVectorForLocale(vector, locale);
+
+  return (
+    <article className="risk-vector-card">
+      <div className="risk-vector-score">
+        <span>{vector.pressureScore}</span>
+        <div aria-hidden="true">
+          <i style={{ width: `${vector.pressureScore}%` }} />
+        </div>
+      </div>
+      <h3>{localizedVector.name}</h3>
+      <p>{localizedVector.failureSignal}</p>
+      <dl>
+        <div>
+          <dt>{t(locale, "radar.source")}</dt>
+          <dd>{localizedVector.source}</dd>
+        </div>
+        <div>
+          <dt>{t(locale, "radar.control")}</dt>
+          <dd>{localizedVector.control}</dd>
+        </div>
+        <div>
+          <dt>{t(locale, "radar.payoff")}</dt>
+          <dd>{localizedVector.productPayoff}</dd>
+        </div>
+      </dl>
     </article>
   );
 }

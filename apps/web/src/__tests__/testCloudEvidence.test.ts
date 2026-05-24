@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   agentProfiles,
+  agentRiskVectors,
   buildConsoleSummary,
   buildOptimizationSummary,
   buildOwnerReviewQueue,
@@ -15,6 +16,7 @@ import {
   researchBackedProtocol,
   scenarioRiskProfiles,
   summarizeAgentCoverage,
+  summarizeAgentRiskRadar,
   summarizeFailureAtlas,
   summarizeResearchProtocol,
   universalReliabilityGates
@@ -184,5 +186,25 @@ describe("test cloud evidence view model", () => {
     ]);
     expect(universalReliabilityGates[1].appliesTo).toContain("browser-rpa");
     expect(universalReliabilityGates[2].appliesTo).toContain("data-analysis");
+  });
+
+  it("summarizes universal agent failure mode radar coverage", () => {
+    expect(agentRiskVectors.map((vector) => vector.id)).toEqual([
+      "instruction-attack",
+      "excessive-agency",
+      "tool-misuse",
+      "data-leakage",
+      "evidence-loss",
+      "state-drift",
+      "approval-bypass",
+      "runtime-fragility"
+    ]);
+    expect(summarizeAgentRiskRadar(agentRiskVectors)).toEqual({
+      totalVectors: 8,
+      liveVectors: 8,
+      blueprintVectors: 8,
+      highestPressureVector: "Excessive Agency",
+      coverageLabel: "8/8 universal vectors covered by live and blueprint controls"
+    });
   });
 });

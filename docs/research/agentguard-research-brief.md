@@ -19,6 +19,8 @@ How should a UiPath Test Cloud submission evaluate enterprise AI agents in a way
 | Datadog CI Visibility | CI visibility products combine flaky test management, failure analysis, and performance trends. | AgentGuard reports the reliability decision and the time cost of collecting evidence. |
 | Tricentis risk-based testing | Enterprise testing suites prioritize test effort around business and release risk. | AgentGuard treats unsafe diffs and test weakening as promotion blockers even when CI can be made green. |
 | NIST AI RMF | AI systems need governance, mapping, measurement, and risk management across their lifecycle. | AgentGuard turns agent repairs into govern/map/measure/manage evidence: scenario taxonomy, five gates, and review actions. |
+| OWASP GenAI / LLM security categories | LLM and agentic systems create risks such as prompt injection, excessive agency, sensitive information disclosure, insecure tool/plugin behavior, and overreliance. | AgentGuard turns those risks into concrete failure vectors, gated scenarios, and owner-routed actions. |
+| OpenTelemetry GenAI semantic conventions | GenAI and agent operations need traceable spans, events, metrics, and exceptions so behavior can be observed consistently. | AgentGuard treats commands, artifacts, gate reasons, and future tool traces as evidence that can be attached to Test Cloud cases. |
 | Google SRE | Reliability practice uses objective budgets and risk tradeoffs instead of chasing perfect uptime. | AgentGuard treats agent autonomy as a reliability budget: only all-gate repairs auto-promote; the rest consume review budget. |
 | High Reliability Organization theory | Reliable operations cultivate preoccupation with failure, reluctance to simplify, and deference to expertise. | AgentGuard intentionally includes failed-by-design cases and routes trust-boundary changes to expert review. |
 
@@ -32,6 +34,7 @@ How should a UiPath Test Cloud submission evaluate enterprise AI agents in a way
 6. **Optimize feedback time without hiding risk.** The product should explain how targeted scenarios save time while still escalating blocked paths to deeper review.
 7. **Quantify prevented risk.** A mature agent gate should report severity, owner, control, and evidence standard so blocked findings become auditable action queues.
 8. **Separate live adapters from expansion blueprints.** The code-repair adapter is the real tested proof; other agent types reuse the same control contract without being presented as already executed.
+9. **Name the pressure points in general agent language.** A judge should see that AgentGuard covers instruction attack, excessive agency, tool misuse, data leakage, evidence loss, state drift, approval bypass, and runtime fragility.
 
 ## General Agent Control Contract
 
@@ -46,6 +49,23 @@ AgentGuard generalizes the live code-repair benchmark into five universal gates:
 | Human Approval | Are high-risk actions routed to a named owner before promotion or execution? | Code, RPA, data, support, workflow, document |
 
 The current implementation proves the contract with a live Code Repair Agent adapter. Browser/RPA, data-analysis, customer-support, workflow/DevOps, and document/compliance agents are represented as expansion blueprints for future live adapters.
+
+## Universal Failure Mode Radar
+
+The latest dashboard layer converts security, observability, and reliability frameworks into eight judge-facing risk vectors:
+
+| Vector | What it catches | Example live scenarios | Control idea |
+| --- | --- | --- | --- |
+| Instruction Attack | Untrusted text overrides policy, goals, or reviewer boundaries. | `prompt-injection-override`, `hallucinated-root-cause`, `secret-handling-guard` | Separate user content from trusted policy and require goal-fidelity evidence. |
+| Excessive Agency | The agent acts beyond the approved task, owner, or release scope. | `unsafe-diff-guard`, `dependency-upgrade-risk`, `auth-bypass-shortcut`, `rollback-flag-missing`, `large-refactor-drift` | Convert autonomy into scoped gates, owner routing, and hard promotion blocks. |
+| Tool Misuse | The agent uses the wrong tool, unsafe command, brittle selector, or hidden workflow path. | `config-env-drift`, `observability-removal`, `cross-platform-path-case` | Record tool boundaries, command traces, and allowed surfaces before promotion. |
+| Data Leakage | The agent exposes secrets, private data, regulated records, or license-sensitive metadata. | `secret-handling-guard`, `data-migration-risk`, `license-policy-risk` | Gate sensitive flows with evidence integrity, owner approval, and data-boundary review. |
+| Evidence Loss | The agent weakens tests, launders snapshots, removes telemetry, or loses audit proof. | `test-integrity-guard`, `snapshot-blessing-abuse`, `observability-removal` | Preserve artifacts and reviewer-readable reasons as first-class outputs. |
+| State Drift | The agent changes migrations, caches, time boundaries, external state, or release flags unsafely. | `data-migration-risk`, `concurrency-race`, `timezone-edge-case`, `config-env-drift` | Require reversible paths and state-safety gates. |
+| Approval Bypass | The agent promotes high-risk work without a named human owner. | `dependency-upgrade-risk`, `secret-handling-guard`, `auth-bypass-shortcut`, `rollback-flag-missing`, `license-policy-risk` | Route decisions to named owners and block until approval evidence exists. |
+| Runtime Fragility | The agent passes the happy path but fails under platform, time, performance, or accessibility edges. | `performance-regression`, `input-validation-gap`, `cross-platform-path-case`, `timezone-edge-case`, `accessibility-regression` | Run targeted edge-case scenarios before full regression expansion. |
+
+Current radar summary: **8/8 universal vectors covered by live and blueprint controls**. The highest-pressure vector is **Excessive Agency**, because it is the place where autonomous agents most visibly cross from assistance into unsafe execution.
 
 ## Failure Atlas
 
@@ -100,4 +120,7 @@ Current full-suite result: **106/131 risk points stopped before promotion**, inc
 - Datadog CI Visibility: https://docs.datadoghq.com/tests/
 - Tricentis risk-based test optimization: https://www.tricentis.com/products/automate-continuous-testing-tosca/risk-based-testing
 - NIST AI Risk Management Framework: https://www.nist.gov/itl/ai-risk-management-framework
+- OWASP Top 10 for Large Language Model Applications / GenAI Security Project: https://owasp.org/www-project-top-10-for-large-language-model-applications/
+- OpenTelemetry semantic conventions for generative AI systems: https://opentelemetry.io/docs/specs/semconv/gen-ai/
+- MITRE ATLAS: https://atlas.mitre.org/
 - Google SRE, embracing risk: https://sre.google/sre-book/embracing-risk/

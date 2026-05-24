@@ -1,6 +1,8 @@
 import type {
   AgentProfile,
   AgentProfileStatus,
+  AgentRiskRadarSummary,
+  AgentRiskVector,
   EvidenceTone,
   GateKey,
   GateStatus,
@@ -108,6 +110,18 @@ const enMessages = {
   "universal.title": "The gate vocabulary is no longer code-only.",
   "universal.body":
     "Every agent is judged by goal fidelity, tool boundaries, evidence integrity, state safety, and human approval.",
+  "radar.aria": "Universal agent failure mode radar",
+  "radar.kicker": "Failure Mode Radar",
+  "radar.title": "Eight pressure points where agents actually fail.",
+  "radar.body":
+    "The radar connects security taxonomies, AI risk management, observability, and production reliability into one Test Cloud control surface.",
+  "radar.totalVectors": "Risk vectors",
+  "radar.liveVectors": "Live covered",
+  "radar.blueprintVectors": "Blueprint covered",
+  "radar.highestPressure": "Highest pressure",
+  "radar.source": "Source",
+  "radar.control": "Control",
+  "radar.payoff": "Payoff",
   "research.aria": "Research backed protocol",
   "research.title": "Research-Backed Protocol"
 } as const;
@@ -204,6 +218,18 @@ const zhMessages: Record<MessageKey, string> = {
   "universal.kicker": "通用闸门",
   "universal.title": "闸门语言不再只属于代码。",
   "universal.body": "每类 Agent 都按目标一致性、工具边界、证据完整性、状态安全和人工批准来判断。",
+  "radar.aria": "通用 Agent 失败模式雷达",
+  "radar.kicker": "失败模式雷达",
+  "radar.title": "Agent 真正失败的八个压力点。",
+  "radar.body":
+    "这张雷达把安全分类、AI 风险管理、可观测性和生产可靠性统一成一层 Test Cloud 控制面。",
+  "radar.totalVectors": "风险向量",
+  "radar.liveVectors": "真实覆盖",
+  "radar.blueprintVectors": "蓝图覆盖",
+  "radar.highestPressure": "最高压力",
+  "radar.source": "来源",
+  "radar.control": "控制",
+  "radar.payoff": "价值",
   "research.aria": "研究支撑协议",
   "research.title": "研究支撑协议"
 };
@@ -623,6 +649,68 @@ const universalGateTranslationsZh: Record<string, Pick<UniversalReliabilityGate,
   }
 };
 
+const agentRiskVectorTranslationsZh: Record<
+  string,
+  Pick<AgentRiskVector, "name" | "source" | "failureSignal" | "control" | "productPayoff">
+> = {
+  "instruction-attack": {
+    name: "指令攻击",
+    source: "OWASP 提示注入 + MITRE ATLAS 式对抗行为",
+    failureSignal: "不可信文本试图覆盖策略、目标或复核边界。",
+    control: "把用户内容与可信策略分离，并要求目标一致性证据。",
+    productPayoff: "阻止 Agent 把恶意指令当成操作权限。"
+  },
+  "excessive-agency": {
+    name: "过度代理权",
+    source: "OWASP 过度代理权 + NIST AI RMF 治理闭环",
+    failureSignal: "Agent 执行超出任务、负责人或发布范围的宽泛动作。",
+    control: "把自主性转换为范围闸门、负责人路由和强制发布阻断。",
+    productPayoff: "支撑最强演示主张：AgentGuard 是自主行动的制动系统。"
+  },
+  "tool-misuse": {
+    name: "工具误用",
+    source: "Agent 工具研究 + OpenTelemetry GenAI agent spans",
+    failureSignal: "Agent 使用错误工具、脆弱选择器、危险命令或隐藏工作流路径。",
+    control: "在发布前记录工具边界、命令轨迹和允许变更面。",
+    productPayoff: "把工具轨迹转成 Test Cloud 证据，而不是不可见的 Agent 行为。"
+  },
+  "data-leakage": {
+    name: "数据泄露",
+    source: "OWASP 敏感信息披露 + 隐私治理",
+    failureSignal: "Agent 暴露密钥、私有数据、受监管记录或许可敏感元数据。",
+    control: "用证据完整性、负责人批准和数据边界复核来管控敏感流。",
+    productPayoff: "让企业有理由把非代码 Agent 也交给这套平台治理。"
+  },
+  "evidence-loss": {
+    name: "证据丢失",
+    source: "科学可证伪性 + Test Cloud 证据管理",
+    failureSignal: "Agent 削弱测试、清洗快照、移除遥测或丢失审计轨迹。",
+    control: "把失败证据、产物和复核理由作为一等输出保留下来。",
+    productPayoff: "用证据证明每个放行或阻断判断为什么成立。"
+  },
+  "state-drift": {
+    name: "状态漂移",
+    source: "SRE 发布安全 + 高可靠组织实践",
+    failureSignal: "Agent 不安全地改变外部状态、迁移、缓存、时间边界或发布开关。",
+    control: "对超出本地编辑的状态变更要求可逆路径和状态安全闸门。",
+    productPayoff: "把产品卖点从测试扩展到运营韧性。"
+  },
+  "approval-bypass": {
+    name: "批准绕过",
+    source: "NIST AI RMF 治理 + 零信任发布控制",
+    failureSignal: "Agent 试图在没有具名负责人批准的情况下发布高风险工作。",
+    control: "将高风险决策路由给具名负责人，在批准证据存在前阻断发布。",
+    productPayoff: "让评委、管理者和安全复核人都能看见治理价值。"
+  },
+  "runtime-fragility": {
+    name: "运行脆弱性",
+    source: "边界值测试 + 生产可靠性实践",
+    failureSignal: "Agent 通过快乐路径，却在平台、时间、性能或无障碍边界上失败。",
+    control: "先选择定向边界场景，再按风险扩展到完整回归。",
+    productPayoff: "展示超过安全 buzzword 的工程成熟度。"
+  }
+};
+
 export function isSupportedLocale(value: string | null | undefined): value is Locale {
   return supportedLocales.includes(value as Locale);
 }
@@ -672,6 +760,34 @@ export function formatUniversalGateForLocale(
     ...gate,
     name: localized?.name ?? gate.name,
     question: localized?.question ?? gate.question
+  };
+}
+
+export function formatAgentRiskVectorForLocale(vector: AgentRiskVector, locale: Locale): AgentRiskVector {
+  const localized = locale === "zh" ? agentRiskVectorTranslationsZh[vector.id] : undefined;
+  return {
+    ...vector,
+    name: localized?.name ?? vector.name,
+    source: localized?.source ?? vector.source,
+    failureSignal: localized?.failureSignal ?? vector.failureSignal,
+    control: localized?.control ?? vector.control,
+    productPayoff: localized?.productPayoff ?? vector.productPayoff
+  };
+}
+
+export function formatAgentRiskRadarSummaryForLocale(
+  summary: AgentRiskRadarSummary,
+  locale: Locale
+): AgentRiskRadarSummary {
+  if (locale === "en") {
+    return summary;
+  }
+
+  return {
+    ...summary,
+    coverageLabel: `${summary.liveVectors}/${summary.totalVectors} 个通用向量已被真实场景和蓝图控制覆盖`,
+    highestPressureVector:
+      summary.highestPressureVector === "Excessive Agency" ? "过度代理权" : summary.highestPressureVector
   };
 }
 

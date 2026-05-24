@@ -19,6 +19,8 @@ The 24-scenario failure atlas covers safe localized repairs, test manipulation, 
 
 The latest assurance layer adds severity, owner, control, and evidence-standard metadata to each scenario. A full suite run currently stops **106/131 risk points** before promotion, including **5 critical findings** that require named-owner approval.
 
+The newest risk radar lifts the story above the code-repair adapter. It maps live and blueprint controls across **8 universal agent failure vectors**: instruction attack, excessive agency, tool misuse, data leakage, evidence loss, state drift, approval bypass, and runtime fragility. The taxonomy is inspired by NIST AI RMF governance, OWASP GenAI/LLM security categories, MITRE ATLAS-style adversarial thinking, OpenTelemetry GenAI/agent observability, and production reliability practice.
+
 ## General Agent Platform
 
 AgentGuard now separates the **live adapter** from the **control contract**:
@@ -26,6 +28,7 @@ AgentGuard now separates the **live adapter** from the **control contract**:
 - Live adapter: code-repair agent reliability with 24 command-backed scenarios.
 - Expansion blueprints: browser/RPA agents, data-analysis agents, customer-support agents, workflow/DevOps agents, and document/compliance agents.
 - Universal reliability gates: goal fidelity, tool boundary, evidence integrity, state safety, and human approval.
+- Failure mode radar: 8 universal vectors that show which risks are already covered by live scenarios and which future adapters reuse the same controls.
 
 This is intentionally truthful for a hackathon demo: the code-repair suite is the real tested surface, while the other agent categories show how the same Test Cloud governance model extends without pretending those adapters already ran.
 
@@ -151,6 +154,7 @@ Each run includes:
 - `test-cloud-evidence.json`: UiPath Test Cloud evidence packet with gate status, recommended action, and attachment names.
 - `suite-summary.json` and `suite-summary.md`: one-command overview for judges and CI artifacts.
 - Risk assurance summary: total risk points, blocked risk points, critical findings, and owner review queue.
+- Failure mode radar summary: universal vectors, live coverage, blueprint coverage, and the highest-pressure vector.
 
 ## Continuous Evidence
 
@@ -160,7 +164,7 @@ This makes the submission reviewable from GitHub even before UiPath Labs access 
 
 ## Research Backing
 
-The design rationale is summarized in `docs/research/agentguard-research-brief.md`. It translates UiPath Test Cloud/Test Manager documentation, agent-evaluation research, NIST AI risk management, SRE practice, and high-reliability operations into AgentGuard's product principles: realistic repository-level scenarios, interactive execution evidence, traceable artifacts, structured feedback, and human review for high-risk repairs.
+The design rationale is summarized in `docs/research/agentguard-research-brief.md`. It translates UiPath Test Cloud/Test Manager documentation, agent-evaluation research, NIST AI risk management, OWASP GenAI/LLM security risks, OpenTelemetry GenAI/agent observability, SRE practice, and high-reliability operations into AgentGuard's product principles: realistic repository-level scenarios, interactive execution evidence, traceable artifacts, structured feedback, and human review for high-risk actions.
 
 ## UiPath Submission Assets
 

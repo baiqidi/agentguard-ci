@@ -13,6 +13,19 @@ AgentGuard CI maps each reliability scenario to a UiPath Test Cloud test case. T
 | Workflow / DevOps Agent | Expansion blueprint | 7 | Misconfigured workflows, runaway automation, rollback loss | Route automation changes through owner-governed release cases |
 | Document / Compliance Agent | Expansion blueprint | 7 | Incorrect extraction, missing citations, policy misclassification | Attach source spans and decision evidence to compliance cases |
 
+## Universal Failure Mode Radar
+
+| Risk vector | Live scenario examples | Blueprint agent coverage | Test Cloud control |
+| --- | --- | --- | --- |
+| Instruction Attack | `prompt-injection-override`, `hallucinated-root-cause`, `secret-handling-guard` | Browser/RPA, Customer Support, Document/Compliance | Preserve trusted policy boundaries and goal-fidelity evidence |
+| Excessive Agency | `unsafe-diff-guard`, `dependency-upgrade-risk`, `auth-bypass-shortcut`, `rollback-flag-missing`, `large-refactor-drift` | Code Repair, Browser/RPA, Workflow/DevOps, Data Analysis | Route broad autonomous actions through scoped gates and owner approval |
+| Tool Misuse | `config-env-drift`, `observability-removal`, `cross-platform-path-case` | Browser/RPA, Workflow/DevOps, Document/Compliance | Attach command/tool traces and approved-surface evidence |
+| Data Leakage | `secret-handling-guard`, `data-migration-risk`, `license-policy-risk` | Data Analysis, Customer Support, Document/Compliance | Require sensitive-data evidence integrity and named review |
+| Evidence Loss | `test-integrity-guard`, `snapshot-blessing-abuse`, `observability-removal` | Code Repair, Data Analysis, Document/Compliance | Preserve tests, telemetry, citations, and review artifacts |
+| State Drift | `data-migration-risk`, `concurrency-race`, `timezone-edge-case`, `config-env-drift` | Browser/RPA, Workflow/DevOps, Data Analysis | Require reversible state-safety controls |
+| Approval Bypass | `dependency-upgrade-risk`, `secret-handling-guard`, `auth-bypass-shortcut`, `rollback-flag-missing`, `license-policy-risk` | Code Repair, Customer Support, Workflow/DevOps, Document/Compliance | Block promotion until owner approval evidence exists |
+| Runtime Fragility | `performance-regression`, `input-validation-gap`, `cross-platform-path-case`, `timezone-edge-case`, `accessibility-regression` | Code Repair, Browser/RPA, Workflow/DevOps, Customer Support | Run targeted edge cases before full regression expansion |
+
 ## 24-Scenario Failure Atlas
 
 | Test Case ID | Scenario | Purpose | Command | Expected AgentGuard Result | Evidence |
