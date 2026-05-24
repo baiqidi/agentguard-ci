@@ -1,11 +1,11 @@
 # AgentGuard CI
 
-AgentGuard CI is a UiPath AgentHack Track 3 prototype for testing whether enterprise AI agents are safe enough to run, promote, or route to human review. The command-backed live adapter focuses on code-repair agents: it uses a mixed frontend/backend Issue Tracker as a CI failure playground, then scores whether an agent repaired the failure safely. The broader product is a general AgentGuard control layer for RPA/browser agents, data-analysis agents, support agents, workflow/DevOps agents, and document/compliance agents, now backed by executable live-local adapter scenarios.
+AgentGuard CI is a UiPath AgentHack Track 3 prototype for testing whether enterprise AI agents are safe enough to run, promote, or route to human review. The command-backed live adapter focuses on code-repair agents: it uses a mixed frontend/backend Issue Tracker as a CI failure playground, then scores whether an agent repaired the failure safely. The broader product is a general AgentGuard control layer for RPA/browser, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems, now backed by executable live-local adapter scenarios.
 
 ## Competition Focus
 
 - Track: UiPath Test Cloud
-- Project: General AI-agent reliability firewall, with code-repair agents as the command-backed adapter and five non-code live-local adapters
+- Project: General AI-agent reliability firewall, with code-repair agents as the command-backed adapter and 12 non-code live-local adapters
 - UiPath role: Test Cloud orchestration and governance for repeatable agent reliability scenarios
 - Bonus alignment: demonstrates Codex/coding-agent use in the build and demo workflow
 
@@ -26,10 +26,10 @@ The newest risk radar lifts the story above the code-repair adapter. It maps liv
 AgentGuard now separates the **execution surface** from the **control contract**:
 
 - Command-backed adapter: code-repair agent reliability with 24 scenarios.
-- Live-local adapters: browser/RPA, data-analysis, customer-support, workflow/DevOps, and document/compliance agents.
+- Live-local adapters: browser/RPA, data-analysis, customer-support, workflow/DevOps, document/compliance, email/calendar, finance/procurement, HR/recruiting, CRM/sales, security/SOC, knowledge retrieval, and multi-agent coordination.
 - Universal reliability gates: goal fidelity, tool boundary, evidence integrity, state safety, and human approval.
 - Failure mode radar: 8 universal vectors that show which risks are covered by command-backed and live-local scenarios.
-- Operator workbench: a four-step runbook plus a scenario priority queue that tells a first-time user what to run, what evidence to inspect, and which high-risk scenarios deserve attention first.
+- Operator workbench: a five-step runbook plus a scenario priority queue that tells a first-time user what to run, what evidence to inspect, and which high-risk scenarios deserve attention first.
 
 This is intentionally truthful for a hackathon demo: the code-repair suite runs real repository commands, while the non-code adapters run deterministic local traces and produce Test Cloud evidence. Hosted third-party agent installation is not claimed unless credentials are provided.
 
@@ -101,7 +101,7 @@ Run reliability scenarios:
 npm run agentguard:suite
 ```
 
-Run live-local browser/data/support/workflow/document adapter scenarios:
+Run live-local non-code adapter scenarios:
 
 ```bash
 npm run agentguard:agent-suite
@@ -154,6 +154,7 @@ Build the agent adapter and reliability CLI:
 
 ```bash
 npm run build -w @agentguard/codefix-agent
+npm run build -w @agentguard/agent-adapters
 npm run build -w @agentguard/reliability-core
 ```
 
@@ -174,8 +175,8 @@ Each run includes:
 - `suite-summary.json` and `suite-summary.md`: one-command overview for judges and CI artifacts.
 - Risk assurance summary: total risk points, blocked risk points, critical findings, and owner review queue.
 - Failure mode radar summary: universal vectors, live coverage, live-local coverage, and the highest-pressure vector.
-- Scenario workbench summary: highest-priority live scenarios, executable live-local adapter scenarios, and the remaining expansion candidates for browser/RPA, data, support, workflow, document, and multi-agent cases.
-- Public framework install summary: contract-verified checks for Playwright, LangChain, CrewAI, and AutoGen without claiming hosted credentials.
+- Scenario workbench summary: highest-priority live scenarios, executable live-local adapter scenarios, and the remaining expansion candidates for browser/RPA, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent cases.
+- Public framework install summary: contract-verified checks for Playwright, LangChain, CrewAI, AutoGen, Microsoft Graph, Slack Bolt, Salesforce Agentforce, and n8n without claiming hosted credentials.
 
 ## Continuous Evidence
 
@@ -202,7 +203,7 @@ The design rationale is summarized in `docs/research/agentguard-research-brief.m
 - `apps/web`: React Judge Demo Console and Issue Tracker target UI
 - `packages/reliability-core`: Agent reliability scoring and reporting
 - `packages/codefix-agent`: Demo code-fixing agent adapter
-- `packages/agent-adapters`: Browser, data, support, workflow, and document live-local adapter traces
+- `packages/agent-adapters`: Browser, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent live-local adapter traces
 - `scenarios`: CI failure scenario manifests
 - `uipath`: Test Cloud mapping and runbook
 - `docs/submission`: demo script and deck outline

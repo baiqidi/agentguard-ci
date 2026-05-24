@@ -18,7 +18,7 @@ AgentGuard CI runs a 24-mode command-backed code-repair failure atlas through Ui
 - Scripted code-fixing agent adapter.
 - Reliability core with five gates.
 - Reports: JSON, Markdown, JUnit XML.
-- Browser/data/support/workflow/document live-local adapter suite.
+- Browser/data/support/workflow/document/email/finance/HR/CRM/SOC/knowledge/multi-agent live-local adapter suite.
 - Operator Runbook and Scenario Workbench in the dashboard.
 - UiPath Test Cloud orchestration.
 
@@ -43,7 +43,7 @@ General agent gates:
 ## Slide 6: General Agent Control Layer
 
 - Command-backed adapter: Code Repair Agent, 24 scenarios.
-- Live-local adapters: Browser/RPA Agent, Data Analysis Agent, Customer Support Agent, Workflow/DevOps Agent, Document/Compliance Agent.
+- Live-local adapters: Browser/RPA, Data Analysis, Customer Support, Workflow/DevOps, Document/Compliance, Email/Calendar, Finance/Procurement, HR/Recruiting, CRM/Sales, Security/SOC, Knowledge Retrieval, and Multi-Agent Coordination.
 - Honest positioning: local adapter traces are verified; hosted cloud installation still requires user credentials.
 
 ## Slide 7: Demo Scenarios
@@ -62,7 +62,7 @@ The product is usable without reading the repository: install and test, run `npm
 
 ## Slide 10: Scenario Expansion Backlog
 
-Five live-local scenarios extend coverage beyond code repair today: browser payment approval, data PII query leakage, support refund escalation, workflow production deploy, and document citation gaps. The next backlog adds selector drift, metric definition drift, policy hallucination, secret rotation, policy misclassification, multi-agent peer injection, and missing agent spans.
+Twelve live-local scenarios extend coverage beyond code repair today: browser payment approval, data PII query leakage, support refund escalation, workflow production deploy, document citation gaps, email confidential attachment, finance over-budget PO, HR protected-attribute ranking, CRM discount commitment, SOC blocklist, knowledge-base prompt injection, and multi-agent peer override. The next backlog adds selector drift, metric definition drift, policy hallucination, secret rotation, account ownership drift, alert suppression, stale policy answers, and missing agent spans.
 
 ## Slide 11: Assurance Case
 
@@ -74,7 +74,7 @@ AgentGuard is not only predictive test selection, test observability, CI optimiz
 
 ## Slide 13: UiPath Platform Usage
 
-Test Cloud tracks repeatable agent reliability test cases. Studio Web can execute scenario commands, collect artifacts, and route unsafe behavior to a human reviewer. The command-backed adapter is code repair; live-local adapters cover RPA/browser, data, support, workflow, and document agents.
+Test Cloud tracks repeatable agent reliability test cases. Studio Web can execute scenario commands, collect artifacts, and route unsafe behavior to a human reviewer. The command-backed adapter is code repair; live-local adapters cover RPA/browser, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems.
 
 ## Slide 14: Why It Matters
 
@@ -83,7 +83,7 @@ The project makes AI agents governable: every high-risk action can be tested, sc
 ## Slide 15: Next Steps
 
 - Add live Codex/Cursor/Claude Code adapter.
-- Connect hosted browser/RPA, data-analysis, support, workflow, and document agents with real user credentials.
+- Connect hosted browser/RPA, data-analysis, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems with real user credentials.
 - Add enterprise policy packs for security, compliance, and release governance.
 - Push reports directly into Test Cloud APIs.
 - Add trend analytics for agent reliability over time.

@@ -103,7 +103,7 @@ describe("dashboard internationalization", () => {
           liveVectors: 8,
           blueprintVectors: 8,
           highestPressureVector: "Excessive Agency",
-          coverageLabel: "8/8 universal vectors covered by live and blueprint controls"
+          coverageLabel: "8/8 universal vectors covered by live and local adapter controls"
         },
         "zh"
       ).coverageLabel
