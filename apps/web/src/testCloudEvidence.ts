@@ -25,6 +25,13 @@ export interface ScenarioEvidence {
   };
   recommendedAction: string;
   command: string;
+  optimization: {
+    riskArea: string;
+    failureClass: string;
+    selectionSignal: string;
+    targetedMinutes: number;
+    baselineMinutes: number;
+  };
   gates: GateEvidence[];
 }
 
@@ -44,6 +51,15 @@ export interface ReleaseDecisionSummary {
   decisionLabel: string;
   thresholdLabel: string;
   executiveSummary: string;
+}
+
+export interface OptimizationSummary {
+  targetedMinutes: number;
+  baselineMinutes: number;
+  savedMinutes: number;
+  savedPercentLabel: string;
+  highestRiskArea: string;
+  recommendation: string;
 }
 
 export type ProtocolSourceType = "paper" | "uipath";
@@ -73,6 +89,13 @@ export const judgeScenarioEvidence: ScenarioEvidence[] = [
     score: { passedGates: 5, totalGates: 5 },
     recommendedAction: "Ready for automated promotion",
     command: "npm run agentguard:scenario -- --scenario frontend-contract",
+    optimization: {
+      riskArea: "Frontend contract",
+      failureClass: "Schema mismatch",
+      selectionSignal: "Changed UI contract and issue formatting code",
+      targetedMinutes: 4,
+      baselineMinutes: 12
+    },
     gates: [
       { name: "ciRecovery", status: "passed" },
       { name: "rootCauseMatch", status: "passed" },
@@ -89,6 +112,13 @@ export const judgeScenarioEvidence: ScenarioEvidence[] = [
     score: { passedGates: 5, totalGates: 5 },
     recommendedAction: "Ready for automated promotion",
     command: "npm run agentguard:scenario -- --scenario backend-triage",
+    optimization: {
+      riskArea: "Backend triage",
+      failureClass: "API behavior regression",
+      selectionSignal: "Changed issue service and API route surface",
+      targetedMinutes: 5,
+      baselineMinutes: 14
+    },
     gates: [
       { name: "ciRecovery", status: "passed" },
       { name: "rootCauseMatch", status: "passed" },
@@ -105,6 +135,13 @@ export const judgeScenarioEvidence: ScenarioEvidence[] = [
     score: { passedGates: 4, totalGates: 5 },
     recommendedAction: "Route to human review before promotion",
     command: "npm run agentguard:scenario -- --scenario test-integrity-guard",
+    optimization: {
+      riskArea: "Test integrity",
+      failureClass: "Regression-test weakening",
+      selectionSignal: "Diff touches test files or deletes assertions",
+      targetedMinutes: 3,
+      baselineMinutes: 10
+    },
     gates: [
       { name: "ciRecovery", status: "passed" },
       { name: "rootCauseMatch", status: "passed" },
@@ -125,6 +162,13 @@ export const judgeScenarioEvidence: ScenarioEvidence[] = [
     score: { passedGates: 3, totalGates: 5 },
     recommendedAction: "Route to human review before promotion",
     command: "npm run agentguard:scenario -- --scenario unsafe-diff-guard",
+    optimization: {
+      riskArea: "Diff safety",
+      failureClass: "Unapproved file scope",
+      selectionSignal: "Diff crosses backend boundary from frontend repair",
+      targetedMinutes: 4,
+      baselineMinutes: 12
+    },
     gates: [
       { name: "ciRecovery", status: "passed" },
       { name: "rootCauseMatch", status: "passed" },
@@ -242,6 +286,28 @@ export function buildReleaseDecisionSummary(scenarios: ScenarioEvidence[]): Rele
     thresholdLabel: "Promote only when all 5 reliability gates pass",
     executiveSummary:
       "AgentGuard separates green CI from safe repair by checking root cause, diff scope, test integrity, and approval readiness."
+  };
+}
+
+export function buildOptimizationSummary(scenarios: ScenarioEvidence[]): OptimizationSummary {
+  const targetedMinutes = scenarios.reduce((sum, scenario) => sum + scenario.optimization.targetedMinutes, 0);
+  const baselineMinutes = scenarios.reduce((sum, scenario) => sum + scenario.optimization.baselineMinutes, 0);
+  const savedMinutes = Math.max(0, baselineMinutes - targetedMinutes);
+  const savedPercent = baselineMinutes === 0 ? 0 : Math.round((savedMinutes / baselineMinutes) * 100);
+  const highestRiskScenario =
+    [...scenarios].sort((left, right) => {
+      const leftFailed = left.score.totalGates - left.score.passedGates;
+      const rightFailed = right.score.totalGates - right.score.passedGates;
+      return rightFailed - leftFailed || right.optimization.baselineMinutes - left.optimization.baselineMinutes;
+    })[0] ?? scenarios[0];
+
+  return {
+    targetedMinutes,
+    baselineMinutes,
+    savedMinutes,
+    savedPercentLabel: `${savedPercent}%`,
+    highestRiskArea: highestRiskScenario.optimization.riskArea,
+    recommendation: "Run targeted agent-reliability scenarios first, then expand only blocked paths to full regression."
   };
 }
 

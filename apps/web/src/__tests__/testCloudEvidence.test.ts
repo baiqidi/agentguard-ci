@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   buildConsoleSummary,
+  buildOptimizationSummary,
   buildReleaseDecisionSummary,
   evidenceTone,
   formatGateLabel,
@@ -36,6 +37,17 @@ describe("test cloud evidence view model", () => {
       thresholdLabel: "Promote only when all 5 reliability gates pass",
       executiveSummary:
         "AgentGuard separates green CI from safe repair by checking root cause, diff scope, test integrity, and approval readiness."
+    });
+  });
+
+  it("summarizes performance optimization from targeted scenario selection", () => {
+    expect(buildOptimizationSummary(judgeScenarioEvidence)).toEqual({
+      targetedMinutes: 16,
+      baselineMinutes: 48,
+      savedMinutes: 32,
+      savedPercentLabel: "67%",
+      highestRiskArea: "Diff safety",
+      recommendation: "Run targeted agent-reliability scenarios first, then expand only blocked paths to full regression."
     });
   });
 

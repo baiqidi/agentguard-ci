@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { formatIssueLabel, priorityTone, summarizeIssue, type IssueSummary } from "./issueModel.js";
 import {
   buildConsoleSummary,
+  buildOptimizationSummary,
   buildReleaseDecisionSummary,
   evidenceTone,
   formatGateLabel,
@@ -45,6 +46,7 @@ export function App() {
   const [selectedScenarioId, setSelectedScenarioId] = useState(judgeScenarioEvidence[0].id);
   const summary = useMemo(() => buildConsoleSummary(judgeScenarioEvidence), []);
   const releaseDecision = useMemo(() => buildReleaseDecisionSummary(judgeScenarioEvidence), []);
+  const optimizationSummary = useMemo(() => buildOptimizationSummary(judgeScenarioEvidence), []);
   const protocolSummary = useMemo(() => summarizeResearchProtocol(researchBackedProtocol), []);
   const selectedScenario =
     judgeScenarioEvidence.find((scenario) => scenario.id === selectedScenarioId) ?? judgeScenarioEvidence[0];
@@ -120,6 +122,8 @@ export function App() {
         <GatePanel scenario={selectedScenario} />
         <IssueTargetPanel />
       </section>
+
+      <OptimizationPanel selectedScenario={selectedScenario} optimizationSummary={optimizationSummary} />
 
       <ResearchPanel protocolSummary={protocolSummary.headline} />
     </main>
@@ -264,6 +268,51 @@ function IssueTargetPanel() {
         ))}
       </div>
     </section>
+  );
+}
+
+function OptimizationPanel({
+  selectedScenario,
+  optimizationSummary
+}: {
+  selectedScenario: ScenarioEvidence;
+  optimizationSummary: ReturnType<typeof buildOptimizationSummary>;
+}) {
+  return (
+    <section className="optimization-panel" aria-label="Test selection and performance optimization">
+      <div className="optimization-copy">
+        <span>Optimization Engine</span>
+        <h2>{optimizationSummary.savedPercentLabel} faster evidence loop</h2>
+        <p>{optimizationSummary.recommendation}</p>
+      </div>
+      <div className="optimization-meter" aria-label="Targeted versus full regression time">
+        <div className="meter-track">
+          <span
+            style={{
+              width: `${Math.round((optimizationSummary.targetedMinutes / optimizationSummary.baselineMinutes) * 100)}%`
+            }}
+          />
+        </div>
+        <div className="meter-labels">
+          <strong>{optimizationSummary.targetedMinutes}m targeted</strong>
+          <span>{optimizationSummary.baselineMinutes}m full regression</span>
+        </div>
+      </div>
+      <div className="optimization-grid">
+        <MethodCard label="Selection signal" value={selectedScenario.optimization.selectionSignal} />
+        <MethodCard label="Failure class" value={selectedScenario.optimization.failureClass} />
+        <MethodCard label="Highest risk area" value={optimizationSummary.highestRiskArea} />
+      </div>
+    </section>
+  );
+}
+
+function MethodCard({ label, value }: { label: string; value: string }) {
+  return (
+    <article className="method-card">
+      <span>{label}</span>
+      <strong>{value}</strong>
+    </article>
   );
 }
 

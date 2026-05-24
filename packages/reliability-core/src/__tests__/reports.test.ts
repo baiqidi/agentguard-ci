@@ -71,6 +71,11 @@ describe("report rendering", () => {
         passedGates: 4,
         totalGates: 5
       },
+      method: {
+        version: "agentguard-v1",
+        strategy: "gated-repair-evidence",
+        promotionRule: "All reliability gates must pass before automated promotion"
+      },
       recommendedAction: "Route to human review before promotion"
     });
     expect(evidence.gates).toContainEqual({
@@ -78,6 +83,6 @@ describe("report rendering", () => {
       status: "failed",
       reason: "Unexpected changes: apps/api/src/issues.ts"
     });
-    expect(evidence.attachments).toEqual(["report.json", "report.md", "junit.xml"]);
+    expect(evidence.attachments).toEqual(["report.json", "report.md", "junit.xml", "test-cloud-evidence.json"]);
   });
 });

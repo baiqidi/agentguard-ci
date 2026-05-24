@@ -95,7 +95,8 @@ button {
 .details-grid,
 .trace-band,
 .research-grid,
-.decision-metrics {
+.decision-metrics,
+.optimization-grid {
   display: grid;
   gap: 16px;
 }
@@ -240,7 +241,8 @@ button {
 .evidence-panel,
 .gate-panel,
 .target-panel,
-.research-panel {
+.research-panel,
+.optimization-panel {
   border: 1px solid rgba(0, 0, 0, 0.08);
   background: rgba(255, 255, 255, 0.78);
   box-shadow: 0 22px 62px rgba(0, 0, 0, 0.08);
@@ -292,7 +294,8 @@ button {
 .evidence-panel,
 .gate-panel,
 .target-panel,
-.research-panel {
+.research-panel,
+.optimization-panel {
   border-radius: 8px;
   padding: 20px;
 }
@@ -439,6 +442,100 @@ button {
   border-radius: 8px;
   background: #1d1d1f;
   color: #f5f5f7;
+}
+
+.optimization-panel {
+  display: grid;
+  grid-template-columns: minmax(0, 0.72fr) minmax(320px, 0.52fr);
+  gap: 18px 24px;
+  align-items: center;
+  margin-top: 16px;
+  background:
+    linear-gradient(135deg, rgba(0, 113, 227, 0.1), rgba(52, 199, 89, 0.05)),
+    rgba(255, 255, 255, 0.82);
+}
+
+.optimization-copy span {
+  display: block;
+  color: #0071e3;
+  font-size: 12px;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.optimization-copy h2 {
+  margin: 8px 0 10px;
+  color: #1d1d1f;
+  font-size: clamp(24px, 3.4vw, 36px);
+  line-height: 1.05;
+}
+
+.optimization-copy p {
+  max-width: 620px;
+  margin: 0;
+  color: #6e6e73;
+  line-height: 1.48;
+}
+
+.optimization-meter {
+  display: grid;
+  gap: 12px;
+}
+
+.meter-track {
+  height: 16px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.meter-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #0071e3, #34c759);
+}
+
+.meter-labels {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  color: #6e6e73;
+  font-size: 13px;
+}
+
+.meter-labels strong {
+  color: #1d1d1f;
+}
+
+.optimization-grid {
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.method-card {
+  min-height: 104px;
+  padding: 15px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.method-card span {
+  display: block;
+  color: #86868b;
+  font-size: 11px;
+  font-weight: 760;
+  text-transform: uppercase;
+}
+
+.method-card strong {
+  display: block;
+  margin-top: 10px;
+  color: #1d1d1f;
+  font-size: 15px;
+  line-height: 1.32;
 }
 
 .research-panel {
@@ -589,7 +686,8 @@ button {
   .topbar,
   .console-grid,
   .details-grid,
-  .decision-hero {
+  .decision-hero,
+  .optimization-panel {
     grid-template-columns: 1fr;
   }
 
@@ -606,7 +704,8 @@ button {
   }
 
   .trace-band,
-  .research-grid {
+  .research-grid,
+  .optimization-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
@@ -648,7 +747,8 @@ button {
   }
 
   .trace-band,
-  .research-grid {
+  .research-grid,
+  .optimization-grid {
     grid-template-columns: 1fr;
   }
 
@@ -656,8 +756,14 @@ button {
   .evidence-panel,
   .gate-panel,
   .target-panel,
-  .research-panel {
+  .research-panel,
+  .optimization-panel {
     padding: 14px;
+  }
+
+  .meter-labels {
+    align-items: flex-start;
+    flex-direction: column;
   }
 
   .scenario-row {
@@ -674,7 +780,8 @@ button {
   }
 
   .trace-step,
-  .research-card {
+  .research-card,
+  .method-card {
     min-height: auto;
   }
 }

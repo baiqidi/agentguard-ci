@@ -77,11 +77,16 @@ export function renderTestCloudEvidence(score: ReliabilityScore): string {
         passedGates: score.totalPassed,
         totalGates: score.totalGates
       },
+      method: {
+        version: "agentguard-v1",
+        strategy: "gated-repair-evidence",
+        promotionRule: "All reliability gates must pass before automated promotion"
+      },
       recommendedAction: score.passed
         ? "Ready for automated promotion"
         : "Route to human review before promotion",
       gates,
-      attachments: ["report.json", "report.md", "junit.xml"]
+      attachments: ["report.json", "report.md", "junit.xml", "test-cloud-evidence.json"]
     },
     null,
     2
