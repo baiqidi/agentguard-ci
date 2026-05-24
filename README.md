@@ -1,11 +1,11 @@
 # AgentGuard CI
 
-AgentGuard CI is a UiPath AgentHack Track 3 prototype for testing whether enterprise AI agents are safe enough to run, promote, or route to human review. The current live adapter focuses on code-repair agents: it uses a mixed frontend/backend Issue Tracker as a CI failure playground, then scores whether an agent repaired the failure safely. The broader product is a general AgentGuard control layer for RPA/browser agents, data-analysis agents, support agents, workflow/DevOps agents, and document/compliance agents.
+AgentGuard CI is a UiPath AgentHack Track 3 prototype for testing whether enterprise AI agents are safe enough to run, promote, or route to human review. The command-backed live adapter focuses on code-repair agents: it uses a mixed frontend/backend Issue Tracker as a CI failure playground, then scores whether an agent repaired the failure safely. The broader product is a general AgentGuard control layer for RPA/browser agents, data-analysis agents, support agents, workflow/DevOps agents, and document/compliance agents, now backed by executable live-local adapter scenarios.
 
 ## Competition Focus
 
 - Track: UiPath Test Cloud
-- Project: General AI-agent reliability firewall, with code-repair agents as the first live adapter
+- Project: General AI-agent reliability firewall, with code-repair agents as the command-backed adapter and five non-code live-local adapters
 - UiPath role: Test Cloud orchestration and governance for repeatable agent reliability scenarios
 - Bonus alignment: demonstrates Codex/coding-agent use in the build and demo workflow
 
@@ -19,26 +19,27 @@ The 24-scenario failure atlas covers safe localized repairs, test manipulation, 
 
 The latest assurance layer adds severity, owner, control, and evidence-standard metadata to each scenario. A full suite run currently stops **106/131 risk points** before promotion, including **5 critical findings** that require named-owner approval.
 
-The newest risk radar lifts the story above the code-repair adapter. It maps live and blueprint controls across **8 universal agent failure vectors**: instruction attack, excessive agency, tool misuse, data leakage, evidence loss, state drift, approval bypass, and runtime fragility. The taxonomy is inspired by NIST AI RMF governance, OWASP GenAI/LLM security categories, MITRE ATLAS-style adversarial thinking, OpenTelemetry GenAI/agent observability, and production reliability practice.
+The newest risk radar lifts the story above the code-repair adapter. It maps live and live-local controls across **8 universal agent failure vectors**: instruction attack, excessive agency, tool misuse, data leakage, evidence loss, state drift, approval bypass, and runtime fragility. The taxonomy is inspired by NIST AI RMF governance, OWASP GenAI/LLM security categories, MITRE ATLAS-style adversarial thinking, OpenTelemetry GenAI/agent observability, and production reliability practice.
 
 ## General Agent Platform
 
-AgentGuard now separates the **live adapter** from the **control contract**:
+AgentGuard now separates the **execution surface** from the **control contract**:
 
-- Live adapter: code-repair agent reliability with 24 command-backed scenarios.
-- Expansion blueprints: browser/RPA agents, data-analysis agents, customer-support agents, workflow/DevOps agents, and document/compliance agents.
+- Command-backed adapter: code-repair agent reliability with 24 scenarios.
+- Live-local adapters: browser/RPA, data-analysis, customer-support, workflow/DevOps, and document/compliance agents.
 - Universal reliability gates: goal fidelity, tool boundary, evidence integrity, state safety, and human approval.
-- Failure mode radar: 8 universal vectors that show which risks are already covered by live scenarios and which future adapters reuse the same controls.
+- Failure mode radar: 8 universal vectors that show which risks are covered by command-backed and live-local scenarios.
 - Operator workbench: a four-step runbook plus a scenario priority queue that tells a first-time user what to run, what evidence to inspect, and which high-risk scenarios deserve attention first.
 
-This is intentionally truthful for a hackathon demo: the code-repair suite is the real tested surface, while the other agent categories show how the same Test Cloud governance model extends without pretending those adapters already ran.
+This is intentionally truthful for a hackathon demo: the code-repair suite runs real repository commands, while the non-code adapters run deterministic local traces and produce Test Cloud evidence. Hosted third-party agent installation is not claimed unless credentials are provided.
 
 ## Fastest User Path
 
 1. Install and verify the workspace: `npm install; npm test`.
 2. Run the full reliability suite: `npm run agentguard:suite`.
-3. Review the blocked-risk summary: `agentguard-runs/suite-summary.md`.
-4. Attach evidence through the Test Cloud mapping: `uipath/test-cloud-import.csv`.
+3. Run the non-code agent adapter suite: `npm run agentguard:agent-suite`.
+4. Review the blocked-risk summaries: `agentguard-runs/suite-summary.md` and `agentguard-runs/agent-adapters/agent-adapter-suite-summary.md`.
+5. Attach evidence through the Test Cloud mapping: `uipath/test-cloud-import.csv`.
 
 The dashboard mirrors this same path in the Operator Runbook panel so a judge or teammate can use the product without reverse-engineering the repository.
 
@@ -100,6 +101,12 @@ Run reliability scenarios:
 npm run agentguard:suite
 ```
 
+Run live-local browser/data/support/workflow/document adapter scenarios:
+
+```bash
+npm run agentguard:agent-suite
+```
+
 Or run individual scenarios:
 
 ```bash
@@ -130,6 +137,7 @@ npm run agentguard:scenario -- --scenario nondeterministic-random-fix
 ```
 
 Scenario reports are written to `agentguard-runs/<scenario-id>/`.
+Non-code adapter reports are written to `agentguard-runs/agent-adapters/<scenario-id>/`.
 
 ## Planned Commands
 
@@ -153,6 +161,7 @@ Run reliability scenarios:
 
 ```bash
 npm run agentguard:suite
+npm run agentguard:agent-suite
 ```
 
 Reports are written to `agentguard-runs/<scenario-id>/`.
@@ -164,8 +173,9 @@ Each run includes:
 - `test-cloud-evidence.json`: UiPath Test Cloud evidence packet with gate status, recommended action, and attachment names.
 - `suite-summary.json` and `suite-summary.md`: one-command overview for judges and CI artifacts.
 - Risk assurance summary: total risk points, blocked risk points, critical findings, and owner review queue.
-- Failure mode radar summary: universal vectors, live coverage, blueprint coverage, and the highest-pressure vector.
-- Scenario workbench summary: highest-priority live scenarios and 12 expansion candidates for browser/RPA, data, support, workflow, document, and multi-agent cases.
+- Failure mode radar summary: universal vectors, live coverage, live-local coverage, and the highest-pressure vector.
+- Scenario workbench summary: highest-priority live scenarios, executable live-local adapter scenarios, and the remaining expansion candidates for browser/RPA, data, support, workflow, document, and multi-agent cases.
+- Public framework install summary: contract-verified checks for Playwright, LangChain, CrewAI, and AutoGen without claiming hosted credentials.
 
 ## Continuous Evidence
 
@@ -192,6 +202,7 @@ The design rationale is summarized in `docs/research/agentguard-research-brief.m
 - `apps/web`: React Judge Demo Console and Issue Tracker target UI
 - `packages/reliability-core`: Agent reliability scoring and reporting
 - `packages/codefix-agent`: Demo code-fixing agent adapter
+- `packages/agent-adapters`: Browser, data, support, workflow, and document live-local adapter traces
 - `scenarios`: CI failure scenario manifests
 - `uipath`: Test Cloud mapping and runbook
 - `docs/submission`: demo script and deck outline

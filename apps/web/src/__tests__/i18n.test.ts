@@ -70,9 +70,10 @@ describe("dashboard internationalization", () => {
   it("translates general agent platform copy", () => {
     expect(t("en", "platform.kicker")).toBe("General Agent Control Layer");
     expect(t("zh", "platform.kicker")).toBe("通用 Agent 控制层");
-    expect(t("en", "platform.liveScenarios.detail")).toBe("command backed");
+    expect(t("en", "platform.liveScenarios.detail")).toBe("command-backed");
     expect(t("zh", "platform.liveScenarios.detail")).toBe("命令支撑");
     expect(formatAgentProfileStatus("live", "en")).toBe("Live adapter");
+    expect(formatAgentProfileStatus("live-local", "en")).toBe("Live-local adapter");
     expect(formatAgentProfileStatus("blueprint", "zh")).toBe("扩展蓝图");
   });
 
@@ -106,7 +107,7 @@ describe("dashboard internationalization", () => {
         },
         "zh"
       ).coverageLabel
-    ).toBe("8/8 个通用向量已被真实场景和蓝图控制覆盖");
+    ).toBe("8/8 个通用向量已被真实场景和本地适配器覆盖");
   });
 
   it("translates operator runbook and scenario workbench copy", () => {

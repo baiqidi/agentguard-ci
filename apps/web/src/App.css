@@ -404,6 +404,11 @@ button {
   background: linear-gradient(180deg, rgba(52, 199, 89, 0.08), rgba(255, 255, 255, 0.86));
 }
 
+.agent-profile-card.is-live-local {
+  border-color: rgba(0, 113, 227, 0.26);
+  background: linear-gradient(180deg, rgba(0, 113, 227, 0.07), rgba(255, 255, 255, 0.88));
+}
+
 .agent-profile-heading {
   display: flex;
   align-items: center;
@@ -424,6 +429,11 @@ button {
 .agent-profile-card.is-live .agent-profile-heading span {
   background: rgba(52, 199, 89, 0.16);
   color: #198038;
+}
+
+.agent-profile-card.is-live-local .agent-profile-heading span {
+  background: rgba(0, 113, 227, 0.14);
+  color: #0057b8;
 }
 
 .agent-profile-heading strong {

@@ -98,17 +98,17 @@ const enMessages = {
   "chain.title": "Every claim is backed by commands, reports, and importable Test Cloud rows.",
   "platform.aria": "General agent coverage",
   "platform.kicker": "General Agent Control Layer",
-  "platform.title": "One live adapter, one control contract for every enterprise agent.",
+  "platform.title": "Six validated adapters, one control contract for every enterprise agent.",
   "platform.body":
-    "AgentGuard keeps the code-repair suite as the proven adapter, then applies the same gate contract to RPA, data, support, workflow, and document agents without pretending those blueprints have already run.",
+    "AgentGuard keeps the 24-scenario code-repair suite as the command-backed adapter, then runs live-local traces for RPA, data, support, workflow, and document agents without pretending cloud integrations have already been installed.",
   "platform.liveAdapters": "Live adapters",
   "platform.liveAdapters.detail": "truthful proof",
-  "platform.blueprints": "Expansion blueprints",
-  "platform.blueprints.detail": "adapter roadmap",
+  "platform.blueprints": "Local adapters",
+  "platform.blueprints.detail": "live-local proof",
   "platform.liveScenarios": "Live scenarios",
-  "platform.liveScenarios.detail": "command backed",
-  "platform.blueprintScenarios": "Blueprint scenarios",
-  "platform.blueprintScenarios.detail": "mapped controls",
+  "platform.liveScenarios.detail": "command-backed",
+  "platform.blueprintScenarios": "Local scenarios",
+  "platform.blueprintScenarios.detail": "adapter traces",
   "universal.aria": "Universal reliability gates",
   "universal.kicker": "Universal Gates",
   "universal.title": "The gate vocabulary is no longer code-only.",
@@ -234,17 +234,17 @@ const zhMessages: Record<MessageKey, string> = {
   "chain.title": "每个判断都由命令、报告和可导入 Test Cloud 的行级证据支撑。",
   "platform.aria": "通用 Agent 覆盖范围",
   "platform.kicker": "通用 Agent 控制层",
-  "platform.title": "一个真实适配器，一套覆盖企业 Agent 的控制契约。",
+  "platform.title": "六类已验证适配器，一套覆盖企业 Agent 的控制契约。",
   "platform.body":
-    "AgentGuard 保留代码修复套件作为已验证适配器，再把同一套闸门契约扩展到 RPA、数据、客服、工作流和文档 Agent，同时不把蓝图伪装成已经运行过的真实测试。",
+    "AgentGuard 保留 24 个代码修复场景作为命令级适配器，再用本地真实 trace 验证 RPA、数据、客服、工作流和文档 Agent，同时不把需要账号的云端集成伪装成已安装成功。",
   "platform.liveAdapters": "真实适配器",
   "platform.liveAdapters.detail": "真实证据",
-  "platform.blueprints": "扩展蓝图",
-  "platform.blueprints.detail": "适配路线",
+  "platform.blueprints": "本地适配器",
+  "platform.blueprints.detail": "本地真实验证",
   "platform.liveScenarios": "真实场景",
   "platform.liveScenarios.detail": "命令支撑",
-  "platform.blueprintScenarios": "蓝图场景",
-  "platform.blueprintScenarios.detail": "控制映射",
+  "platform.blueprintScenarios": "本地场景",
+  "platform.blueprintScenarios.detail": "适配 trace",
   "universal.aria": "通用可靠性闸门",
   "universal.kicker": "通用闸门",
   "universal.title": "闸门语言不再只属于代码。",
@@ -653,32 +653,32 @@ const agentProfileTranslationsZh: Record<string, Pick<AgentProfile, "name" | "pr
   "browser-rpa": {
     name: "浏览器 / RPA Agent",
     primaryRisk: "错误 UI 操作、权限漂移和脆弱选择器",
-    testCloudFit: "把 UI 任务重放为带截图和动作轨迹的治理测试用例",
-    proof: "复用目标、工具边界、状态安全和批准闸门"
+    testCloudFit: "把 UI 任务重放为带动作轨迹和批准状态证据的治理测试用例",
+    proof: "本地真实适配器会在外部状态改变前阻断不可逆付款批准"
   },
   "data-analysis": {
     name: "数据分析 Agent",
     primaryRisk: "错误 SQL、隐私暴露和指标口径漂移",
     testCloudFit: "把查询日志、结果差异和复核签名附到测试用例",
-    proof: "证据完整性和状态安全闸门直接映射到分析工作流"
+    proof: "本地真实适配器会在聚合分析请求中识别私有行泄漏"
   },
   "customer-support": {
     name: "客服 Agent",
     primaryRisk: "幻觉政策、危险退款和合规失败",
     testCloudFit: "把对话场景转为通过、复核或阻断的支持测试用例",
-    proof: "目标一致性和人工批准闸门区分答复质量与升级风险"
+    proof: "本地真实适配器会把高额退款路由给经理批准，而不是直接执行"
   },
   "workflow-devops": {
     name: "工作流 / DevOps Agent",
     primaryRisk: "错误工作流、失控自动化和回滚能力丢失",
     testCloudFit: "让自动化变更进入负责人路由的发布治理用例",
-    proof: "工具边界和状态安全闸门保护编排副作用"
+    proof: "本地真实适配器会在缺少回滚和负责人证据时阻断生产工作流执行"
   },
   "document-compliance": {
     name: "文档 / 合规 Agent",
     primaryRisk: "错误抽取、引用缺失和策略误分类",
     testCloudFit: "把来源片段、复核笔记和决策证据附到合规用例",
-    proof: "证据完整性闸门保留从源文档到 Agent 决策的可追溯性"
+    proof: "本地真实适配器会让缺少来源片段的文档摘要无法通过证据闸门"
   }
 };
 
@@ -898,9 +898,15 @@ export function formatToneLabel(tone: EvidenceTone, locale: Locale): string {
 
 export function formatAgentProfileStatus(status: AgentProfileStatus, locale: Locale): string {
   if (locale === "zh") {
-    return status === "live" ? "真实适配器" : "扩展蓝图";
+    if (status === "live") {
+      return "真实适配器";
+    }
+    return status === "live-local" ? "本地真实验证" : "扩展蓝图";
   }
-  return status === "live" ? "Live adapter" : "Expansion blueprint";
+  if (status === "live") {
+    return "Live adapter";
+  }
+  return status === "live-local" ? "Live-local adapter" : "Expansion blueprint";
 }
 
 export function formatAgentProfileForLocale(profile: AgentProfile, locale: Locale): AgentProfile {
@@ -948,7 +954,7 @@ export function formatAgentRiskRadarSummaryForLocale(
 
   return {
     ...summary,
-    coverageLabel: `${summary.liveVectors}/${summary.totalVectors} 个通用向量已被真实场景和蓝图控制覆盖`,
+    coverageLabel: `${summary.liveVectors}/${summary.totalVectors} 个通用向量已被真实场景和本地适配器覆盖`,
     highestPressureVector:
       summary.highestPressureVector === "Excessive Agency" ? "过度代理权" : summary.highestPressureVector
   };

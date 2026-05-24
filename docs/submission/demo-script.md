@@ -8,9 +8,9 @@ AI agents can complete tasks, click through systems, query data, draft support r
 
 ## 0:30-1:00 Product
 
-AgentGuard CI uses UiPath Test Cloud as the governance layer for enterprise AI agents. The live adapter is a code-repair agent benchmark: it runs a 24-mode failure atlas, scores agent behavior across five gates, and outputs JUnit, JSON, Markdown, and a Test Cloud evidence packet.
+AgentGuard CI uses UiPath Test Cloud as the governance layer for enterprise AI agents. The command-backed adapter is a code-repair agent benchmark: it runs a 24-mode failure atlas, scores agent behavior across five gates, and outputs JUnit, JSON, Markdown, and a Test Cloud evidence packet.
 
-The general platform layer shows one live adapter plus expansion blueprints for browser/RPA, data-analysis, customer-support, workflow/DevOps, and document/compliance agents. The new failure-mode radar maps eight universal risk vectors across live and blueprint controls: instruction attack, excessive agency, tool misuse, data leakage, evidence loss, state drift, approval bypass, and runtime fragility. The assurance layer also gives each scenario a severity, named owner, control, and evidence standard. That lets the demo say exactly what risk was stopped and who must review it.
+The general platform layer now shows one command-backed adapter plus five live-local adapters for browser/RPA, data-analysis, customer-support, workflow/DevOps, and document/compliance agents. The new failure-mode radar maps eight universal risk vectors across live and live-local controls: instruction attack, excessive agency, tool misuse, data leakage, evidence loss, state drift, approval bypass, and runtime fragility. The assurance layer also gives each scenario a severity, named owner, control, and evidence standard. That lets the demo say exactly what risk was stopped and who must review it.
 
 ## 1:00-1:45 Demo Target
 
@@ -18,7 +18,7 @@ Show the AgentGuard CI Console:
 
 - Operator Runbook showing the four commands/artifacts needed to use the product.
 - Scenario matrix mapped to UiPath Test Cloud.
-- General Agent Control Layer showing 1 live adapter, 5 expansion blueprints, and the universal gate contract.
+- General Agent Control Layer showing 1 command-backed adapter, 5 live-local adapters, and the universal gate contract.
 - Failure Mode Radar showing eight general agent risk vectors and the highest-pressure vector, Excessive Agency.
 - Scenario Workbench ranking the most dangerous live scenarios and listing the next non-code agent scenarios to add.
 - Failure Atlas covering 24 agent failure modes across 6 reliability domains.
@@ -29,7 +29,7 @@ Show the AgentGuard CI Console:
 - Issue Tracker target used by the reliability scenarios.
 - GitHub Actions workflow that publishes the same evidence artifacts.
 
-Explain that this is the controlled enterprise-style playground used to test one live agent adapter, and that the same gate contract can govern RPA, data, support, workflow, and document agents.
+Explain that this is the controlled enterprise-style playground used to test one command-backed agent adapter plus five live-local agent traces, and that the same gate contract can govern hosted RPA, data, support, workflow, and document agents once credentials are connected.
 
 ## 1:45-2:30 Positive Scenario
 
@@ -37,6 +37,7 @@ Run:
 
 ```bash
 npm run agentguard:suite
+npm run agentguard:agent-suite
 ```
 
 Show:
@@ -48,6 +49,7 @@ Show:
 - Positive scenarios recommend automated promotion.
 - Governance scenarios cover prompt injection, snapshot laundering, test weakening, unsafe diffs, hallucinated root cause, flaky rerun abuse, auth bypass, dependency/license risk, secret handling, workflow drift, accessibility regression, data migration risk, and random workarounds.
 - `suite-summary.md` gives judges a one-page run overview.
+- `agent-adapter-suite-summary.md` gives judges five non-code agent traces and a public framework install-contract summary.
 
 ## 2:30-3:20 Governance Scenario
 
@@ -74,9 +76,9 @@ Show `uipath/test-cloud-matrix.md` and explain:
 - GitHub Actions already produces the same `agentguard-evidence` artifact for repository review.
 - Governance failures are routed to a human reviewer.
 - Codex/coding-agent usage is part of the workflow and bonus alignment.
-- The code-repair adapter is live evidence; the other agent profiles are honest expansion blueprints using the same Test Cloud control model.
+- The code-repair adapter is command-backed evidence; the other agent profiles are live-local evidence using the same Test Cloud control model.
 - The radar ties the pitch to recognized risk language: NIST AI RMF governance, OWASP GenAI security categories, OpenTelemetry-style agent traces, and production reliability controls.
-- The expansion backlog names 12 next tests, including browser payment approval, data PII leakage, support refund escalation, workflow production deploy, document citation gaps, and multi-agent peer injection.
+- The live-local adapter suite already runs browser payment approval, data PII leakage, support refund escalation, workflow production deploy, and document citation gaps; the remaining backlog adds selector drift, metric drift, policy hallucination, secret rotation, policy misclassification, multi-agent peer injection, and missing agent spans.
 
 ## 4:00-4:30 Close
 

@@ -392,7 +392,7 @@ function AgentCoveragePanel({
         />
         <Metric
           label={t(locale, "platform.blueprints")}
-          value={String(coverageSummary.blueprintProfiles)}
+          value={String(coverageSummary.localValidatedProfiles)}
           detail={t(locale, "platform.blueprints.detail")}
         />
         <Metric
@@ -402,7 +402,7 @@ function AgentCoveragePanel({
         />
         <Metric
           label={t(locale, "platform.blueprintScenarios")}
-          value={String(coverageSummary.blueprintScenarioCount)}
+          value={String(coverageSummary.localScenarioCount)}
           detail={t(locale, "platform.blueprintScenarios.detail")}
         />
       </div>
