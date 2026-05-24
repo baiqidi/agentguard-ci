@@ -66,8 +66,10 @@ describe("agent adapter reporting", () => {
 
     expect(markdown).toContain("# AgentGuard Agent Adapter Suite");
     expect(markdown).toContain("| browser-rpa | FAIL | 3/5 |");
-    expect(markdown).toContain("Gate pass rate: **64%**");
-    expect(json).toContain('"liveAgentTypes": 5');
+    expect(markdown).toContain("| knowledge-retrieval | FAIL | 4/5 |");
+    expect(markdown).toContain("Gate pass rate: **65%**");
+    expect(markdown).toContain("8 public frameworks contract-verified across 13 scenario links");
+    expect(json).toContain('"liveAgentTypes": 12');
   });
 
   it("keeps Markdown reports judge-readable", () => {

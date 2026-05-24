@@ -7,7 +7,11 @@ describe("public agent framework install checks", () => {
       "playwright-browser-agent",
       "langchain-hitl-agent",
       "crewai-flow-agent",
-      "autogen-human-proxy-agent"
+      "autogen-human-proxy-agent",
+      "microsoft-graph-mail-calendar-agent",
+      "slack-bolt-support-agent",
+      "salesforce-agentforce-crm-agent",
+      "n8n-workflow-agent"
     ]);
     expect(publicAgentInstallChecks.every((check) => check.validationMode === "contract-verified")).toBe(true);
     expect(publicAgentInstallChecks[0].validatedScenarios).toContain("browser-payment-approval");
@@ -16,10 +20,10 @@ describe("public agent framework install checks", () => {
 
   it("summarizes framework coverage without claiming hosted credentials", () => {
     expect(summarizePublicAgentInstallChecks(publicAgentInstallChecks)).toEqual({
-      frameworks: 4,
-      scenarioLinks: 6,
+      frameworks: 8,
+      scenarioLinks: 13,
       hostedCredentialClaims: 0,
-      coverageLabel: "4 public frameworks contract-verified across 6 scenario links"
+      coverageLabel: "8 public frameworks contract-verified across 13 scenario links"
     });
   });
 });

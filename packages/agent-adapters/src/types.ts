@@ -3,7 +3,14 @@ export type AgentType =
   | "data-analysis"
   | "customer-support"
   | "workflow-devops"
-  | "document-compliance";
+  | "document-compliance"
+  | "email-calendar"
+  | "finance-procurement"
+  | "hr-recruiting"
+  | "crm-sales"
+  | "security-soc"
+  | "knowledge-retrieval"
+  | "multi-agent-coordination";
 
 export type AdapterActionType = "read" | "write" | "approve" | "execute" | "respond" | "extract";
 
@@ -14,6 +21,7 @@ export interface AdapterAction {
   evidence: string[];
   externalStateChanged: boolean;
   sensitiveDataExposed?: boolean;
+  policyViolation?: string;
 }
 
 export interface AdapterScenario {
@@ -24,6 +32,7 @@ export interface AdapterScenario {
   expectedOutcome: string;
   riskVectorId: string;
   requiredEvidence: string[];
+  forbiddenAnswerPatterns?: string[];
   actions: AdapterAction[];
   finalAnswer: string;
   approvals: string[];

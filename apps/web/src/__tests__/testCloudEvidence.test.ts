@@ -168,17 +168,24 @@ describe("test cloud evidence view model", () => {
       "data-analysis",
       "customer-support",
       "workflow-devops",
-      "document-compliance"
+      "document-compliance",
+      "email-calendar",
+      "finance-procurement",
+      "hr-recruiting",
+      "crm-sales",
+      "security-soc",
+      "knowledge-retrieval",
+      "multi-agent-coordination"
     ]);
     expect(summarizeAgentCoverage(agentProfiles)).toEqual({
-      totalProfiles: 6,
+      totalProfiles: 13,
       liveProfiles: 1,
-      localValidatedProfiles: 5,
+      localValidatedProfiles: 12,
       blueprintProfiles: 0,
       liveScenarioCount: 24,
-      localScenarioCount: 5,
+      localScenarioCount: 12,
       blueprintScenarioCount: 0,
-      coverageLabel: "1 live adapter + 5 live-local adapters"
+      coverageLabel: "1 live adapter + 12 live-local adapters"
     });
   });
 
@@ -191,7 +198,9 @@ describe("test cloud evidence view model", () => {
       "human-approval"
     ]);
     expect(universalReliabilityGates[1].appliesTo).toContain("browser-rpa");
+    expect(universalReliabilityGates[1].appliesTo).toContain("security-soc");
     expect(universalReliabilityGates[2].appliesTo).toContain("data-analysis");
+    expect(universalReliabilityGates[2].appliesTo).toContain("knowledge-retrieval");
   });
 
   it("summarizes universal agent failure mode radar coverage", () => {
@@ -210,7 +219,7 @@ describe("test cloud evidence view model", () => {
       liveVectors: 8,
       blueprintVectors: 8,
       highestPressureVector: "Excessive Agency",
-      coverageLabel: "8/8 universal vectors covered by live and blueprint controls"
+      coverageLabel: "8/8 universal vectors covered by live and local adapter controls"
     });
   });
 
@@ -218,12 +227,17 @@ describe("test cloud evidence view model", () => {
     expect(operatorWorkflowSteps.map((step) => step.id)).toEqual([
       "install",
       "run-suite",
+      "run-agent-suite",
       "review-evidence",
       "import-test-cloud"
     ]);
     expect(operatorWorkflowSteps[1]).toMatchObject({
       command: "npm run agentguard:suite",
       artifact: "agentguard-runs/suite-summary.md"
+    });
+    expect(operatorWorkflowSteps[2]).toMatchObject({
+      command: "npm run agentguard:agent-suite",
+      artifact: "agentguard-runs/agent-adapters/agent-adapter-suite-summary.md"
     });
   });
 
@@ -249,29 +263,30 @@ describe("test cloud evidence view model", () => {
   it("summarizes expansion scenarios for non-code agent coverage", () => {
     const analysis = buildScenarioAnalysis(judgeScenarioEvidence, scenarioRiskProfiles, agentRiskVectors);
 
-    expect(scenarioExpansionCandidates).toHaveLength(12);
+    expect(scenarioExpansionCandidates).toHaveLength(13);
     expect(scenarioExpansionCandidates.map((candidate) => candidate.agentProfileId)).toEqual([
       "browser-rpa",
-      "browser-rpa",
-      "data-analysis",
       "data-analysis",
       "customer-support",
-      "customer-support",
-      "workflow-devops",
       "workflow-devops",
       "document-compliance",
-      "document-compliance",
-      "browser-rpa",
-      "workflow-devops"
+      "multi-agent-coordination",
+      "workflow-devops",
+      "email-calendar",
+      "finance-procurement",
+      "hr-recruiting",
+      "crm-sales",
+      "security-soc",
+      "document-compliance"
     ]);
     expect(summarizeScenarioWorkbench(analysis, scenarioExpansionCandidates)).toEqual({
       liveScenarioCount: 24,
       criticalLiveScenarios: 5,
-      expansionCandidateCount: 12,
-      criticalExpansionCandidates: 6,
+      expansionCandidateCount: 13,
+      criticalExpansionCandidates: 5,
       firstRunCommand: "npm run agentguard:suite",
       topLiveScenarioId: "auth-bypass-shortcut",
-      topExpansionCandidateId: "browser-payment-approval"
+      topExpansionCandidateId: "finance-duplicate-payment-release"
     });
   });
 });
