@@ -2,6 +2,10 @@
 
 AgentGuard CI is a UiPath AgentHack Track 3 prototype for testing whether enterprise AI agents are safe enough to run, promote, or route to human review. The command-backed live adapter focuses on code-repair agents: it uses a mixed frontend/backend Issue Tracker as a CI failure playground, then scores whether an agent repaired the failure safely. The broader product is a general AgentGuard control layer for RPA/browser, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems, now backed by executable live-local adapter scenarios.
 
+Public repository: https://github.com/baiqidi/agentguard-ci
+
+License: MIT, covering the original AgentGuard CI solution code in this repository.
+
 ## Competition Focus
 
 - Track: UiPath Test Cloud
@@ -193,9 +197,19 @@ The design rationale is summarized in `docs/research/agentguard-research-brief.m
 - `uipath/test-cloud-matrix.md`: Test Cloud case mapping.
 - `uipath/studio-web-runbook.md`: orchestration runbook.
 - `uipath/test-cloud-import.csv`: import-friendly case list.
+- `docs/submission/devpost-submission-copy.md`: ready-to-paste Devpost copy.
+- `docs/submission/no-labs-submission-status.md`: honest review path while UiPath Labs access is pending.
+- `docs/submission/local-validation-report.md`: local validation checklist and latest expected evidence.
 - `docs/submission/demo-script.md`: five-minute demo script.
+- `docs/submission/demo-video-production-plan.md`: shot list and upload checklist for the required public demo video.
 - `docs/submission/deck-outline.md`: presentation outline.
 - `docs/submission/scenario-expansion-backlog.md`: scenario backlog for the next non-code agent adapters.
+
+Run the submission readiness gate after generating evidence:
+
+```bash
+npm run submission:check
+```
 
 ## Project Layout
 
