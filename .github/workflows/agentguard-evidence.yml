@@ -39,6 +39,9 @@ jobs:
       - name: Run agent adapter suite
         run: npm run agentguard:agent-suite
 
+      - name: Check submission readiness
+        run: npm run submission:check
+
       - name: Upload AgentGuard evidence
         uses: actions/upload-artifact@v5
         with:

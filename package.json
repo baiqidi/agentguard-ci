@@ -14,7 +14,8 @@
     "agentguard:scenario": "node packages/reliability-core/dist/cli.js",
     "agentguard:suite": "node packages/reliability-core/dist/suite-cli.js",
     "agentguard:agent-scenario": "node packages/agent-adapters/dist/cli.js",
-    "agentguard:agent-suite": "node packages/agent-adapters/dist/suite-cli.js"
+    "agentguard:agent-suite": "node packages/agent-adapters/dist/suite-cli.js",
+    "submission:check": "node scripts/verify-submission-readiness.mjs"
   },
   "devDependencies": {
     "@types/node": "^24.10.1",
