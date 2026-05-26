@@ -211,6 +211,12 @@ Run the submission readiness gate after generating evidence:
 npm run submission:check
 ```
 
+Multi-hackathon packaging lives in `docs/hackathons/`. It ranks realistic alternate contests, records the Google Cloud eligibility warning for China-resident solo submissions, and gives contest-specific submission angles. Validate it with:
+
+```bash
+npm run hackathons:check
+```
+
 ## Project Layout
 
 - `apps/api`: Express Issue Tracker API

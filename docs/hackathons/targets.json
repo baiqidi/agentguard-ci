@@ -1,0 +1,98 @@
+[
+  {
+    "id": "uipath-agenthack",
+    "name": "UiPath AgentHack",
+    "tier": "primary",
+    "status": "active",
+    "deadline": "2026-06-29 23:45 PDT",
+    "urgency": "medium",
+    "eligibility": "pending-labs-access",
+    "fitScore": 93,
+    "prizeStrategy": "Keep as the main submission because AgentGuard CI was designed around Test Cloud governance.",
+    "agentguardAngle": "AI-agent reliability firewall governed through UiPath Test Cloud evidence.",
+    "requiredDelta": "Add Labs URL, public demo video URL, and public deck URL when available.",
+    "sourceUrls": [
+      "https://uipath-agenthack.devpost.com/rules"
+    ]
+  },
+  {
+    "id": "sans-find-evil",
+    "name": "FIND EVIL! - SANS AI Incident Response Hackathon",
+    "tier": "active-alternate",
+    "status": "active",
+    "deadline": "2026-06-15",
+    "urgency": "high",
+    "eligibility": "appears-viable-with-standard-sanctions-caveat",
+    "fitScore": 86,
+    "prizeStrategy": "Strong technical target for security credibility and a focused incident-response story.",
+    "agentguardAngle": "Reliability gate for autonomous incident-response agents so they can triage and report without taking unsafe containment actions.",
+    "requiredDelta": "Add two SOC-specific scenarios: evidence-preserving triage and approval-gated containment.",
+    "sourceUrls": [
+      "https://www.sans.org/blog/sans-launches-first-hackathon-autonomous-incident-response"
+    ]
+  },
+  {
+    "id": "tencent-cloud-ai-agent",
+    "name": "腾讯云黑客松 AI 智能体争霸赛",
+    "tier": "active-alternate",
+    "status": "active",
+    "deadline": "2026-09-18",
+    "urgency": "low",
+    "eligibility": "china-friendly",
+    "fitScore": 88,
+    "prizeStrategy": "Best long-run China-accessible prize path with enough time to localize the product and add Chinese enterprise cases.",
+    "agentguardAngle": "企业智能体上线前可靠性评测与治理平台，覆盖代码、客服、知识库、流程、财务、HR、CRM 与安全场景。",
+    "requiredDelta": "Chinese landing copy, Tencent Cloud deployment story, and two China-enterprise demo scenarios.",
+    "sourceUrls": [
+      "https://tch.cloud.tencent.com/"
+    ]
+  },
+  {
+    "id": "hack-nation-global-ai",
+    "name": "Hack-Nation Global AI Hackathon",
+    "tier": "active-alternate",
+    "status": "active",
+    "deadline": "2026-07-19",
+    "urgency": "medium",
+    "eligibility": "appears-viable",
+    "fitScore": 78,
+    "prizeStrategy": "Use as a startup-style track where AgentGuard can be positioned as agent governance infrastructure.",
+    "agentguardAngle": "A venture-ready reliability layer for teams deploying AI agents into real business workflows.",
+    "requiredDelta": "Sharper venture deck, pricing hypothesis, and hosted demo narrative.",
+    "sourceUrls": [
+      "https://hack-nation.ai/global-ai-hackathon"
+    ]
+  },
+  {
+    "id": "devnetwork-ai-ml-2026",
+    "name": "DevNetwork AI + ML Hackathon 2026",
+    "tier": "opportunistic",
+    "status": "active",
+    "deadline": "2026-05-28 10:00 PDT",
+    "urgency": "critical",
+    "eligibility": "appears-viable-but-deadline-tight",
+    "fitScore": 62,
+    "prizeStrategy": "Submit only if the existing UiPath package can be reused with minimal changes before the deadline.",
+    "agentguardAngle": "General AI/ML reliability tool that evaluates agent behavior before deployment.",
+    "requiredDelta": "One generic DevNetwork submission page, short demo video reuse, and no new product build.",
+    "sourceUrls": [
+      "https://devnetwork-ai-ml-hack-2026.devpost.com/"
+    ]
+  },
+  {
+    "id": "google-cloud-rapid-agent",
+    "name": "Google Cloud Rapid Agent Hackathon",
+    "tier": "study-only",
+    "status": "not-current-prize-target",
+    "deadline": "2026-06-11 14:00 PDT",
+    "urgency": "medium",
+    "eligibility": "not-eligible-for-china-resident-solo-submission",
+    "fitScore": 0,
+    "prizeStrategy": "Do not spend primary build time here unless eligibility changes or a qualified teammate leads the submission.",
+    "agentguardAngle": "Useful inspiration for AgentGuard as a Gemini/Google Cloud agent reliability gate, but not a current prize target for this solo China-resident path.",
+    "requiredDelta": "Eligibility confirmation before any submission work.",
+    "sourceUrls": [
+      "https://rapid-agent.devpost.com/rules"
+    ]
+  }
+]
