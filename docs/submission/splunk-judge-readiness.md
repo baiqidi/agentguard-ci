@@ -21,7 +21,7 @@ Source: https://splunk.devpost.com/rules
 | Installable Splunk artifact | Companion app package extracts cleanly with no missing files | `agentguard-runs/splunk-app/install-smoke-report.json` |
 | English materials | Splunk submission copy, README, testing instructions, and video plan are in English | `README.md`, `docs/submission/` |
 | Significant update after submission period start | Splunk SOC routes, companion app, CI checks, and presentation UI added after May 18, 2026 | `docs/submission/splunk-significant-updates.md` |
-| Official Splunk tooling | GitHub Actions pins Python 3.12 before installing Splunk Packaging Toolkit and AppInspect | `.github/workflows/splunk-companion-app.yml` |
+| Official Splunk tooling | GitHub Actions pins Python 3.9 before installing Splunk Packaging Toolkit and AppInspect | `.github/workflows/splunk-companion-app.yml` |
 
 ## Judging Score Map
 
@@ -42,7 +42,7 @@ Source: https://splunk.devpost.com/rules
 | Claims are hard to verify | Judges may rely on text/video only and skip local setup | Presentation deep links, machine-readable evidence, root architecture diagram, verifier script |
 | UI feels like a report instead of a product | Design is an equally weighted criterion | Presentation mode, compact judge route, interactive review desk, mobile QA |
 | Splunk app feels aspirational | A mock app would weaken technical implementation | Packaged companion app tgz, clean extraction report, and alert-action fixture execution |
-| Official Splunk tools fail locally on Python 3.14 | Packaging Toolkit 1.0.1 imports Python's removed `imp` module | CI pins Python 3.12; local smoke test still validates package structure and alert action |
+| Official Splunk tools fail locally on Python 3.14 | Packaging Toolkit 1.0.1 imports legacy `collections.Mapping` and `imp` APIs | CI pins Python 3.9; local smoke test still validates package structure and alert action |
 
 ## Final Submit Stop List
 
@@ -52,7 +52,7 @@ Do not click final submit until all are true:
 - `npm run build` passes.
 - `npm run splunk:check` passes.
 - `agentguard-runs/splunk-app/install-smoke-report.json` has `missingFiles: []`.
-- GitHub Actions uses Python 3.12 for official Splunk Packaging Toolkit and AppInspect.
+- GitHub Actions uses Python 3.9 for official Splunk Packaging Toolkit and AppInspect.
 - Public GitHub repository is updated with the Splunk-specific version.
 - Demo video is public and under three minutes.
 - Devpost text uses `docs/submission/splunk-submission-copy.md` as the source of truth.

@@ -34,7 +34,7 @@ npm run splunk:check
 | Public framework checks | 12 contract-verified checks, 2 deployment-validated Splunk surfaces, 0 hosted credential claims |
 | Submission readiness | 32 checks pass for required repository, docs, license, scripts, and evidence files |
 | Splunk readiness | Self-generating `npm run splunk:check` passes with 19 companion-app checks and 34 submission checks |
-| Official Splunk CLI note | GitHub Actions pins Python 3.12; local Python 3.14 cannot run Splunk Packaging Toolkit 1.0.1 because the tool imports Python's removed `imp` module |
+| Official Splunk CLI note | GitHub Actions pins Python 3.9; local Python 3.14 cannot run Splunk Packaging Toolkit 1.0.1 because the tool imports legacy `collections.Mapping` and `imp` APIs |
 
 ## Generated Evidence Paths
 

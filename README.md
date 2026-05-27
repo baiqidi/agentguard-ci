@@ -257,7 +257,7 @@ npm run splunk:app:check
 
 That command packages the companion app, executes the custom alert-action fixture, extracts the packaged `.tgz` into a clean install directory, and writes `agentguard-runs/splunk-app/install-smoke-report.json`.
 
-Official Splunk Packaging Toolkit and AppInspect validation is pinned to Python 3.12 in `.github/workflows/splunk-companion-app.yml`. Python 3.14 is not compatible with Splunk Packaging Toolkit 1.0.1 because that tool still imports Python's removed `imp` module.
+Official Splunk Packaging Toolkit and AppInspect validation is pinned to Python 3.9 in `.github/workflows/splunk-companion-app.yml`. Splunk Packaging Toolkit 1.0.1 still imports legacy Python APIs such as `collections.Mapping` and `imp`, so newer local Python runtimes such as 3.14 are not used for the official SLIM packaging step.
 
 Prepare the Splunk demo video assets without recording:
 

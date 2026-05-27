@@ -250,15 +250,18 @@ if (existsSync(join(root, ".github/workflows/splunk-companion-app.yml"))) {
     workflow.includes("actions/setup-node@v4") &&
     workflow.includes("actions/setup-python@v5") &&
     workflow.includes("actions/upload-artifact@v4") &&
-    workflow.includes('python-version: "3.12"') &&
+    workflow.includes('python-version: "3.9"') &&
     workflow.includes("splunk-appinspect") &&
-    workflow.includes("splunk-packaging-toolkit")
+    workflow.includes("splunk-packaging-toolkit") &&
+    workflow.includes("--output-dir agentguard-runs/splunk-official") &&
+    !workflow.includes("--output-directory") &&
+    workflow.includes("agentguard-runs/splunk-official/*.tar.gz")
   ) {
     pass("workflow:splunk-companion-app");
   } else {
     fail(
       "workflow:splunk-companion-app",
-      "Splunk companion workflow must use stable GitHub Actions, pin Python 3.12, and install AppInspect and Packaging Toolkit."
+      "Splunk companion workflow must use stable GitHub Actions, pin Python 3.9 for Splunk Packaging Toolkit 1.0.1, install Splunk tools, package with SLIM --output-dir, and AppInspect the official .tar.gz output."
     );
   }
 }

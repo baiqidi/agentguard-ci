@@ -12,6 +12,17 @@ afterEach(async () => {
 });
 
 describe("Splunk companion app", () => {
+  it("uses the official SLIM output-dir flag and AppInspects the SLIM package", async () => {
+    const workflow = await readFile(".github/workflows/splunk-companion-app.yml", "utf8");
+
+    expect(workflow).toContain('python-version: "3.9"');
+    expect(workflow).not.toContain('python-version: "3.12"');
+    expect(workflow).toContain("--output-dir agentguard-runs/splunk-official");
+    expect(workflow).not.toContain("--output-directory");
+    expect(workflow).toContain("agentguard-runs/splunk-official/*.tar.gz");
+    expect(workflow).not.toContain("splunk-app/agentguard_ci_for_splunk.tgz --mode test");
+  });
+
   it("converts a saved-search alert payload into an AgentGuard review envelope", async () => {
     const outputDir = await mkdtemp(join(tmpdir(), "agentguard-splunk-app-"));
     tempDirs.push(outputDir);
