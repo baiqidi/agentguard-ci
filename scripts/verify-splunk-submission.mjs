@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const root = process.cwd();
@@ -26,6 +26,7 @@ const requiredFiles = [
   "docs/submission/splunk-judge-readiness.md",
   "docs/submission/splunk-demo-script.md",
   "docs/submission/splunk-demo-video-plan.md",
+  "docs/submission/AgentGuard-CI-Splunk-Demo.mp4",
   ".github/workflows/splunk-companion-app.yml",
   "splunk-apps/agentguard_ci_for_splunk/default/app.conf",
   "splunk-apps/agentguard_ci_for_splunk/default/savedsearches.conf",
@@ -128,6 +129,8 @@ if (existsSync(join(root, "docs/submission/splunk-judge-readiness.md"))) {
 
 if (existsSync(join(root, "docs/submission/splunk-demo-video-plan.md"))) {
   const videoPlan = read("docs/submission/splunk-demo-video-plan.md");
+  const publicVideoUrl =
+    "https://github.com/baiqidi/agentguard-ci/raw/main/docs/submission/AgentGuard-CI-Splunk-Demo.mp4";
   const requiredRoutes = [
     "page=overview&present=1",
     "page=scenarios&soc=security-soc-alert-suppression&present=1",
@@ -140,6 +143,7 @@ if (existsSync(join(root, "docs/submission/splunk-demo-video-plan.md"))) {
     videoPlan.includes("under 3 minutes") &&
     videoPlan.includes("2:35-2:55") &&
     videoPlan.includes("install-smoke-report.json") &&
+    videoPlan.includes(publicVideoUrl) &&
     missingRoutes.length === 0
   ) {
     pass("video-plan:three-minute-route");
@@ -150,6 +154,15 @@ if (existsSync(join(root, "docs/submission/splunk-demo-video-plan.md"))) {
         missingRoutes.join(", ") || "none"
       }`
     );
+  }
+}
+
+if (existsSync(join(root, "docs/submission/AgentGuard-CI-Splunk-Demo.mp4"))) {
+  const videoBytes = statSync(join(root, "docs/submission/AgentGuard-CI-Splunk-Demo.mp4")).size;
+  if (videoBytes > 1_000_000) {
+    pass("public-video:committed-mp4", `${videoBytes} bytes`);
+  } else {
+    fail("public-video:committed-mp4", `Committed demo video is unexpectedly small: ${videoBytes} bytes.`);
   }
 }
 

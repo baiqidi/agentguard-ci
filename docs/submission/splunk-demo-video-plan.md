@@ -73,6 +73,12 @@ npm run video:check:splunk
 
 This gate checks the MP4 duration, audio stream, minimum resolution, seven-scene product route list, scene-aligned audio manifest, and clean judge-facing narration text. Keep it separate from `npm run splunk:check`; video recording needs a running local web app, while the submission packet check should remain clone-friendly.
 
+The public submission copy of the current recording is committed at:
+
+```text
+https://github.com/baiqidi/agentguard-ci/raw/main/docs/submission/AgentGuard-CI-Splunk-Demo.mp4
+```
+
 ## Narration Rules
 
 - Speak to judges, not to internal developers.

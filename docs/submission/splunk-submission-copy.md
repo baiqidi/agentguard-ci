@@ -48,6 +48,10 @@ AgentGuard gives teams a repeatable way to verify that before an agent is promot
 
 ## Demo Notes
 
+Public demo video:
+
+https://github.com/baiqidi/agentguard-ci/raw/main/docs/submission/AgentGuard-CI-Splunk-Demo.mp4
+
 The demo video is designed to stay under 3 minutes and show:
 
 1. the problem,

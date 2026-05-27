@@ -286,6 +286,12 @@ npm run video:check:splunk
 
 The video check validates the generated MP4 duration, audio stream, resolution, seven-scene product route list, scene-aligned narration audio, and judge-facing narration text. It is separate from `npm run splunk:check` because recording requires the local web app to be running.
 
+Public Splunk demo video URL for submission forms:
+
+```text
+https://github.com/baiqidi/agentguard-ci/raw/main/docs/submission/AgentGuard-CI-Splunk-Demo.mp4
+```
+
 Splunk-specific submission assets live in:
 
 - `docs/submission/splunk-submission-copy.md`
@@ -293,6 +299,7 @@ Splunk-specific submission assets live in:
 - `docs/submission/splunk-judge-readiness.md`
 - `docs/submission/splunk-demo-script.md`
 - `docs/submission/splunk-demo-video-plan.md`
+- `docs/submission/AgentGuard-CI-Splunk-Demo.mp4`
 - `agentguard-runs/splunk-app/install-smoke-report.json`
 - `splunk-apps/agentguard_ci_for_splunk/`
 - `.github/workflows/splunk-companion-app.yml`

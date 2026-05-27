@@ -1,5 +1,4 @@
-import ffmpeg from "@ffmpeg-installer/ffmpeg";
-import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
@@ -17,12 +16,20 @@ async function createFixture() {
   tempDirs.push(outputDir);
   await mkdir(outputDir, { recursive: true });
 
-  const shotList = Array.from({ length: 7 }, (_, index) => ({
-    time: `0:${(index * 0.2).toFixed(1)}-0:${((index + 1) * 0.2).toFixed(1)}`,
-    name: `Scene ${index + 1}`,
+  const shotList = [
+    ["0:00-0:20", "Opening problem"],
+    ["0:20-0:42", "Command-backed decision"],
+    ["0:42-1:12", "SOC mission desk"],
+    ["1:12-1:42", "Splunk tool surfaces"],
+    ["1:42-2:10", "Companion app delivery"],
+    ["2:10-2:38", "Blocked evidence case"],
+    ["2:38-2:55", "Closing value"]
+  ].map(([time, name], index) => ({
+    time,
+    name,
     url: `http://localhost:5190/?contest=splunk&lang=en&page=scene-${index + 1}&present=1`,
     focus: ".app-shell",
-    narration: `Scene ${index + 1} explains a Splunk review gate with concrete evidence.`
+    narration: `Scene ${index + 1} explains AgentGuard for Splunk SOC as a review gate for AI security agents, with concrete evidence, owner routing, and a clear promote, review, or block decision for judges.`
   }));
 
   await writeFile(join(outputDir, "shot-list.json"), `${JSON.stringify(shotList, null, 2)}\n`);
@@ -32,15 +39,15 @@ async function createFixture() {
     `${JSON.stringify(
       {
         status: "audio-generated",
-        targetDurationSeconds: 1.4,
-        durationSeconds: 1.4,
+        targetDurationSeconds: 175,
+        durationSeconds: 175,
         segments: shotList.map((shot, index) => ({
           id: `scene-${String(index + 1).padStart(2, "0")}`,
           time: shot.time,
           name: shot.name,
-          targetSeconds: 0.2,
-          spokenSeconds: 0.1,
-          paddedSeconds: 0.1,
+          targetSeconds: 20,
+          spokenSeconds: 18,
+          paddedSeconds: 2,
           text: join(outputDir, `scene-${index + 1}.txt`),
           audio: join(outputDir, `scene-${index + 1}.wav`)
         }))
@@ -54,33 +61,10 @@ async function createFixture() {
     `${JSON.stringify({ generatedAt: "2026-05-27T00:00:00.000Z", scenes: 7 }, null, 2)}\n`
   );
 
-  const mp4Path = join(outputDir, "AgentGuard-CI-Splunk-Demo.mp4");
-  const ffmpegResult = spawnSync(
-    ffmpeg.path,
-    [
-      "-y",
-      "-f",
-      "lavfi",
-      "-i",
-      "testsrc=size=320x240:rate=5",
-      "-f",
-      "lavfi",
-      "-i",
-      "anullsrc=channel_layout=stereo:sample_rate=44100",
-      "-t",
-      "1.4",
-      "-c:v",
-      "libx264",
-      "-pix_fmt",
-      "yuv420p",
-      "-c:a",
-      "aac",
-      "-shortest",
-      mp4Path
-    ],
-    { encoding: "utf8" }
+  await copyFile(
+    "docs/submission/AgentGuard-CI-Splunk-Demo.mp4",
+    join(outputDir, "AgentGuard-CI-Splunk-Demo.mp4")
   );
-  expect(ffmpegResult.status).toBe(0);
 
   return outputDir;
 }
@@ -93,12 +77,7 @@ describe("Splunk demo video verifier", () => {
       encoding: "utf8",
       env: {
         ...process.env,
-        AGENTGUARD_SPLUNK_VIDEO_DIR: outputDir,
-        AGENTGUARD_SPLUNK_VIDEO_MIN_SECONDS: "1",
-        AGENTGUARD_SPLUNK_VIDEO_MAX_SECONDS: "2",
-        AGENTGUARD_SPLUNK_VIDEO_MIN_WIDTH: "300",
-        AGENTGUARD_SPLUNK_VIDEO_MIN_HEIGHT: "200",
-        AGENTGUARD_SPLUNK_VIDEO_MIN_BYTES: "1000"
+        AGENTGUARD_SPLUNK_VIDEO_DIR: outputDir
       }
     });
 
