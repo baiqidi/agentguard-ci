@@ -49,7 +49,7 @@ AgentGuard generalizes the live code-repair benchmark into five universal gates:
 | State Safety | Did the agent avoid unsafe external state changes or provide a reversible path? | Code, RPA, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, multi-agent |
 | Human Approval | Are high-risk actions routed to a named owner before promotion or execution? | Code, RPA, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, multi-agent |
 
-The current implementation proves the contract with a command-backed Code Repair Agent adapter and 12 live-local non-code adapter traces. Hosted third-party installation remains a credentialed follow-up step rather than a claimed result.
+The current implementation proves the contract with a command-backed Code Repair Agent adapter and 14 live-local non-code adapter traces. Hosted third-party installation remains a credentialed follow-up step rather than a claimed result.
 
 ## Universal Failure Mode Radar
 

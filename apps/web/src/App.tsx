@@ -1,5 +1,15 @@
-import { useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
+import { getPageNavigation, parseAppPage, type AppPage } from "./appNavigation.js";
+import { useRef } from "react";
 import { priorityTone, type IssueSummary } from "./issueModel.js";
+import {
+  buildScenarioFocusSummary,
+  countScenariosByTone,
+  filterScenariosByTone,
+  getScenarioTargetIssues,
+  parseScenarioToneFilter,
+  type ScenarioToneFilter
+} from "./evidenceReviewModel.js";
 import {
   agentProfiles,
   agentRiskVectors,
@@ -77,28 +87,18 @@ import {
   t,
   type Locale
 } from "./i18n.js";
+import {
+  getContestEvidenceArtifact,
+  getContestEvidenceTarget,
+  getContestMode,
+  getContestTrackBadge
+} from "./contestMode.js";
+import { BaselineReadinessPanel, JudgingCriteriaPanel } from "./CompetitionPanels.js";
+import { parseSplunkDeliveryId, type SplunkDeliveryId } from "./splunkDeliveryModel.js";
+import { SplunkCompanionAppSection, SplunkContestSection } from "./SplunkPanels.js";
+import { summarizeSplunkContestSurface } from "./splunkContestData.js";
+import { parseSplunkScenarioId, type SplunkScenarioId } from "./splunkMissionModel.js";
 import "./App.css";
-
-const sampleIssues: IssueSummary[] = [
-  {
-    id: "ISSUE-0001",
-    title: "Production login is down",
-    priority: "high",
-    status: "open"
-  },
-  {
-    id: "ISSUE-0002",
-    title: "Auth token leak in callback flow",
-    priority: "critical",
-    status: "triaged"
-  },
-  {
-    id: "ISSUE-0003",
-    title: "Settings copy typo",
-    priority: "low",
-    status: "resolved"
-  }
-];
 
 function readInitialLocale(): Locale {
   if (typeof window === "undefined") {
@@ -108,9 +108,69 @@ function readInitialLocale(): Locale {
   return getInitialLocale(new URLSearchParams(window.location.search).get("lang"), window.navigator.language);
 }
 
+function readInitialPage(): AppPage {
+  if (typeof window === "undefined") {
+    return "overview";
+  }
+
+  return parseAppPage(new URLSearchParams(window.location.search).get("page"));
+}
+
+function readInitialPresentationMode(): boolean {
+  if (typeof window === "undefined") {
+    return false;
+  }
+
+  const value = new URLSearchParams(window.location.search).get("present");
+  return value === "1" || value === "true";
+}
+
+function readInitialScenarioId(): string {
+  if (typeof window === "undefined") {
+    return judgeScenarioEvidence[0].id;
+  }
+
+  const urlScenario = new URLSearchParams(window.location.search).get("scenario");
+  return judgeScenarioEvidence.some((scenario) => scenario.id === urlScenario) ? urlScenario! : judgeScenarioEvidence[0].id;
+}
+
+function readInitialScenarioFilter(): ScenarioToneFilter {
+  if (typeof window === "undefined") {
+    return "all";
+  }
+
+  return parseScenarioToneFilter(new URLSearchParams(window.location.search).get("filter"));
+}
+
+function readInitialSplunkScenarioId(): SplunkScenarioId {
+  if (typeof window === "undefined") {
+    return parseSplunkScenarioId(null);
+  }
+
+  return parseSplunkScenarioId(new URLSearchParams(window.location.search).get("soc"));
+}
+
+function readInitialSplunkDeliveryId(): SplunkDeliveryId {
+  if (typeof window === "undefined") {
+    return parseSplunkDeliveryId(null);
+  }
+
+  return parseSplunkDeliveryId(new URLSearchParams(window.location.search).get("delivery"));
+}
+
 export function App() {
-  const [selectedScenarioId, setSelectedScenarioId] = useState(judgeScenarioEvidence[0].id);
+  const [selectedScenarioId, setSelectedScenarioId] = useState(readInitialScenarioId);
+  const [scenarioFilter, setScenarioFilter] = useState<ScenarioToneFilter>(readInitialScenarioFilter);
+  const [selectedSplunkScenarioId, setSelectedSplunkScenarioId] = useState<SplunkScenarioId>(readInitialSplunkScenarioId);
+  const [selectedSplunkDeliveryId, setSelectedSplunkDeliveryId] = useState<SplunkDeliveryId>(readInitialSplunkDeliveryId);
   const [locale, setLocale] = useState<Locale>(readInitialLocale);
+  const [activePage, setActivePage] = useState<AppPage>(readInitialPage);
+  const contestMode = getContestMode();
+  const presentationMode = useMemo(() => readInitialPresentationMode(), []);
+  const hideProductNav = presentationMode && contestMode === "splunk";
+  const compactPresentationChrome = hideProductNav && activePage !== "overview";
+  const contestTrackBadge = getContestTrackBadge(contestMode);
+  const pageNavigation = useMemo(() => getPageNavigation(locale, contestMode), [contestMode, locale]);
   const summary = useMemo(() => buildConsoleSummary(judgeScenarioEvidence), []);
   const agentCoverageSummary = useMemo(() => summarizeAgentCoverage(agentProfiles), []);
   const riskRadarSummary = useMemo(() => summarizeAgentRiskRadar(agentRiskVectors), []);
@@ -128,6 +188,11 @@ export function App() {
   const atlasSummary = useMemo(() => summarizeFailureAtlas(failureModeTaxonomy), []);
   const riskAssurance = useMemo(() => buildRiskAssuranceSummary(judgeScenarioEvidence, scenarioRiskProfiles), []);
   const ownerQueue = useMemo(() => buildOwnerReviewQueue(judgeScenarioEvidence, scenarioRiskProfiles), []);
+  const scenarioToneCounts = useMemo(() => countScenariosByTone(judgeScenarioEvidence), []);
+  const filteredScenarios = useMemo(
+    () => filterScenariosByTone(judgeScenarioEvidence, scenarioFilter),
+    [scenarioFilter]
+  );
   const localizedReleaseDecision = formatReleaseDecisionForLocale(releaseDecision, locale);
   const localizedRiskAssurance = formatRiskAssuranceForLocale(riskAssurance, locale);
   const localizedProtocolHeadline = formatResearchHeadline(
@@ -142,8 +207,51 @@ export function App() {
     atlasSummary.totalDomains,
     locale
   );
+  const activePageItem = pageNavigation.find((item) => item.id === activePage) ?? pageNavigation[0];
   const selectedScenario =
-    judgeScenarioEvidence.find((scenario) => scenario.id === selectedScenarioId) ?? judgeScenarioEvidence[0];
+    filteredScenarios.find((scenario) => scenario.id === selectedScenarioId) ??
+    filteredScenarios[0] ??
+    judgeScenarioEvidence[0];
+  const selectedScenarioFocus = useMemo(() => buildScenarioFocusSummary(selectedScenario), [selectedScenario]);
+  const selectedScenarioTargetIssues = useMemo(
+    () => getScenarioTargetIssues(selectedScenario.id),
+    [selectedScenario.id]
+  );
+
+  useEffect(() => {
+    if (selectedScenario.id !== selectedScenarioId) {
+      setSelectedScenarioId(selectedScenario.id);
+    }
+  }, [selectedScenario.id, selectedScenarioId]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const url = new URL(window.location.href);
+    if (activePage === "evidence") {
+      url.searchParams.set("scenario", selectedScenario.id);
+      url.searchParams.set("filter", scenarioFilter);
+    } else {
+      url.searchParams.delete("scenario");
+      url.searchParams.delete("filter");
+    }
+
+    if (activePage === "scenarios") {
+      url.searchParams.set("soc", selectedSplunkScenarioId);
+    } else {
+      url.searchParams.delete("soc");
+    }
+
+    if (activePage === "companion") {
+      url.searchParams.set("delivery", selectedSplunkDeliveryId);
+    } else {
+      url.searchParams.delete("delivery");
+    }
+
+    window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+  }, [activePage, scenarioFilter, selectedScenario.id, selectedSplunkDeliveryId, selectedSplunkScenarioId]);
 
   function handleLocaleChange(nextLocale: Locale) {
     setLocale(nextLocale);
@@ -155,34 +263,233 @@ export function App() {
     }
   }
 
+  function handlePageChange(nextPage: AppPage) {
+    setActivePage(nextPage);
+
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("page", nextPage);
+      window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }
+
+  function launchJudgePreset(preset: JudgePresetId) {
+    if (preset === "overview-to-scenarios") {
+      setSelectedSplunkScenarioId("security-soc-alert-suppression");
+      handlePageChange("scenarios");
+      return;
+    }
+
+    if (preset === "overview-to-evidence") {
+      setScenarioFilter("danger");
+      setSelectedScenarioId("unsafe-diff-guard");
+      handlePageChange("evidence");
+      return;
+    }
+
+    setSelectedSplunkDeliveryId("review-gate-action");
+    handlePageChange("companion");
+  }
+
+  function handleJudgeFlowSelect(page: AppPage) {
+    if (page === "overview") {
+      handlePageChange("overview");
+      return;
+    }
+
+    if (page === "scenarios") {
+      launchJudgePreset("overview-to-scenarios");
+      return;
+    }
+
+    if (page === "companion") {
+      launchJudgePreset("overview-to-companion");
+      return;
+    }
+
+    launchJudgePreset("overview-to-evidence");
+  }
+
+  const pageContent =
+    activePage === "overview" ? (
+      <OverviewPage
+        agentCoverageSummary={agentCoverageSummary}
+        contestMode={contestMode}
+        locale={locale}
+        onLaunchPreset={launchJudgePreset}
+        onPageChange={handlePageChange}
+        protocolSummary={protocolSummary}
+        releaseDecision={releaseDecision}
+        localizedReleaseDecision={localizedReleaseDecision}
+        summary={summary}
+      />
+    ) : activePage === "scenarios" ? (
+      <ScenariosPage
+        agentCoverageSummary={agentCoverageSummary}
+        contestMode={contestMode}
+        locale={locale}
+        riskRadarSummary={riskRadarSummary}
+        scenarioAnalysis={scenarioAnalysis}
+        selectedSplunkScenarioId={selectedSplunkScenarioId}
+        scenarioWorkbenchSummary={scenarioWorkbenchSummary}
+        setSelectedSplunkScenarioId={setSelectedSplunkScenarioId}
+      />
+    ) : activePage === "companion" ? (
+      <CompanionPage
+        contestMode={contestMode}
+        locale={locale}
+        selectedSplunkDeliveryId={selectedSplunkDeliveryId}
+        setSelectedSplunkDeliveryId={setSelectedSplunkDeliveryId}
+      />
+    ) : (
+      <EvidencePage
+        atlasCoverageLabel={atlasCoverageLabel}
+        filteredScenarios={filteredScenarios}
+        onScenarioFilterChange={setScenarioFilter}
+        onScenarioSelect={setSelectedScenarioId}
+        locale={locale}
+        optimizationSummary={optimizationSummary}
+        ownerQueue={ownerQueue}
+        protocolSummary={localizedProtocolHeadline}
+        riskAssurance={localizedRiskAssurance}
+        scenarioFilter={scenarioFilter}
+        scenarioToneCounts={scenarioToneCounts}
+        selectedScenario={selectedScenario}
+        selectedScenarioFocus={selectedScenarioFocus}
+        targetIssues={selectedScenarioTargetIssues}
+        summary={summary}
+      />
+    );
+
   return (
-    <main className="app-shell">
-      <header className="topbar">
+    <main className={`app-shell ${presentationMode ? "is-presentation" : ""} page-${activePage}`}>
+      <header className={`topbar ${compactPresentationChrome ? "is-compact" : ""}`}>
         <div className="hero-copy">
           <h1>AgentGuard CI</h1>
-          <p>{t(locale, "hero.subtitle")}</p>
+          {compactPresentationChrome ? (
+            <div className="hero-meta" aria-label={t(locale, "topbar.status")}>
+              <span>{activePageItem.label}</span>
+              <span>{contestTrackBadge.value ?? t(locale, "track.value")}</span>
+            </div>
+          ) : (
+            <p>{t(locale, "hero.subtitle")}</p>
+          )}
         </div>
-        <div className="topbar-actions" aria-label={t(locale, "topbar.status")}>
-          <div className="language-switch" aria-label={t(locale, "language.switchLabel")} role="group">
-            {supportedLocales.map((item) => (
-              <button
-                aria-pressed={locale === item}
-                className={locale === item ? "is-active" : ""}
-                key={item}
-                onClick={() => handleLocaleChange(item)}
-                type="button"
-              >
-                {t(locale, item === "en" ? "language.en" : "language.zh")}
-              </button>
-            ))}
+        {compactPresentationChrome ? null : (
+          <div className="topbar-actions" aria-label={t(locale, "topbar.status")}>
+            <div className="language-switch" aria-label={t(locale, "language.switchLabel")} role="group">
+              {supportedLocales.map((item) => (
+                <button
+                  aria-pressed={locale === item}
+                  className={locale === item ? "is-active" : ""}
+                  key={item}
+                  onClick={() => handleLocaleChange(item)}
+                  type="button"
+                >
+                  {t(locale, item === "en" ? "language.en" : "language.zh")}
+                </button>
+              ))}
+            </div>
+            <div className="track-badge">
+              <span>{contestTrackBadge.label ?? t(locale, "track.label")}</span>
+              <strong>{contestTrackBadge.value ?? t(locale, "track.value")}</strong>
+            </div>
           </div>
-          <div className="track-badge">
-            <span>{t(locale, "track.label")}</span>
-            <strong>{t(locale, "track.value")}</strong>
-          </div>
-        </div>
+        )}
       </header>
+      {hideProductNav ? null : (
+        <ProductPageNav
+          activePage={activePage}
+          activePageItem={activePageItem}
+          items={pageNavigation}
+          locale={locale}
+          onChange={handlePageChange}
+        />
+      )}
+      {contestMode === "splunk" ? (
+        <JudgeFlowRail activePage={activePage} locale={locale} onSelectPage={handleJudgeFlowSelect} />
+      ) : null}
+      {pageContent}
+    </main>
+  );
+}
 
+function ProductPageNav({
+  activePage,
+  activePageItem,
+  items,
+  locale,
+  onChange
+}: {
+  activePage: AppPage;
+  activePageItem: ReturnType<typeof getPageNavigation>[number];
+  items: ReturnType<typeof getPageNavigation>;
+  locale: Locale;
+  onChange: (page: AppPage) => void;
+}) {
+  const shellCopy =
+    locale === "zh"
+      ? {
+          eyebrow: "评审地图",
+          title: "四个页面，各讲一件重要的事。",
+          detail: activePageItem.description
+        }
+      : {
+          eyebrow: "Judge map",
+          title: "Four pages. One decision per page.",
+          detail: activePageItem.description
+        };
+
+  return (
+    <section className="page-nav-shell" aria-label="Product navigation">
+      <div className="page-nav-copy">
+        <span>{shellCopy.eyebrow}</span>
+        <strong>{shellCopy.title}</strong>
+        <p>{shellCopy.detail}</p>
+      </div>
+      <div className="page-nav-tabs" role="tablist" aria-label="Page sections">
+        {items.map((item) => (
+          <button
+            aria-selected={item.id === activePage}
+            className={item.id === activePage ? "is-active" : ""}
+            key={item.id}
+            onClick={() => onChange(item.id)}
+            role="tab"
+            type="button"
+          >
+            <small>{item.eyebrow}</small>
+            <strong>{item.label}</strong>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function OverviewPage({
+  agentCoverageSummary,
+  contestMode,
+  locale,
+  onLaunchPreset,
+  onPageChange,
+  protocolSummary,
+  localizedReleaseDecision,
+  releaseDecision,
+  summary
+}: {
+  agentCoverageSummary: AgentCoverageSummary;
+  contestMode: ReturnType<typeof getContestMode>;
+  locale: Locale;
+  onLaunchPreset: (preset: JudgePresetId) => void;
+  onPageChange: (page: AppPage) => void;
+  protocolSummary: ReturnType<typeof summarizeResearchProtocol>;
+  localizedReleaseDecision: ReturnType<typeof formatReleaseDecisionForLocale>;
+  releaseDecision: ReturnType<typeof buildReleaseDecisionSummary>;
+  summary: ReturnType<typeof buildConsoleSummary>;
+}) {
+  return (
+    <>
       <section className="decision-hero" aria-label={t(locale, "release.aria")}>
         <div className="decision-copy">
           <span>{t(locale, "release.kicker")}</span>
@@ -197,28 +504,14 @@ export function App() {
         <p className="decision-threshold">{localizedReleaseDecision.thresholdLabel}</p>
       </section>
 
-      <OperatorRunbookPanel locale={locale} />
-
-      <AgentCoveragePanel coverageSummary={agentCoverageSummary} locale={locale} />
-
-      <UniversalGatePanel locale={locale} />
-
-      <RiskRadarPanel locale={locale} riskRadarSummary={riskRadarSummary} />
-
-      <ScenarioWorkbenchPanel
+      <OverviewProofPanel
+        agentCoverageSummary={agentCoverageSummary}
+        contestMode={contestMode}
         locale={locale}
-        scenarioAnalysis={scenarioAnalysis}
-        workbenchSummary={scenarioWorkbenchSummary}
+        onLaunchPreset={onLaunchPreset}
+        releaseDecision={releaseDecision}
+        summary={summary}
       />
-
-      <RiskAssurancePanel locale={locale} ownerQueue={ownerQueue} riskAssurance={localizedRiskAssurance} />
-
-      <section className="trace-band" aria-label={t(locale, "trace.aria")}>
-        <TraceStep index="01" title={t(locale, "trace.1.title")} detail={t(locale, "trace.1.detail")} />
-        <TraceStep index="02" title={t(locale, "trace.2.title")} detail={t(locale, "trace.2.detail")} />
-        <TraceStep index="03" title={t(locale, "trace.3.title")} detail={t(locale, "trace.3.detail")} />
-        <TraceStep index="04" title={t(locale, "trace.4.title")} detail={t(locale, "trace.4.detail")} />
-      </section>
 
       <section className="summary-grid" aria-label={t(locale, "summary.aria")}>
         <Metric
@@ -242,10 +535,372 @@ export function App() {
           detail={t(locale, "summary.researchPrinciples")}
         />
       </section>
+      <JudgingCriteriaPanel contestMode={contestMode} locale={locale} onNavigate={onPageChange} />
+      <BaselineReadinessPanel contestMode={contestMode} locale={locale} />
 
       <MoatPanel locale={locale} />
+    </>
+  );
+}
 
-      <FailureAtlasPanel coverageLabel={atlasCoverageLabel} locale={locale} />
+type JudgePresetId = "overview-to-scenarios" | "overview-to-evidence" | "overview-to-companion";
+
+function OverviewProofPanel({
+  agentCoverageSummary,
+  contestMode,
+  locale,
+  onLaunchPreset,
+  releaseDecision,
+  summary
+}: {
+  agentCoverageSummary: AgentCoverageSummary;
+  contestMode: ReturnType<typeof getContestMode>;
+  locale: Locale;
+  onLaunchPreset: (preset: JudgePresetId) => void;
+  releaseDecision: ReturnType<typeof buildReleaseDecisionSummary>;
+  summary: ReturnType<typeof buildConsoleSummary>;
+}) {
+  if (contestMode !== "splunk") {
+    return null;
+  }
+
+  const splunkSurfaceSummary = summarizeSplunkContestSurface();
+  const copy =
+    locale === "zh"
+      ? {
+          kicker: "首屏证据",
+          title: "先给评委三份真凭实据，再讲故事。",
+          body: "在评委往下点之前，先把三件已经落地的东西摆出来：命令驱动的结果、Splunk 场景覆盖，以及可安装的交付面。",
+          suiteLabel: "命令驱动主套件",
+          suiteValue: `${releaseDecision.autoPromotions} 自动放行，${releaseDecision.reviewRequired} 进入复核，其中 ${releaseDecision.hardBlocks} 个强阻断`,
+          suiteDetail: `${summary.totalScenarios} 个仓库场景 · ${summary.totalPassedGates}/${summary.totalGates} 个 gate 已通过`,
+          coverageLabel: "Live-local 覆盖广度",
+          coverageValue: `${agentCoverageSummary.liveScenarioCount} 个 live-local 场景`,
+          coverageDetail: `${splunkSurfaceSummary.socScenarios} 条 Splunk SOC 路线 · 9 条复核路线 · 5 个强制阻断`,
+          deliveryLabel: "可安装交付面",
+          deliveryValue: `${splunkSurfaceSummary.deploymentArtifacts} 个 Splunk 工件`,
+          deliveryDetail: `${splunkSurfaceSummary.mcpTools} 个工具契约 · 安装包 tgz · clean-install report`,
+          verifyLabel: "评委能验证什么",
+          verifyTitle: "每个关键结论，都能落到命令、工件或深链页面上。",
+          verifyBody: "这不是靠一段讲解去说服人，而是让每一次点击都落在已经存在的证据面上。",
+          verifyFoot: "suite-summary.json · agent-adapter-suite-summary.json · review envelope",
+          wedgeLabel: "为什么它不一样",
+          wedgeTitle: "我们不是再做一个 copilot，而是在决定 copilot 什么时候配得上线。",
+          wedgeBody: "这会把项目从“助手更聪明”拉到“自动化更可治理”的层级上。",
+          blockedAction: "打开阻断案例",
+          routeAction: "打开 SOC 路线",
+          deliveryAction: "打开交付面"
+        }
+      : {
+          kicker: "first look",
+          title: "Three pieces of proof before the pitch.",
+          body: "Before a judge clicks deeper, the landing view should already show command-backed results, Splunk-specific workflow coverage, and installable delivery.",
+          suiteLabel: "Command-backed suite",
+          suiteValue: `${releaseDecision.autoPromotions} auto-promote, ${releaseDecision.reviewRequired} review, ${releaseDecision.hardBlocks} hard-blocked reviews`,
+          suiteDetail: `${summary.totalScenarios} repository scenarios · ${summary.totalPassedGates}/${summary.totalGates} gate passes`,
+          coverageLabel: "Live-local breadth",
+          coverageValue: `${agentCoverageSummary.liveScenarioCount} live-local scenarios`,
+          coverageDetail: `${splunkSurfaceSummary.socScenarios} Splunk SOC routes · 9 review routes · 5 hard blocks`,
+          deliveryLabel: "Installable delivery",
+          deliveryValue: `${splunkSurfaceSummary.deploymentArtifacts} Splunk assets`,
+          deliveryDetail: `${splunkSurfaceSummary.mcpTools} tool contracts · packaged tgz · clean-install report`,
+          verifyLabel: "What judges can verify",
+          verifyTitle: "Every important claim lands on a command, artifact, or deep-linked view.",
+          verifyBody: "The story never floats away from evidence. Each click lands on a proof surface that already exists in the repo.",
+          verifyFoot: "suite-summary.json · agent-adapter-suite-summary.json · review envelope",
+          wedgeLabel: "Why it feels different",
+          wedgeTitle: "We are not building another copilot. We are deciding when the copilot is safe enough to act.",
+          wedgeBody: "That moves the project from assistant polish into deployment governance.",
+          blockedAction: "Open blocked case",
+          routeAction: "Open SOC route",
+          deliveryAction: "Open delivery surface"
+        };
+
+  return (
+    <section className="proof-signal-panel" aria-label={copy.kicker}>
+      <div className="proof-signal-grid">
+        <article className="proof-signal-lead">
+          <span>{copy.kicker}</span>
+          <h2>{copy.title}</h2>
+          <p>{copy.body}</p>
+          <div className="proof-signal-list">
+            <article className="proof-signal-item">
+              <small>{copy.suiteLabel}</small>
+              <strong>{copy.suiteValue}</strong>
+              <p>{copy.suiteDetail}</p>
+            </article>
+            <article className="proof-signal-item">
+              <small>{copy.coverageLabel}</small>
+              <strong>{copy.coverageValue}</strong>
+              <p>{copy.coverageDetail}</p>
+            </article>
+            <article className="proof-signal-item">
+              <small>{copy.deliveryLabel}</small>
+              <strong>{copy.deliveryValue}</strong>
+              <p>{copy.deliveryDetail}</p>
+            </article>
+          </div>
+          <div className="proof-action-row">
+            <button onClick={() => onLaunchPreset("overview-to-evidence")} type="button">
+              <small>{copy.verifyLabel}</small>
+              <strong>{copy.blockedAction}</strong>
+            </button>
+            <button onClick={() => onLaunchPreset("overview-to-scenarios")} type="button">
+              <small>{copy.coverageLabel}</small>
+              <strong>{copy.routeAction}</strong>
+            </button>
+            <button onClick={() => onLaunchPreset("overview-to-companion")} type="button">
+              <small>{copy.deliveryLabel}</small>
+              <strong>{copy.deliveryAction}</strong>
+            </button>
+          </div>
+        </article>
+        <div className="proof-signal-side">
+          <article className="proof-signal-card">
+            <span>{copy.verifyLabel}</span>
+            <strong>{copy.verifyTitle}</strong>
+            <p>{copy.verifyBody}</p>
+            <small>{copy.verifyFoot}</small>
+          </article>
+          <article className="proof-signal-card is-accent">
+            <span>{copy.wedgeLabel}</span>
+            <strong>{copy.wedgeTitle}</strong>
+            <p>{copy.wedgeBody}</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function JudgeFlowRail({
+  activePage,
+  locale,
+  onSelectPage
+}: {
+  activePage: AppPage;
+  locale: Locale;
+  onSelectPage: (page: AppPage) => void;
+}) {
+  const copy =
+    locale === "zh"
+      ? {
+          kicker: "评审路线",
+          title: "按这四步看，最快理解产品为什么值得高分。",
+          overview: {
+            label: "总览",
+            body: "先抓住价值主张、核心指标和发布决策。"
+          },
+          scenarios: {
+            label: "场景路线",
+            body: "进入最强的安全处置链，看工具、证据和审批关口如何联动。"
+          },
+          evidence: {
+            label: "证据与治理",
+            body: "直接跳到被拦下的高风险案例，看为什么系统不让它上线。"
+          },
+          companion: {
+            label: "配套应用",
+            body: "看 companion app、alert action 和可安装的 Splunk 资产。"
+          }
+        }
+      : {
+          kicker: "judge route",
+          title: "Follow these four steps to understand the product at judge speed.",
+          overview: {
+            label: "Overview",
+            body: "Start with the value proposition, the core metrics, and the release decision."
+          },
+          scenarios: {
+            label: "SOC scenarios",
+            body: "Open the strongest security workflow and watch tools, evidence, and approvals move together."
+          },
+          evidence: {
+            label: "Evidence",
+            body: "Go directly to a stopped high-risk case and see why the system refused promotion."
+          },
+          companion: {
+            label: "Companion app",
+            body: "Open the companion app, alert action, and installable Splunk assets immediately."
+          }
+        };
+
+  const steps = [
+    { id: "overview" as AppPage, index: "01", ...copy.overview },
+    { id: "scenarios" as AppPage, index: "02", ...copy.scenarios },
+    { id: "companion" as AppPage, index: "03", ...copy.companion },
+    { id: "evidence" as AppPage, index: "04", ...copy.evidence }
+  ];
+  const activeStep = steps.find((step) => step.id === activePage) ?? steps[0];
+  const activeStepRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    activeStepRef.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [activePage]);
+
+  return (
+    <section className="judge-flow-rail" aria-label={copy.kicker}>
+      <div className="judge-route-copy">
+        <span>{copy.kicker}</span>
+        <h2>{copy.title}</h2>
+        <p>{activeStep.body}</p>
+      </div>
+      <div className="judge-route-grid" role="tablist" aria-label={copy.kicker}>
+        {steps.map((step) => (
+          <button
+            aria-selected={activePage === step.id}
+            className={`judge-route-card ${activePage === step.id ? "is-active" : ""}`}
+            key={step.id}
+            onClick={() => onSelectPage(step.id)}
+            ref={activePage === step.id ? activeStepRef : null}
+            role="tab"
+            type="button"
+          >
+            <small>{step.index}</small>
+            <strong>{step.label}</strong>
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ScenariosPage({
+  agentCoverageSummary,
+  contestMode,
+  locale,
+  riskRadarSummary,
+  scenarioAnalysis,
+  selectedSplunkScenarioId,
+  scenarioWorkbenchSummary,
+  setSelectedSplunkScenarioId
+}: {
+  agentCoverageSummary: AgentCoverageSummary;
+  contestMode: ReturnType<typeof getContestMode>;
+  locale: Locale;
+  riskRadarSummary: AgentRiskRadarSummary;
+  scenarioAnalysis: ScenarioAnalysisItem[];
+  selectedSplunkScenarioId: SplunkScenarioId;
+  scenarioWorkbenchSummary: ScenarioWorkbenchSummary;
+  setSelectedSplunkScenarioId: (id: SplunkScenarioId) => void;
+}) {
+  return (
+    <>
+      {contestMode === "splunk" ? (
+        <SplunkContestSection
+          locale={locale}
+          selectedScenarioId={selectedSplunkScenarioId}
+          onSelectScenario={setSelectedSplunkScenarioId}
+        />
+      ) : null}
+      <AgentCoveragePanel coverageSummary={agentCoverageSummary} locale={locale} />
+      <RiskRadarPanel locale={locale} riskRadarSummary={riskRadarSummary} />
+      <ScenarioWorkbenchPanel
+        locale={locale}
+        scenarioAnalysis={scenarioAnalysis}
+        workbenchSummary={scenarioWorkbenchSummary}
+      />
+    </>
+  );
+}
+
+function CompanionPage({
+  contestMode,
+  locale,
+  selectedSplunkDeliveryId,
+  setSelectedSplunkDeliveryId
+}: {
+  contestMode: ReturnType<typeof getContestMode>;
+  locale: Locale;
+  selectedSplunkDeliveryId: SplunkDeliveryId;
+  setSelectedSplunkDeliveryId: (id: SplunkDeliveryId) => void;
+}) {
+  return (
+    <>
+      {contestMode === "splunk" ? (
+        <SplunkCompanionAppSection
+          locale={locale}
+          selectedDeliveryId={selectedSplunkDeliveryId}
+          onSelectDelivery={setSelectedSplunkDeliveryId}
+        />
+      ) : null}
+      <OperatorRunbookPanel locale={locale} />
+      <section className="trace-band" aria-label={t(locale, "trace.aria")}>
+        <TraceStep index="01" title={t(locale, "trace.1.title")} detail={t(locale, "trace.1.detail")} />
+        <TraceStep index="02" title={t(locale, "trace.2.title")} detail={t(locale, "trace.2.detail")} />
+        <TraceStep index="03" title={t(locale, "trace.3.title")} detail={t(locale, "trace.3.detail")} />
+        <TraceStep index="04" title={t(locale, "trace.4.title")} detail={t(locale, "trace.4.detail")} />
+      </section>
+      <EvidenceChainPanel locale={locale} />
+    </>
+  );
+}
+
+function EvidencePage({
+  atlasCoverageLabel,
+  filteredScenarios,
+  locale,
+  onScenarioFilterChange,
+  onScenarioSelect,
+  optimizationSummary,
+  ownerQueue,
+  protocolSummary,
+  riskAssurance,
+  scenarioFilter,
+  scenarioToneCounts,
+  selectedScenario,
+  selectedScenarioFocus,
+  targetIssues,
+  summary
+}: {
+  atlasCoverageLabel: string;
+  filteredScenarios: ScenarioEvidence[];
+  locale: Locale;
+  onScenarioFilterChange: (filter: ScenarioToneFilter) => void;
+  onScenarioSelect: (id: string) => void;
+  optimizationSummary: ReturnType<typeof buildOptimizationSummary>;
+  ownerQueue: OwnerReviewQueueItem[];
+  protocolSummary: string;
+  riskAssurance: RiskAssuranceSummary;
+  scenarioFilter: ScenarioToneFilter;
+  scenarioToneCounts: ReturnType<typeof countScenariosByTone>;
+  selectedScenario: ScenarioEvidence;
+  selectedScenarioFocus: ReturnType<typeof buildScenarioFocusSummary>;
+  targetIssues: IssueSummary[];
+  summary: ReturnType<typeof buildConsoleSummary>;
+}) {
+  const selectedIndex = filteredScenarios.findIndex((scenario) => scenario.id === selectedScenario.id);
+
+  function stepScenario(direction: "previous" | "next") {
+    if (!filteredScenarios.length) {
+      return;
+    }
+
+    const fallbackIndex = selectedIndex >= 0 ? selectedIndex : 0;
+    const nextIndex =
+      direction === "previous"
+        ? Math.max(0, fallbackIndex - 1)
+        : Math.min(filteredScenarios.length - 1, fallbackIndex + 1);
+
+    onScenarioSelect(filteredScenarios[nextIndex].id);
+  }
+
+  return (
+    <>
+      <EvidenceReviewDesk
+        activeFilter={scenarioFilter}
+        counts={scenarioToneCounts}
+        filteredCount={filteredScenarios.length}
+        locale={locale}
+        onFilterChange={onScenarioFilterChange}
+        onNext={() => stepScenario("next")}
+        onPrevious={() => stepScenario("previous")}
+        selectedIndex={selectedIndex}
+        selectedScenario={selectedScenario}
+        selectedScenarioFocus={selectedScenarioFocus}
+        totalVisible={filteredScenarios.length}
+      />
+      <RiskAssurancePanel locale={locale} ownerQueue={ownerQueue} riskAssurance={riskAssurance} />
 
       <section className="console-grid">
         <section className="scenario-panel" aria-label={t(locale, "matrix.aria")}>
@@ -253,18 +908,18 @@ export function App() {
             <div>
               <h2>{t(locale, "matrix.title")}</h2>
               <p>
-                {summary.totalScenarios} {t(locale, "matrix.description")}
+                {filteredScenarios.length}/{summary.totalScenarios} {t(locale, "matrix.description")}
               </p>
             </div>
           </div>
           <div className="scenario-list">
-            {judgeScenarioEvidence.map((scenario) => (
+            {filteredScenarios.map((scenario) => (
               <ScenarioRow
                 key={scenario.id}
                 locale={locale}
                 scenario={scenario}
                 selected={scenario.id === selectedScenario.id}
-                onSelect={() => setSelectedScenarioId(scenario.id)}
+                onSelect={() => onScenarioSelect(scenario.id)}
               />
             ))}
           </div>
@@ -275,15 +930,14 @@ export function App() {
 
       <section className="details-grid">
         <GatePanel locale={locale} scenario={selectedScenario} />
-        <IssueTargetPanel locale={locale} />
+        <IssueTargetPanel issues={targetIssues} locale={locale} />
       </section>
 
       <OptimizationPanel locale={locale} selectedScenario={selectedScenario} optimizationSummary={optimizationSummary} />
-
-      <EvidenceChainPanel locale={locale} />
-
-      <ResearchPanel locale={locale} protocolSummary={localizedProtocolHeadline} />
-    </main>
+      <UniversalGatePanel locale={locale} />
+      <FailureAtlasPanel coverageLabel={atlasCoverageLabel} locale={locale} />
+      <ResearchPanel locale={locale} protocolSummary={protocolSummary} />
+    </>
   );
 }
 
@@ -697,7 +1351,12 @@ function ScenarioRow({
   const tone = evidenceTone(scenario);
 
   return (
-    <button className={`scenario-row ${selected ? "is-selected" : ""}`} type="button" onClick={onSelect}>
+    <button
+      aria-pressed={selected}
+      className={`scenario-row ${selected ? "is-selected" : ""}`}
+      type="button"
+      onClick={onSelect}
+    >
       <span className={`status-rail tone-${tone}`} aria-hidden="true" />
       <span className="scenario-copy">
         <strong>{formatScenarioTitle(scenario.id, scenario.title, locale)}</strong>
@@ -709,12 +1368,160 @@ function ScenarioRow({
   );
 }
 
+function EvidenceReviewDesk({
+  activeFilter,
+  counts,
+  filteredCount,
+  locale,
+  onFilterChange,
+  onNext,
+  onPrevious,
+  selectedIndex,
+  selectedScenario,
+  selectedScenarioFocus,
+  totalVisible
+}: {
+  activeFilter: ScenarioToneFilter;
+  counts: ReturnType<typeof countScenariosByTone>;
+  filteredCount: number;
+  locale: Locale;
+  onFilterChange: (filter: ScenarioToneFilter) => void;
+  onNext: () => void;
+  onPrevious: () => void;
+  selectedIndex: number;
+  selectedScenario: ScenarioEvidence;
+  selectedScenarioFocus: ReturnType<typeof buildScenarioFocusSummary>;
+  totalVisible: number;
+}) {
+  const tone = evidenceTone(selectedScenario);
+  const copy =
+    locale === "zh"
+      ? {
+          kicker: "评审台",
+          title: "先选一个案例，再看为什么放行、复核，或拦截。",
+          body: "把 24 条场景压成一条清晰的决策路径：哪位负责人接手，哪条控制触发，哪份证据足够支撑结论。",
+          all: "全部",
+          success: "放行",
+          warning: "复核",
+          danger: "拦截",
+          visible: "当前可见",
+          selected: "当前案例",
+          previous: "上一条",
+          next: "下一条",
+          owner: "负责人",
+          control: "控制措施",
+          evidence: "证据标准",
+          blockedGates: "失败闸门"
+        }
+      : {
+          kicker: "Review Desk",
+          title: "Choose a scenario first, then inspect exactly why it ships, routes, or stops.",
+          body: "Compress 24 scenarios into one clear decision path: who owns the risk, which control fired, and what evidence is strong enough to justify the outcome.",
+          all: "All",
+          success: "Ready",
+          warning: "Review",
+          danger: "Blocked",
+          visible: "Visible now",
+          selected: "Selected case",
+          previous: "Previous",
+          next: "Next",
+          owner: "Owner",
+          control: "Control",
+          evidence: "Evidence standard",
+          blockedGates: "Failed gates"
+        };
+
+  const filters: Array<{ id: ScenarioToneFilter; label: string; count: number }> = [
+    { id: "all", label: copy.all, count: counts.all },
+    { id: "success", label: copy.success, count: counts.success },
+    { id: "warning", label: copy.warning, count: counts.warning },
+    { id: "danger", label: copy.danger, count: counts.danger }
+  ];
+  const activeFilterRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    activeFilterRef.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [activeFilter]);
+
+  return (
+    <section className="review-desk-panel" aria-label={copy.kicker}>
+      <div className="review-desk-copy">
+        <span>{copy.kicker}</span>
+        <h2>{copy.title}</h2>
+        <p>{copy.body}</p>
+      </div>
+      <div className="review-desk-toolbar">
+        <div className="review-chip-row" role="tablist" aria-label={copy.kicker}>
+          {filters.map((filter) => (
+            <button
+              aria-selected={activeFilter === filter.id}
+              className={activeFilter === filter.id ? "is-active" : ""}
+              key={filter.id}
+              onClick={() => onFilterChange(filter.id)}
+              ref={activeFilter === filter.id ? activeFilterRef : null}
+              role="tab"
+              type="button"
+            >
+              <small>{filter.label}</small>
+              <strong>{filter.count}</strong>
+            </button>
+          ))}
+        </div>
+        <div className="review-stepper">
+          <div className="review-stepper-meta">
+            <span>{copy.visible}</span>
+            <strong>{`${filteredCount} / ${counts.all}`}</strong>
+          </div>
+          <div className="review-stepper-controls">
+            <button disabled={selectedIndex <= 0} onClick={onPrevious} type="button">
+              {copy.previous}
+            </button>
+            <button disabled={selectedIndex >= totalVisible - 1} onClick={onNext} type="button">
+              {copy.next}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div className="review-focus-grid">
+        <article className={`review-focus-lead is-${tone}`}>
+          <span>{copy.selected}</span>
+          <h3>{formatScenarioTitle(selectedScenario.id, selectedScenario.title, locale)}</h3>
+          <p>{formatScenarioAction(selectedScenario.recommendedAction, locale)}</p>
+          <div className="review-focus-meta">
+            <strong>{selectedScenario.testCaseId}</strong>
+            <b>{selectedScenarioFocus.domain}</b>
+          </div>
+        </article>
+        <article className="review-focus-card">
+          <span>{copy.owner}</span>
+          <strong>{formatOwner(selectedScenarioFocus.owner, locale)}</strong>
+          <p>{selectedScenarioFocus.riskPoints} pts</p>
+        </article>
+        <article className="review-focus-card">
+          <span>{copy.control}</span>
+          <strong>{formatShortText(selectedScenarioFocus.control, locale)}</strong>
+        </article>
+        <article className="review-focus-card">
+          <span>{copy.evidence}</span>
+          <strong>{formatShortText(selectedScenarioFocus.evidenceStandard, locale)}</strong>
+        </article>
+        <article className="review-focus-card">
+          <span>{copy.blockedGates}</span>
+          <strong>{selectedScenarioFocus.blockedGates}</strong>
+          <p>{formatToneLabel(tone, locale)}</p>
+        </article>
+      </div>
+    </section>
+  );
+}
+
 function EvidencePanel({ locale, scenario }: { locale: Locale; scenario: ScenarioEvidence }) {
   const tone = evidenceTone(scenario);
   const riskProfile = findScenarioRiskProfile(scenario.id);
+  const contestMode = getContestMode();
   const evidencePreview = {
     sourceSystem: "AgentGuard CI",
-    targetPlatform: "UiPath Test Cloud",
+    targetPlatform: getContestEvidenceTarget(contestMode),
     scenarioId: scenario.id,
     status: scenario.status,
     score: scenario.score,
@@ -727,7 +1534,7 @@ function EvidencePanel({ locale, scenario }: { locale: Locale; scenario: Scenari
           control: riskProfile.control
         }
       : undefined,
-    attachments: ["report.json", "report.md", "junit.xml", "test-cloud-evidence.json"]
+    attachments: ["report.json", "report.md", "junit.xml", getContestEvidenceArtifact(contestMode)]
   };
 
   return (
@@ -836,7 +1643,7 @@ function GatePanel({ locale, scenario }: { locale: Locale; scenario: ScenarioEvi
   );
 }
 
-function IssueTargetPanel({ locale }: { locale: Locale }) {
+function IssueTargetPanel({ issues, locale }: { issues: IssueSummary[]; locale: Locale }) {
   return (
     <section className="target-panel" aria-label={t(locale, "target.aria")}>
       <div className="panel-heading">
@@ -846,7 +1653,7 @@ function IssueTargetPanel({ locale }: { locale: Locale }) {
         </div>
       </div>
       <div className="issue-list">
-        {sampleIssues.map((issue) => (
+        {issues.map((issue) => (
           <article className="issue-row" key={issue.id}>
             <span className={`priority-dot issue-${priorityTone(issue.priority)}`} aria-hidden="true" />
             <div>
@@ -1013,7 +1820,7 @@ function EvidenceStep({ index, step, locale }: { index: number; step: RealEviden
       <span>{String(index).padStart(2, "0")}</span>
       <div>
         <strong>{localizedStep.stage}</strong>
-        <code>{step.artifact}</code>
+        <code>{localizedStep.artifact}</code>
         <p>{localizedStep.proof}</p>
       </div>
     </article>

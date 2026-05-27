@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { getContestEvidenceConfig } from "./contest.js";
 import { findAdapterScenario } from "./scenarios.js";
 import { scoreAdapterScenario } from "./scoring.js";
 import { writeAdapterScenarioReports } from "./reports.js";
@@ -26,6 +27,7 @@ async function main() {
   const outputDir = readArg("--output-dir") ?? join(process.cwd(), "agentguard-runs", "agent-adapters");
   const score = scoreAdapterScenario(scenario);
   const paths = await writeAdapterScenarioReports(scenario, score, outputDir);
+  const contestConfig = getContestEvidenceConfig();
 
   console.log(`AgentGuard agent scenario: ${scenario.id}`);
   console.log(`Agent type: ${scenario.agentType}`);
@@ -33,7 +35,7 @@ async function main() {
   console.log(`Score: ${score.totalPassed}/${score.totalGates}`);
   console.log(`Passed: ${String(score.passed)}`);
   console.log(`Markdown report: ${paths.markdown}`);
-  console.log(`Test Cloud evidence: ${paths.testCloudEvidence}`);
+  console.log(`${contestConfig.evidenceLabel}: ${paths.testCloudEvidence}`);
 }
 
 main().catch((error: unknown) => {

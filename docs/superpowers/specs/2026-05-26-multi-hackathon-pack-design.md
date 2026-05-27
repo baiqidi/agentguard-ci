@@ -11,19 +11,21 @@ AgentGuard remains one product: an agent reliability firewall that tests whether
 The pack uses three tiers:
 
 - **Primary:** UiPath AgentHack remains the main submission because the product was built for Test Cloud governance.
-- **Active alternates:** SANS Find Evil, Tencent Cloud AI Agent, Hack-Nation Global AI, and DevNetwork AI + ML are viable targets with different pitch angles.
+- **Active alternates:** Splunk Agentic Ops, SANS Find Evil, Tencent Cloud AI Agent, Hack-Nation Global AI, and DevNetwork AI + ML are viable targets with different pitch angles.
 - **Disqualified or caution:** Google Cloud Rapid Agent is useful for learning, but the public rules exclude residents of China, so it should not be treated as a prize target unless eligibility changes or a qualified teammate leads the submission.
 
 ## Files
 
 - `docs/hackathons/targets.json`: machine-readable contest metadata, scores, URLs, and strategy.
 - `docs/hackathons/multi-hackathon-strategy.md`: human-facing portfolio strategy and priority order.
+- `docs/hackathons/splunk-agentic-ops-pack.md`: Splunk Security-track positioning.
 - `docs/hackathons/google-rapid-agent-pack.md`: cautionary Google Cloud version with eligibility warning.
 - `docs/hackathons/sans-find-evil-pack.md`: incident response positioning.
 - `docs/hackathons/tencent-ai-agent-pack.md`: Chinese enterprise AI agent governance positioning.
 - `docs/hackathons/devnetwork-ai-ml-pack.md`: fast-track generic AI/ML submission positioning.
 - `docs/hackathons/hack-nation-global-ai-pack.md`: startup/venture positioning.
 - `scripts/verify-hackathon-pack.mjs`: validates that the pack exists, contains eligibility notes, and has no empty submission fields.
+- `scripts/verify-splunk-submission.mjs`: validates Splunk-specific repository requirements.
 - `package.json`: adds `hackathons:check`.
 
 ## Strategy

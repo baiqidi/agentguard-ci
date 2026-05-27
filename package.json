@@ -16,11 +16,26 @@
     "agentguard:agent-scenario": "node packages/agent-adapters/dist/cli.js",
     "agentguard:agent-suite": "node packages/agent-adapters/dist/suite-cli.js",
     "submission:check": "node scripts/verify-submission-readiness.mjs",
-    "hackathons:check": "node scripts/verify-hackathon-pack.mjs"
+    "hackathons:check": "node scripts/verify-hackathon-pack.mjs",
+    "splunk:app:check": "node scripts/verify-splunk-companion-app.mjs",
+    "splunk:prepare": "npm run build && npm run agentguard:suite && npm run agentguard:agent-suite && npm run splunk:app:check && npm run video:prep:splunk",
+    "splunk:check": "npm run splunk:prepare && node scripts/verify-splunk-submission.mjs",
+    "video:prep:tencent": "node scripts/prepare-tencent-demo-video.mjs",
+    "video:prep:splunk": "node scripts/prepare-splunk-demo-video.mjs",
+    "video:audio:prep:tencent": "node scripts/prepare-tencent-demo-audio.mjs --prepare-only",
+    "video:audio:tencent": "node scripts/prepare-tencent-demo-audio.mjs",
+    "video:audio:piper:tencent": "node scripts/prepare-tencent-demo-audio.mjs --engine=piper",
+    "video:audio:prep:splunk": "node scripts/prepare-splunk-demo-audio.mjs --prepare-only",
+    "video:audio:splunk": "node scripts/prepare-splunk-demo-audio.mjs",
+    "video:record:tencent": "node scripts/record-tencent-demo-video.mjs",
+    "video:record:splunk": "node scripts/record-splunk-demo-video.mjs",
+    "video:check:splunk": "node scripts/verify-splunk-demo-video.mjs"
   },
   "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@types/node": "^24.10.1",
     "@vitejs/plugin-react": "^5.1.1",
+    "playwright": "^1.60.0",
     "typescript": "^5.9.3",
     "vite": "^7.2.4",
     "vitest": "^4.0.14"

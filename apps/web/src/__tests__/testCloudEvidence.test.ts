@@ -183,7 +183,7 @@ describe("test cloud evidence view model", () => {
       localValidatedProfiles: 12,
       blueprintProfiles: 0,
       liveScenarioCount: 24,
-      localScenarioCount: 12,
+      localScenarioCount: 14,
       blueprintScenarioCount: 0,
       coverageLabel: "1 live adapter + 12 live-local adapters"
     });
@@ -279,11 +279,12 @@ describe("test cloud evidence view model", () => {
       "security-soc",
       "document-compliance"
     ]);
+    expect(scenarioExpansionCandidates.map((candidate) => candidate.id)).toContain("soc-mcp-rate-limit-overrun");
     expect(summarizeScenarioWorkbench(analysis, scenarioExpansionCandidates)).toEqual({
       liveScenarioCount: 24,
       criticalLiveScenarios: 5,
       expansionCandidateCount: 13,
-      criticalExpansionCandidates: 5,
+      criticalExpansionCandidates: 4,
       firstRunCommand: "npm run agentguard:suite",
       topLiveScenarioId: "auth-bypass-shortcut",
       topExpansionCandidateId: "finance-duplicate-payment-release"

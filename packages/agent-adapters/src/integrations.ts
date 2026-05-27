@@ -6,7 +6,7 @@ export interface PublicAgentInstallCheck {
   evidenceCaptured: string[];
   validatedScenarios: string[];
   validatedEffect: string;
-  validationMode: "contract-verified";
+  validationMode: "contract-verified" | "deployment-validated";
   hostedCredentialClaim: boolean;
   sourceUrl: string;
 }
@@ -15,6 +15,7 @@ export interface PublicAgentInstallSummary {
   frameworks: number;
   scenarioLinks: number;
   hostedCredentialClaims: number;
+  deploymentValidatedChecks: number;
   coverageLabel: string;
 }
 
@@ -114,6 +115,62 @@ export const publicAgentInstallChecks: PublicAgentInstallCheck[] = [
     validationMode: "contract-verified",
     hostedCredentialClaim: false,
     sourceUrl: "https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.agent/"
+  },
+  {
+    id: "splunk-mcp-server-security-agent",
+    framework: "Splunk MCP Server",
+    agentSurface: "security investigation, suppression, and containment over Splunk data through MCP",
+    installPoint: "gate MCP-mediated search, suppression, and containment decisions before state changes or signal tuning",
+    evidenceCaptured: ["notable-id", "search-job-id", "case-note", "review approval route"],
+    validatedScenarios: [
+      "security-soc-blocklist",
+      "security-soc-evidence-preservation",
+      "security-soc-alert-suppression"
+    ],
+    validatedEffect:
+      "SOC agents can query and summarize through Splunk MCP while suppression and containment remain review-gated.",
+    validationMode: "contract-verified",
+    hostedCredentialClaim: false,
+    sourceUrl: "https://help.splunk.com/en/splunk-cloud-platform/mcp-server-for-splunk-platform/configure-and-connect"
+  },
+  {
+    id: "splunk-ai-assistant-spl",
+    framework: "Splunk AI Assistant for SPL",
+    agentSurface: "natural-language SPL generation, explanation, and optimization",
+    installPoint: "preserve generated SPL, explanation context, and supporting evidence before analysts trust the conclusion",
+    evidenceCaptured: ["generated SPL", "search-job-id", "supporting event sample"],
+    validatedScenarios: ["security-soc-evidence-preservation", "security-soc-alert-suppression"],
+    validatedEffect:
+      "Generated SPL becomes reviewable evidence instead of an opaque assistant step in the investigation.",
+    validationMode: "contract-verified",
+    hostedCredentialClaim: false,
+    sourceUrl: "https://help.splunk.com/en/splunk-cloud-platform/search/splunk-ai-assistant/1.5.0/use-splunk-ai-assistant-for-spl"
+  },
+  {
+    id: "splunk-appinspect-companion-app",
+    framework: "Splunk AppInspect",
+    agentSurface: "companion app package validation and cloud-readiness review",
+    installPoint: "validate saved searches, alert actions, metadata, and dashboards before the app is published or demoed",
+    evidenceCaptured: ["appinspect report", "package manifest", "cloud-readiness findings"],
+    validatedScenarios: ["security-soc-blocklist", "security-soc-alert-suppression"],
+    validatedEffect:
+      "The Splunk companion app is linted as a deployable surface instead of being presented as an unvalidated mock integration.",
+    validationMode: "deployment-validated",
+    hostedCredentialClaim: false,
+    sourceUrl: "https://dev.splunk.com/enterprise/reference/packagingtoolkit/packagingtoolkitcli"
+  },
+  {
+    id: "splunk-packaging-toolkit-companion-app",
+    framework: "Splunk Packaging Toolkit",
+    agentSurface: "buildable Splunk app artifact for dashboards, saved searches, and custom alert actions",
+    installPoint: "package the companion app into a distributable tgz that can be inspected and uploaded",
+    evidenceCaptured: ["packaged tgz", "savedsearches.conf", "alert_actions.conf"],
+    validatedScenarios: ["security-soc-evidence-preservation", "security-soc-alert-suppression"],
+    validatedEffect:
+      "Review-gated saved searches and custom alert actions ship as a real Splunk app artifact instead of repo-only files.",
+    validationMode: "deployment-validated",
+    hostedCredentialClaim: false,
+    sourceUrl: "https://dev.splunk.com/enterprise/reference/packagingtoolkit/packagingtoolkitcli"
   }
 ];
 
@@ -123,11 +180,13 @@ export function summarizePublicAgentInstallChecks(
   const frameworks = new Set(checks.map((check) => check.framework)).size;
   const scenarioLinks = checks.reduce((sum, check) => sum + check.validatedScenarios.length, 0);
   const hostedCredentialClaims = checks.filter((check) => check.hostedCredentialClaim).length;
+  const deploymentValidatedChecks = checks.filter((check) => check.validationMode === "deployment-validated").length;
 
   return {
     frameworks,
     scenarioLinks,
     hostedCredentialClaims,
-    coverageLabel: `${frameworks} public frameworks contract-verified across ${scenarioLinks} scenario links`
+    deploymentValidatedChecks,
+    coverageLabel: `${frameworks} public frameworks checked across ${scenarioLinks} scenario links`
   };
 }

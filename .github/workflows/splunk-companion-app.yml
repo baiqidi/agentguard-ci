@@ -1,0 +1,52 @@
+name: Splunk Companion App
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  validate-splunk-companion-app:
+    name: Validate Splunk companion app
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Run full Splunk submission gate
+        run: npm run splunk:check
+
+      - name: Install Splunk validation tools
+        run: python -m pip install --upgrade pip splunk-appinspect splunk-packaging-toolkit
+
+      - name: Build companion app evidence
+        run: node scripts/verify-splunk-companion-app.mjs
+
+      - name: Package Splunk companion app with Packaging Toolkit
+        run: slim package splunk-apps/agentguard_ci_for_splunk --output-directory agentguard-runs/splunk-app
+
+      - name: Run Splunk AppInspect
+        run: splunk-appinspect inspect agentguard-runs/splunk-app/agentguard_ci_for_splunk.tgz --mode test --data-format json --output-file agentguard-runs/splunk-app/appinspect-report.json
+
+      - name: Upload Splunk companion app artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: splunk-companion-app
+          path: agentguard-runs/splunk-app

@@ -92,4 +92,17 @@ describe("report rendering", () => {
     });
     expect(evidence.attachments).toEqual(["report.json", "report.md", "junit.xml", "test-cloud-evidence.json"]);
   });
+
+  it("renders Splunk evidence when contest mode is set", () => {
+    process.env.AGENTGUARD_CONTEST = "splunk";
+
+    try {
+      const evidence = JSON.parse(renderTestCloudEvidence(failingScore));
+
+      expect(evidence.targetPlatform).toBe("Splunk MCP Server");
+      expect(evidence.attachments).toEqual(["report.json", "report.md", "junit.xml", "splunk-mcp-evidence.json"]);
+    } finally {
+      delete process.env.AGENTGUARD_CONTEST;
+    }
+  });
 });

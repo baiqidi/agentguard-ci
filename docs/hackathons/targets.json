@@ -16,6 +16,24 @@
     ]
   },
   {
+    "id": "splunk-agentic-ops",
+    "name": "Splunk Agentic Ops Hackathon",
+    "tier": "active-alternate",
+    "status": "active",
+    "deadline": "2026-06-15 09:00 PDT",
+    "urgency": "high",
+    "eligibility": "appears-viable-for-china-resident-solo-builder",
+    "fitScore": 91,
+    "prizeStrategy": "Best near-term alternate prize target because AgentGuard can be reframed as a Security-track reliability layer around Splunk MCP-driven SOC workflows.",
+    "agentguardAngle": "AgentGuard for Splunk SOC blocks unsafe AI-agent actions before they suppress alerts, skip evidence, or mutate systems without approval.",
+    "requiredDelta": "Add Splunk-specific architecture diagram, contest-aware evidence artifacts, Splunk submission copy, and a 3-minute Security-track demo.",
+    "sourceUrls": [
+      "https://splunk.devpost.com/",
+      "https://splunk.devpost.com/rules",
+      "https://splunk.devpost.com/updates"
+    ]
+  },
+  {
     "id": "sans-find-evil",
     "name": "FIND EVIL! - SANS AI Incident Response Hackathon",
     "tier": "active-alternate",

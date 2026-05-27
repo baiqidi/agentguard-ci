@@ -1,0 +1,23 @@
+<form class="splunk-alert-action">
+  <fieldset>
+    <legend>AgentGuard review gate</legend>
+    <label for="review_owner">Review owner</label>
+    <input id="review_owner" name="action.agentguard_review_gate.param.review_owner" type="text" value="Security Review" />
+    <label for="risk_label">Risk label</label>
+    <input id="risk_label" name="action.agentguard_review_gate.param.risk_label" type="text" value="suppression-change" />
+    <label for="required_evidence">Required evidence</label>
+    <input
+      id="required_evidence"
+      name="action.agentguard_review_gate.param.required_evidence"
+      type="text"
+      value="alert-sample,suppression-rationale,security-reviewer-approval"
+    />
+    <label for="output_path">Output path</label>
+    <input
+      id="output_path"
+      name="action.agentguard_review_gate.param.output_path"
+      type="text"
+      value="$SPLUNK_HOME/var/run/splunk/agentguard-review-envelope.json"
+    />
+  </fieldset>
+</form>

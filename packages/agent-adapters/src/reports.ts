@@ -1,5 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { getContestEvidenceConfig } from "./contest.js";
 import type { AdapterGateResult, AdapterScenario, AdapterScore } from "./types.js";
 import { scoreAdapterScenario, summarizeAdapterScores } from "./scoring.js";
 import { publicAgentInstallChecks, summarizePublicAgentInstallChecks } from "./integrations.js";
@@ -56,6 +57,7 @@ export function renderAdapterMarkdownReport(scenario: AdapterScenario, score: Ad
     `Agent type: \`${scenario.agentType}\``,
     `Validation mode: **live-local**`,
     `Status: **${status}**`,
+    `Decision: **${score.decision.toUpperCase()}**`,
     `Score: ${score.totalPassed}/${score.totalGates}`,
     "",
     "## Goal",
@@ -63,6 +65,17 @@ export function renderAdapterMarkdownReport(scenario: AdapterScenario, score: Ad
     "",
     "## Expected Outcome",
     scenario.expectedOutcome,
+    ...(scenario.integrationContext
+      ? [
+          "",
+          "## Integration Context",
+          `Platform: ${scenario.integrationContext.platform}`,
+          `Connector: ${scenario.integrationContext.connector}`,
+          `Tools: ${scenario.integrationContext.tools.join(", ")}`,
+          `Observed objects: ${scenario.integrationContext.observedObjects.join(", ")}`,
+          `Decision focus: ${scenario.integrationContext.decisionFocus}`
+        ]
+      : []),
     "",
     "| Gate | Status | Reason |",
     "| --- | --- | --- |",
@@ -93,6 +106,7 @@ export function renderAdapterJUnitReport(score: AdapterScore): string {
 }
 
 export function renderAdapterTestCloudEvidence(scenario: AdapterScenario, score: AdapterScore): string {
+  const contestConfig = getContestEvidenceConfig();
   const gates = gateEntries(score).map(([name, gate]) => ({
     name,
     status: gate.passed ? "passed" : "failed",
@@ -102,11 +116,13 @@ export function renderAdapterTestCloudEvidence(scenario: AdapterScenario, score:
   return JSON.stringify(
     {
       sourceSystem: "AgentGuard Agent Adapters",
-      targetPlatform: "UiPath Test Cloud",
+      targetPlatform: contestConfig.targetPlatform,
       scenarioId: scenario.id,
       agentType: scenario.agentType,
       riskVectorId: scenario.riskVectorId,
       validationMode: "live-local",
+      decision: score.decision,
+      ...(scenario.integrationContext ? { integrationContext: scenario.integrationContext } : {}),
       status: score.passed ? "passed" : "failed",
       score: {
         passedGates: score.totalPassed,
@@ -122,7 +138,7 @@ export function renderAdapterTestCloudEvidence(scenario: AdapterScenario, score:
         ? "Ready for guarded execution"
         : "Route to human review before external execution",
       gates,
-      attachments: ["report.json", "report.md", "junit.xml", "test-cloud-evidence.json"]
+      attachments: ["report.json", "report.md", "junit.xml", contestConfig.evidenceArtifact]
     },
     null,
     2
@@ -136,12 +152,13 @@ export async function writeAdapterScenarioReports(
 ): Promise<AdapterReportPaths> {
   const scenarioDir = join(outputDir, scenario.id);
   await mkdir(scenarioDir, { recursive: true });
+  const contestConfig = getContestEvidenceConfig();
 
   const paths: AdapterReportPaths = {
     json: join(scenarioDir, "report.json"),
     markdown: join(scenarioDir, "report.md"),
     junit: join(scenarioDir, "junit.xml"),
-    testCloudEvidence: join(scenarioDir, "test-cloud-evidence.json")
+    testCloudEvidence: join(scenarioDir, contestConfig.evidenceArtifact)
   };
 
   await Promise.all([
@@ -166,7 +183,9 @@ export function renderAdapterSuiteJson(scenarios: AdapterScenario[]): string {
         scenarioId: scenario.id,
         title: scenario.title,
         agentType: scenario.agentType,
+        ...(scenario.integrationContext ? { integrationContext: scenario.integrationContext } : {}),
         validationMode: "live-local",
+        decision: scores[index].decision,
         status: scores[index].passed ? "passed" : "failed",
         score: {
           passedGates: scores[index].totalPassed,
@@ -187,8 +206,7 @@ export function renderAdapterSuiteMarkdown(scenarios: AdapterScenario[]): string
   const rows = scenarios
     .map((scenario, index) => {
       const score = scores[index];
-      const status = score.passed ? "PASS" : "FAIL";
-      return `| ${scenario.agentType} | ${status} | ${score.totalPassed}/${score.totalGates} | ${scenario.id} |`;
+      return `| ${scenario.agentType} | ${score.decision.toUpperCase()} | ${score.totalPassed}/${score.totalGates} | ${scenario.id} |`;
     })
     .join("\n");
 
@@ -197,12 +215,15 @@ export function renderAdapterSuiteMarkdown(scenarios: AdapterScenario[]): string
     "",
     `Validation mode: **live-local**`,
     `Agent categories: **${summary.liveAgentTypes}**`,
-    `Scenario pass rate: **${summary.passedScenarios}/${summary.totalScenarios}**`,
+    `Promotion-ready scenarios: **${summary.promotedScenarios}/${summary.totalScenarios}**`,
+    `Decision mix: **${summary.promotedScenarios} promote / ${summary.reviewScenarios} review / ${summary.blockedScenarios} block**`,
     `Gate pass rate: **${summary.gatePassRate}%**`,
     `Review or block findings: **${summary.reviewOrBlockScenarios}**`,
+    `Security / SOC scenarios: **${summary.securitySocScenarios}**`,
+    `Splunk-integrated scenarios: **${summary.splunkIntegratedScenarios}**`,
     `Public framework checks: **${installSummary.coverageLabel}**`,
     "",
-    "| Agent Type | Status | Gates | Scenario |",
+    "| Agent Type | Decision | Gates | Scenario |",
     "| --- | --- | --- | --- |",
     rows,
     ""

@@ -16,6 +16,10 @@ const requiredFiles = [
   "docs/submission/deck-outline.md",
   "docs/submission/AgentGuard-CI-deck.pptx",
   "docs/submission/live-agent-adapter-validation.md",
+  ".github/workflows/splunk-companion-app.yml",
+  "splunk-apps/agentguard_ci_for_splunk/default/app.conf",
+  "splunk-apps/agentguard_ci_for_splunk/default/savedsearches.conf",
+  "splunk-apps/agentguard_ci_for_splunk/default/alert_actions.conf",
   "uipath/test-cloud-matrix.md",
   "uipath/test-cloud-import.csv",
   "uipath/studio-web-runbook.md",
@@ -78,6 +82,20 @@ if (license.includes("MIT License")) {
   fail("license:mit", "Devpost requires MIT or Apache 2.0 visibility.");
 }
 
+if (existsSync(join(root, ".github/workflows/agentguard-evidence.yml"))) {
+  const workflow = readFileSync(join(root, ".github/workflows/agentguard-evidence.yml"), "utf8");
+  if (
+    workflow.includes("actions/checkout@v4") &&
+    workflow.includes("actions/setup-node@v4") &&
+    workflow.includes("actions/upload-artifact@v4") &&
+    workflow.includes("npm run submission:check")
+  ) {
+    pass("workflow:agentguard-evidence-stable");
+  } else {
+    fail("workflow:agentguard-evidence-stable", "Evidence workflow must use stable actions and run submission:check.");
+  }
+}
+
 if (existsSync(join(root, "agentguard-runs/suite-summary.json"))) {
   const suiteSummary = readJson("agentguard-runs/suite-summary.json").summary;
   if (suiteSummary.totalScenarios === 24 && suiteSummary.risk?.criticalFindings === 5) {
@@ -93,13 +111,17 @@ if (existsSync(join(root, "agentguard-runs/suite-summary.json"))) {
 if (existsSync(join(root, "agentguard-runs/agent-adapters/agent-adapter-suite-summary.json"))) {
   const adapterSummary = readJson("agentguard-runs/agent-adapters/agent-adapter-suite-summary.json");
   if (
-    adapterSummary.summary.totalScenarios === 12 &&
+    adapterSummary.summary.totalScenarios === 14 &&
     adapterSummary.summary.liveAgentTypes === 12 &&
-    adapterSummary.publicAgentInstallSummary.frameworks === 8
+    adapterSummary.summary.splunkIntegratedScenarios === 3 &&
+    adapterSummary.summary.reviewScenarios === 9 &&
+    adapterSummary.summary.blockedScenarios === 5 &&
+    adapterSummary.publicAgentInstallSummary.frameworks === 12 &&
+    adapterSummary.publicAgentInstallSummary.deploymentValidatedChecks === 2
   ) {
     pass(
       "evidence:agent-adapter-suite",
-      `${adapterSummary.summary.totalScenarios} live-local scenarios, ${adapterSummary.publicAgentInstallSummary.frameworks} public framework checks`,
+      `${adapterSummary.summary.totalScenarios} live-local scenarios, ${adapterSummary.summary.reviewScenarios} review routes, ${adapterSummary.summary.blockedScenarios} hard blocks, ${adapterSummary.summary.splunkIntegratedScenarios} Splunk scenarios, ${adapterSummary.publicAgentInstallSummary.frameworks} public framework checks, ${adapterSummary.publicAgentInstallSummary.deploymentValidatedChecks} deployment-validated surfaces`,
     );
   } else {
     fail("evidence:agent-adapter-suite", "Unexpected agent adapter suite summary values.");

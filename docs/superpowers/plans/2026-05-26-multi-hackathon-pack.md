@@ -18,7 +18,7 @@
 
 - [x] **Step 1: Create scored target catalog**
 
-Add contest metadata for UiPath, SANS, Tencent Cloud, Hack-Nation, DevNetwork, and Google Cloud Rapid Agent. Include eligibility status and strategy tier.
+Add contest metadata for UiPath, Splunk, SANS, Tencent Cloud, Hack-Nation, DevNetwork, and Google Cloud Rapid Agent. Include eligibility status and strategy tier.
 
 - [x] **Step 2: Create portfolio strategy**
 
@@ -28,6 +28,7 @@ Summarize which contests to pursue, which to avoid, and why.
 
 **Files:**
 - Create: `docs/hackathons/sans-find-evil-pack.md`
+- Create: `docs/hackathons/splunk-agentic-ops-pack.md`
 - Create: `docs/hackathons/tencent-ai-agent-pack.md`
 - Create: `docs/hackathons/devnetwork-ai-ml-pack.md`
 - Create: `docs/hackathons/hack-nation-global-ai-pack.md`

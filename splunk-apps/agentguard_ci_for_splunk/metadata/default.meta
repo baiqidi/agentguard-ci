@@ -1,0 +1,19 @@
+[]
+access = read : [ * ], write : [ admin ]
+export = system
+
+[savedsearches]
+access = read : [ * ], write : [ admin ]
+export = app
+
+[views/agentguard_overview]
+access = read : [ * ], write : [ admin ]
+export = app
+
+[alert_actions/agentguard_review_gate]
+access = read : [ * ], write : [ admin ]
+export = app
+
+[lookups/agentguard_ci_soc_demo]
+access = read : [ * ], write : [ admin ]
+export = app

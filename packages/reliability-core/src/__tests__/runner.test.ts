@@ -56,4 +56,39 @@ describe("runScenarioManifest", () => {
       '"targetPlatform": "UiPath Test Cloud"'
     );
   });
+
+  it("writes Splunk-named evidence artifacts when contest mode is set", async () => {
+    const outputDir = await mkdtemp(join(tmpdir(), "agentguard-"));
+    tempDirs.push(outputDir);
+    process.env.AGENTGUARD_CONTEST = "splunk";
+
+    try {
+      const result = await runScenarioManifest(manifest, {
+        cwd: process.cwd(),
+        outputDir,
+        planFix: () => ({
+          status: "proposed",
+          rootCause: "Issue priority type changed from string to enum",
+          changedFiles: ["apps/web/src/issueModel.ts"],
+          patchSummary: "Fix enum label formatting.",
+          riskLevel: "low"
+        }),
+        runCommand: async (command) => ({
+          command,
+          exitCode: 0,
+          stdout: "pass",
+          stderr: ""
+        })
+      });
+
+      expect(result.reportPaths.testCloudEvidence).toBe(
+        join(outputDir, "frontend-contract", "splunk-mcp-evidence.json")
+      );
+      await expect(readFile(result.reportPaths.testCloudEvidence, "utf8")).resolves.toContain(
+        '"targetPlatform": "Splunk MCP Server"'
+      );
+    } finally {
+      delete process.env.AGENTGUARD_CONTEST;
+    }
+  });
 });

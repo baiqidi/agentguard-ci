@@ -11,15 +11,13 @@ jobs:
   reliability-evidence:
     name: Reliability evidence
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
@@ -46,7 +44,7 @@ jobs:
         run: npm run hackathons:check
 
       - name: Upload AgentGuard evidence
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         with:
           name: agentguard-evidence
           path: agentguard-runs

@@ -1,4 +1,5 @@
 import { join } from "node:path";
+import { getContestEvidenceConfig } from "./contest.js";
 import { loadScenarioManifest } from "./scenario.js";
 import { runScenarioManifest } from "./runner.js";
 import type { FixRequest, FixPlan } from "./runner.js";
@@ -24,12 +25,14 @@ async function main() {
     planScriptedFix: (request: FixRequest) => FixPlan;
   };
   const result = await runScenarioManifest(manifest, { cwd, outputDir, planFix: planScriptedFix });
+  const contestConfig = getContestEvidenceConfig();
 
   console.log(`AgentGuard scenario: ${scenarioId}`);
   console.log(`Score: ${result.score.totalPassed}/${result.score.totalGates}`);
   console.log(`Passed: ${String(result.score.passed)}`);
   console.log(`Markdown report: ${result.reportPaths.markdown}`);
   console.log(`JUnit report: ${result.reportPaths.junit}`);
+  console.log(`${contestConfig.evidenceLabel}: ${result.reportPaths.testCloudEvidence}`);
 }
 
 main().catch((error: unknown) => {

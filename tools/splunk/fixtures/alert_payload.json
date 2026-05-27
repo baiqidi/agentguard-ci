@@ -1,0 +1,22 @@
+{
+  "search_name": "AGCI Suppression Review Gate",
+  "sid": "scheduler__nobody__search__RMD5f3d7",
+  "result_count": 1,
+  "configuration": {
+    "review_owner": "Security Review",
+    "risk_label": "suppression-change",
+    "required_evidence": "alert-sample,suppression-rationale,security-reviewer-approval"
+  },
+  "result": {
+    "scenario_id": "security-soc-alert-suppression",
+    "alert_id": "AG-115",
+    "search_job_id": "sid://AG115",
+    "review_owner": "Security Review",
+    "evidence_status": "missing-alert-sample",
+    "action": "update suppression rule",
+    "risk_points": 5,
+    "approval_required": true,
+    "source_surface": "splunk_ai_assistant",
+    "suppression_rationale": "Repeated phishing alerts from a trusted sender pattern"
+  }
+}

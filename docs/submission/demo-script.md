@@ -10,7 +10,7 @@ AI agents can complete tasks, click through systems, query data, draft support r
 
 AgentGuard CI uses UiPath Test Cloud as the governance layer for enterprise AI agents. The command-backed adapter is a code-repair agent benchmark: it runs a 24-mode failure atlas, scores agent behavior across five gates, and outputs JUnit, JSON, Markdown, and a Test Cloud evidence packet.
 
-The general platform layer now shows one command-backed adapter plus 12 live-local adapters for browser/RPA, data-analysis, customer-support, workflow/DevOps, document/compliance, email/calendar, finance/procurement, HR/recruiting, CRM/sales, security/SOC, knowledge retrieval, and multi-agent coordination. The new failure-mode radar maps eight universal risk vectors across live and live-local controls: instruction attack, excessive agency, tool misuse, data leakage, evidence loss, state drift, approval bypass, and runtime fragility. The assurance layer also gives each scenario a severity, named owner, control, and evidence standard. That lets the demo say exactly what risk was stopped and who must review it.
+The general platform layer now shows one command-backed adapter plus 14 live-local scenarios across browser/RPA, data-analysis, customer-support, workflow/DevOps, document/compliance, email/calendar, finance/procurement, HR/recruiting, CRM/sales, security/SOC, knowledge retrieval, and multi-agent coordination. The new failure-mode radar maps eight universal risk vectors across live and live-local controls: instruction attack, excessive agency, tool misuse, data leakage, evidence loss, state drift, approval bypass, and runtime fragility. The assurance layer also gives each scenario a severity, named owner, control, and evidence standard. That lets the demo say exactly what risk was stopped and who must review it.
 
 ## 1:00-1:45 Demo Target
 
@@ -18,7 +18,7 @@ Show the AgentGuard CI Console:
 
 - Operator Runbook showing the four commands/artifacts needed to use the product.
 - Scenario matrix mapped to UiPath Test Cloud.
-- General Agent Control Layer showing 1 command-backed adapter, 12 live-local adapters, and the universal gate contract.
+- General Agent Control Layer showing 1 command-backed adapter, 14 live-local scenarios across 12 enterprise agent categories, and the universal gate contract.
 - Failure Mode Radar showing eight general agent risk vectors and the highest-pressure vector, Excessive Agency.
 - Scenario Workbench ranking the most dangerous live scenarios and listing the next non-code agent scenarios to add.
 - Failure Atlas covering 24 agent failure modes across 6 reliability domains.
@@ -29,7 +29,7 @@ Show the AgentGuard CI Console:
 - Issue Tracker target used by the reliability scenarios.
 - GitHub Actions workflow that publishes the same evidence artifacts.
 
-Explain that this is the controlled enterprise-style playground used to test one command-backed agent adapter plus 12 live-local agent traces, and that the same gate contract can govern hosted RPA, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems once credentials are connected.
+Explain that this is the controlled enterprise-style playground used to test one command-backed agent adapter plus 14 live-local agent traces, including three dedicated Splunk-style SOC routes, and that the same gate contract can govern hosted RPA, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems once credentials are connected.
 
 ## 1:45-2:30 Positive Scenario
 

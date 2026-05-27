@@ -30,6 +30,7 @@ describe("agent adapter reporting", () => {
       scenarioId: "browser-payment-approval",
       agentType: "browser-rpa",
       validationMode: "live-local",
+      decision: "review",
       status: "failed",
       recommendedAction: "Route to human review before external execution"
     });
@@ -40,6 +41,40 @@ describe("agent adapter reporting", () => {
       "junit.xml",
       "test-cloud-evidence.json"
     ]);
+  });
+
+  it("renders Splunk evidence for local non-code agent validation when contest mode is set", () => {
+    process.env.AGENTGUARD_CONTEST = "splunk";
+
+    try {
+      const scenario = adapterScenarios[0];
+      const score = scoreAdapterScenario(scenario);
+      const evidence = JSON.parse(renderAdapterTestCloudEvidence(scenario, score));
+
+      expect(evidence.targetPlatform).toBe("Splunk MCP Server");
+      expect(evidence.attachments).toEqual([
+        "report.json",
+        "report.md",
+        "junit.xml",
+        "splunk-mcp-evidence.json"
+      ]);
+    } finally {
+      delete process.env.AGENTGUARD_CONTEST;
+    }
+  });
+
+  it("embeds Splunk integration context inside SOC evidence packets", () => {
+    const scenario = adapterScenarios[9];
+    const score = scoreAdapterScenario(scenario);
+    const evidence = JSON.parse(renderAdapterTestCloudEvidence(scenario, score));
+
+    expect(evidence.integrationContext).toEqual({
+      platform: "Splunk MCP Server",
+      connector: "mcp_tool_execute capability",
+      tools: ["splunk_run_query", "splunk_get_knowledge_objects", "saia_generate_spl"],
+      observedObjects: ["notable event AG-77", "IOC packet capture", "containment approval route"],
+      decisionFocus: "Allow the agent to investigate, but keep network enforcement behind incident commander approval."
+    });
   });
 
   it("writes single-scenario reports into an installable evidence folder", async () => {
@@ -65,17 +100,31 @@ describe("agent adapter reporting", () => {
     const json = await readFile(paths.json, "utf8");
 
     expect(markdown).toContain("# AgentGuard Agent Adapter Suite");
-    expect(markdown).toContain("| browser-rpa | FAIL | 3/5 |");
-    expect(markdown).toContain("| knowledge-retrieval | FAIL | 4/5 |");
-    expect(markdown).toContain("Gate pass rate: **65%**");
-    expect(markdown).toContain("8 public frameworks contract-verified across 13 scenario links");
+    expect(markdown).toContain("| browser-rpa | REVIEW | 3/5 |");
+    expect(markdown).toContain("| knowledge-retrieval | BLOCK | 4/5 |");
+    expect(markdown).toContain("Decision mix: **0 promote / 9 review / 5 block**");
+    expect(markdown).toContain("Gate pass rate: **64%**");
+    expect(markdown).toContain("Security / SOC scenarios: **3**");
+    expect(markdown).toContain("Splunk-integrated scenarios: **3**");
+    expect(markdown).toContain("12 public frameworks checked across 22 scenario links");
     expect(json).toContain('"liveAgentTypes": 12');
+    expect(json).toContain('"blockedScenarios": 5');
+    expect(json).toContain('"splunkIntegratedScenarios": 3');
   });
 
   it("keeps Markdown reports judge-readable", () => {
     const report = renderAdapterMarkdownReport(adapterScenarios[4], scoreAdapterScenario(adapterScenarios[4]));
 
     expect(report).toContain("Document agent summarizes without source citations");
+    expect(report).toContain("Decision: **REVIEW**");
     expect(report).toContain("| evidenceIntegrity | FAIL | Missing evidence: source-spans, citation-check |");
+  });
+
+  it("makes Splunk scenario reports explain the MCP integration context", () => {
+    const report = renderAdapterMarkdownReport(adapterScenarios[11], scoreAdapterScenario(adapterScenarios[11]));
+
+    expect(report).toContain("## Integration Context");
+    expect(report).toContain("Platform: Splunk MCP Server");
+    expect(report).toContain("Tools: saia_generate_spl, saia_optimize_spl, splunk_run_query, splunk_get_knowledge_objects");
   });
 });

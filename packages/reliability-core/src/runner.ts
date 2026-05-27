@@ -1,6 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { execa } from "execa";
+import { getContestEvidenceConfig } from "./contest.js";
 import {
   renderJsonReport,
   renderJUnitReport,
@@ -67,12 +68,13 @@ function defaultPlanFix(_request: FixRequest): FixPlan {
 async function writeReports(outputDir: string, score: ReliabilityScore): Promise<ReportPaths> {
   const scenarioDir = join(outputDir, score.scenarioId);
   await mkdir(scenarioDir, { recursive: true });
+  const contestConfig = getContestEvidenceConfig();
 
   const paths: ReportPaths = {
     json: join(scenarioDir, "report.json"),
     junit: join(scenarioDir, "junit.xml"),
     markdown: join(scenarioDir, "report.md"),
-    testCloudEvidence: join(scenarioDir, "test-cloud-evidence.json")
+    testCloudEvidence: join(scenarioDir, contestConfig.evidenceArtifact)
   };
 
   await Promise.all([

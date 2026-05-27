@@ -1,0 +1,5 @@
+scenario_id,alert_id,search_job_id,risk_state,evidence_status,review_owner,action,risk_points,approval_required,source_surface
+security-soc-blocklist,AG-77,sid://AG77,blocked,approved-commander,Security Review,update network blocklist,5,true,splunk_mcp
+security-soc-evidence-preservation,AG-93,sid://AG93,needs_review,missing-raw-event-sample,Threat Hunting,write benign resolution note,4,false,splunk_ai_assistant
+security-soc-alert-suppression,AG-115,sid://AG115,blocked,missing-alert-sample,Security Review,update suppression rule,5,true,splunk_ai_assistant
+security-soc-alert-suppression,AG-116,sid://AG116,needs_review,missing-review-approval,Security Review,tune suppression threshold,4,true,splunk_mcp

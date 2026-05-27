@@ -15,6 +15,7 @@ import type {
   UniversalReliabilityGate
 } from "./testCloudEvidence.js";
 import type { IssuePriority, IssueStatus } from "./issueModel.js";
+import { getContestMode } from "./contestMode.js";
 
 export const supportedLocales = ["en", "zh"] as const;
 export type Locale = (typeof supportedLocales)[number];
@@ -32,7 +33,7 @@ const enMessages = {
   "release.kicker": "Release Decision",
   "metric.autoPromote": "Auto-promote",
   "metric.needsReview": "Needs review",
-  "metric.hardBlock": "Hard block",
+  "metric.hardBlock": "Hard-blocked reviews",
   "assurance.aria": "Risk assurance case",
   "assurance.kicker": "Assurance Case",
   "assurance.body":
@@ -100,7 +101,7 @@ const enMessages = {
   "platform.kicker": "General Agent Control Layer",
   "platform.title": "Thirteen validated adapters, one control contract for every enterprise agent.",
   "platform.body":
-    "AgentGuard keeps the 24-scenario code-repair suite as the command-backed adapter, then runs 12 live-local traces for RPA, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems.",
+    "AgentGuard keeps the 24-scenario code-repair suite as the command-backed adapter, then runs 14 live-local traces for RPA, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems.",
   "platform.liveAdapters": "Live adapters",
   "platform.liveAdapters.detail": "truthful proof",
   "platform.blueprints": "Local adapters",
@@ -171,7 +172,7 @@ const zhMessages: Record<MessageKey, string> = {
   "release.kicker": "发布决策",
   "metric.autoPromote": "自动发布",
   "metric.needsReview": "需要复核",
-  "metric.hardBlock": "强制阻断",
+  "metric.hardBlock": "强阻断复核",
   "assurance.aria": "风险保证案例",
   "assurance.kicker": "保证案例",
   "assurance.body": "每个失败的 Agent 修复都会被量化风险、绑定负责人、控制措施和证据标准，而不是只给一个红色状态。",
@@ -961,6 +962,50 @@ export function isSupportedLocale(value: string | null | undefined): value is Lo
   return supportedLocales.includes(value as Locale);
 }
 
+function adaptTencentText(value: string): string {
+  if (getContestMode() !== "tencent") {
+    return value;
+  }
+
+  return value
+    .replaceAll("uipath/test-cloud-import.csv", "agentguard-runs/tencent-submission/AgentGuard-CI-tencent-submit.zip")
+    .replaceAll("test-cloud-evidence.json", "governance-evidence.json")
+    .replaceAll("赛道 3", "腾讯云")
+    .replaceAll("可导入 Test Cloud 的行级证据", "可复核的上线审批证据")
+    .replaceAll("从克隆仓库到 Test Cloud 证据", "从本地验证到上线审批证据")
+    .replaceAll("Test Cloud 证据适配器", "上线审批证据适配器")
+    .replaceAll("Test Cloud 证据包", "治理证据包")
+    .replaceAll("Test Cloud 证据", "上线审批证据")
+    .replaceAll("Test Cloud 用例", "治理用例")
+    .replaceAll("Test Cloud 控制面", "企业治理控制面")
+    .replaceAll("Test Cloud 测试用例", "治理测试用例")
+    .replaceAll("Test Cloud", "治理证据")
+    .replaceAll("UiPath", "腾讯云智能体生态")
+    .replaceAll("导入 治理证据", "进入评审流程")
+    .replaceAll("挂到 治理证据", "形成上线审批证据")
+    .replaceAll("把证据挂到", "生成");
+}
+
+function adaptSplunkText(value: string): string {
+  if (getContestMode() !== "splunk") {
+    return value;
+  }
+
+  return value
+    .replaceAll("uipath/test-cloud-import.csv", "architecture_diagram.md")
+    .replaceAll("test-cloud-evidence.json", "splunk-mcp-evidence.json")
+    .replaceAll("UiPath Test Cloud / Test Manager", "Splunk MCP Server + Splunk AI")
+    .replaceAll("UiPath Test Manager", "Splunk AI Assistant")
+    .replaceAll("UiPath Test Cloud", "Splunk MCP Server")
+    .replaceAll("Track 3", "Track")
+    .replaceAll("Test Cloud", "Splunk MCP")
+    .replaceAll("UiPath", "Splunk");
+}
+
+function adaptContestText(value: string): string {
+  return adaptSplunkText(adaptTencentText(value));
+}
+
 export function getInitialLocale(localeParam: string | null, browserLanguage = ""): Locale {
   if (isSupportedLocale(localeParam)) {
     return localeParam;
@@ -972,7 +1017,7 @@ export function getInitialLocale(localeParam: string | null, browserLanguage = "
 }
 
 export function t(locale: Locale, key: MessageKey): string {
-  return messages[locale][key] ?? messages.en[key];
+  return adaptContestText(messages[locale][key] ?? messages.en[key]);
 }
 
 export function formatToneLabel(tone: EvidenceTone, locale: Locale): string {
@@ -996,10 +1041,10 @@ export function formatAgentProfileForLocale(profile: AgentProfile, locale: Local
   const localized = locale === "zh" ? agentProfileTranslationsZh[profile.id] : undefined;
   return {
     ...profile,
-    name: localized?.name ?? profile.name,
-    primaryRisk: localized?.primaryRisk ?? profile.primaryRisk,
-    testCloudFit: localized?.testCloudFit ?? profile.testCloudFit,
-    proof: localized?.proof ?? profile.proof
+    name: adaptContestText(localized?.name ?? profile.name),
+    primaryRisk: adaptContestText(localized?.primaryRisk ?? profile.primaryRisk),
+    testCloudFit: adaptContestText(localized?.testCloudFit ?? profile.testCloudFit),
+    proof: adaptContestText(localized?.proof ?? profile.proof)
   };
 }
 
@@ -1019,11 +1064,11 @@ export function formatAgentRiskVectorForLocale(vector: AgentRiskVector, locale: 
   const localized = locale === "zh" ? agentRiskVectorTranslationsZh[vector.id] : undefined;
   return {
     ...vector,
-    name: localized?.name ?? vector.name,
-    source: localized?.source ?? vector.source,
-    failureSignal: localized?.failureSignal ?? vector.failureSignal,
-    control: localized?.control ?? vector.control,
-    productPayoff: localized?.productPayoff ?? vector.productPayoff
+    name: adaptContestText(localized?.name ?? vector.name),
+    source: adaptContestText(localized?.source ?? vector.source),
+    failureSignal: adaptContestText(localized?.failureSignal ?? vector.failureSignal),
+    control: adaptContestText(localized?.control ?? vector.control),
+    productPayoff: adaptContestText(localized?.productPayoff ?? vector.productPayoff)
   };
 }
 
@@ -1050,9 +1095,10 @@ export function formatOperatorWorkflowStepForLocale(
   const localized = locale === "zh" ? operatorWorkflowTranslationsZh[step.id] : undefined;
   return {
     ...step,
-    title: localized?.title ?? step.title,
-    why: localized?.why ?? step.why,
-    artifact: localized?.artifact ?? step.artifact
+    command: adaptContestText(step.command),
+    title: adaptContestText(localized?.title ?? step.title),
+    why: adaptContestText(localized?.why ?? step.why),
+    artifact: adaptContestText(localized?.artifact ?? step.artifact)
   };
 }
 
@@ -1063,10 +1109,10 @@ export function formatScenarioExpansionCandidateForLocale(
   const localized = locale === "zh" ? scenarioExpansionTranslationsZh[candidate.id] : undefined;
   return {
     ...candidate,
-    title: localized?.title ?? candidate.title,
-    userStory: localized?.userStory ?? candidate.userStory,
-    testCloudCase: localized?.testCloudCase ?? candidate.testCloudCase,
-    expectedEvidence: localized?.expectedEvidence ?? candidate.expectedEvidence
+    title: adaptContestText(localized?.title ?? candidate.title),
+    userStory: adaptContestText(localized?.userStory ?? candidate.userStory),
+    testCloudCase: adaptContestText(localized?.testCloudCase ?? candidate.testCloudCase),
+    expectedEvidence: adaptContestText(localized?.expectedEvidence ?? candidate.expectedEvidence)
   };
 }
 
@@ -1191,10 +1237,10 @@ export function formatAdvantageCardForLocale(
 ) {
   const localized = locale === "zh" ? advantageTranslationsZh[card.referenceCategory] : undefined;
   return {
-    referenceCategory: localized?.category ?? card.referenceCategory,
-    incumbentPattern: localized?.pattern ?? card.incumbentPattern,
-    agentGuardAdvantage: localized?.advantage ?? card.agentGuardAdvantage,
-    proofPoint: localized?.proof ?? card.proofPoint
+    referenceCategory: adaptContestText(localized?.category ?? card.referenceCategory),
+    incumbentPattern: adaptContestText(localized?.pattern ?? card.incumbentPattern),
+    agentGuardAdvantage: adaptContestText(localized?.advantage ?? card.agentGuardAdvantage),
+    proofPoint: adaptContestText(localized?.proof ?? card.proofPoint)
   };
 }
 
@@ -1213,8 +1259,9 @@ export function formatDomainForLocale(
 export function formatEvidenceStepForLocale(step: { artifact: string; stage: string; proof: string }, locale: Locale) {
   const localized = locale === "zh" ? evidenceStepTranslationsZh[step.artifact] : undefined;
   return {
-    stage: localized?.stage ?? step.stage,
-    proof: localized?.proof ?? step.proof
+    artifact: adaptContestText(step.artifact),
+    stage: adaptContestText(localized?.stage ?? step.stage),
+    proof: adaptContestText(localized?.proof ?? step.proof)
   };
 }
 
@@ -1224,8 +1271,8 @@ export function formatResearchCardForLocale(
 ) {
   const localized = locale === "zh" ? researchTranslationsZh[principle.id] : undefined;
   return {
-    title: localized?.title ?? principle.title,
-    productTranslation: localized?.productTranslation ?? principle.productTranslation
+    title: adaptContestText(localized?.title ?? principle.title),
+    productTranslation: adaptContestText(localized?.productTranslation ?? principle.productTranslation)
   };
 }
 
@@ -1243,7 +1290,7 @@ export function formatResearchHeadline(
   locale: Locale
 ): string {
   return locale === "zh"
-    ? `${principleCount} 条原则，来自 ${paperCount} 篇 Agent 评估论文 + ${uipathControlCount} 个 UiPath 控制点`
+    ? adaptContestText(`${principleCount} 条原则，来自 ${paperCount} 篇 Agent 评估论文 + ${uipathControlCount} 个 UiPath 控制点`)
     : fallback;
 }
 

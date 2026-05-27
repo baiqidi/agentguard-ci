@@ -1,17 +1,28 @@
 # AgentGuard CI
 
-AgentGuard CI is a UiPath AgentHack Track 3 prototype for testing whether enterprise AI agents are safe enough to run, promote, or route to human review. The command-backed live adapter focuses on code-repair agents: it uses a mixed frontend/backend Issue Tracker as a CI failure playground, then scores whether an agent repaired the failure safely. The broader product is a general AgentGuard control layer for RPA/browser, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems, now backed by executable live-local adapter scenarios.
+AgentGuard CI is an agent reliability firewall for testing whether enterprise AI agents are safe enough to run, promote, or route to human review. The command-backed live adapter focuses on code-repair agents: it uses a mixed frontend/backend Issue Tracker as a CI failure playground, then scores whether an agent repaired the failure safely. The broader product is a general AgentGuard control layer for RPA/browser, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems, now backed by executable live-local adapter scenarios.
+
+The repository now supports multiple contest wrappers on top of the same product core:
+
+- **UiPath**: Test Cloud governance and evidence import workflow.
+- **Tencent Cloud**: Chinese enterprise AI governance packaging.
+- **Splunk**: Security-track packaging for agentic SOC workflows with Splunk MCP evidence.
 
 Public repository: https://github.com/baiqidi/agentguard-ci
 
 License: MIT, covering the original AgentGuard CI solution code in this repository.
 
-## Competition Focus
+## Current Contest Wrappers
 
-- Track: UiPath Test Cloud
-- Project: General AI-agent reliability firewall, with code-repair agents as the command-backed adapter and 12 non-code live-local adapters
-- UiPath role: Test Cloud orchestration and governance for repeatable agent reliability scenarios
-- Bonus alignment: demonstrates Codex/coding-agent use in the build and demo workflow
+- UiPath Track 3: code-repair reliability plus Test Cloud evidence.
+- Tencent Cloud AI contest: Chinese enterprise governance story and localized dashboard.
+- Splunk Agentic Ops: Security track plus Best Use of Splunk MCP Server.
+
+Open the web console in different modes:
+
+- Default: `http://localhost:5173/`
+- Tencent wrapper: `http://localhost:5173/?contest=tencent`
+- Splunk wrapper: `http://localhost:5173/?contest=splunk`
 
 ## Project Description
 
@@ -30,12 +41,12 @@ The newest risk radar lifts the story above the code-repair adapter. It maps liv
 AgentGuard now separates the **execution surface** from the **control contract**:
 
 - Command-backed adapter: code-repair agent reliability with 24 scenarios.
-- Live-local adapters: browser/RPA, data-analysis, customer-support, workflow/DevOps, document/compliance, email/calendar, finance/procurement, HR/recruiting, CRM/sales, security/SOC, knowledge retrieval, and multi-agent coordination.
+- Live-local adapters: browser/RPA, data-analysis, customer-support, workflow/DevOps, document/compliance, email/calendar, finance/procurement, HR/recruiting, CRM/sales, security/SOC, knowledge retrieval, and multi-agent coordination, with a current 9 review / 5 hard-block decision mix.
 - Universal reliability gates: goal fidelity, tool boundary, evidence integrity, state safety, and human approval.
 - Failure mode radar: 8 universal vectors that show which risks are covered by command-backed and live-local scenarios.
 - Operator workbench: a five-step runbook plus a scenario priority queue that tells a first-time user what to run, what evidence to inspect, and which high-risk scenarios deserve attention first.
 
-This is intentionally truthful for a hackathon demo: the code-repair suite runs real repository commands, while the non-code adapters run deterministic local traces and produce Test Cloud evidence. Hosted third-party agent installation is not claimed unless credentials are provided.
+This is intentionally truthful for a hackathon demo: the code-repair suite runs real repository commands, while the non-code adapters run deterministic local traces and produce contest-aware evidence packets. Hosted third-party agent installation is not claimed unless credentials are provided.
 
 ## Fastest User Path
 
@@ -46,6 +57,15 @@ This is intentionally truthful for a hackathon demo: the code-repair suite runs 
 5. Attach evidence through the Test Cloud mapping: `uipath/test-cloud-import.csv`.
 
 The dashboard mirrors this same path in the Operator Runbook panel so a judge or teammate can use the product without reverse-engineering the repository.
+
+## Splunk Agentic Ops Edition
+
+The Splunk wrapper positions AgentGuard as a security control layer around agentic SOC workflows:
+
+- The dashboard can run in Splunk mode with `?contest=splunk`.
+- Evidence payloads switch to `targetPlatform: "Splunk MCP Server"`.
+- The evidence artifact name becomes `splunk-mcp-evidence.json`.
+- The root repository includes [`architecture_diagram.md`](./architecture_diagram.md), which satisfies Splunk's architecture-diagram requirement.
 
 ## Product Thesis
 
@@ -175,7 +195,7 @@ Each run includes:
 - `report.json`: machine-readable AgentGuard score.
 - `report.md`: human reviewer summary.
 - `junit.xml`: CI/Test Cloud-compatible pass/fail evidence.
-- `test-cloud-evidence.json`: UiPath Test Cloud evidence packet with gate status, recommended action, and attachment names.
+- `test-cloud-evidence.json` by default, or a contest-specific evidence packet such as `splunk-mcp-evidence.json`.
 - `suite-summary.json` and `suite-summary.md`: one-command overview for judges and CI artifacts.
 - Risk assurance summary: total risk points, blocked risk points, critical findings, and owner review queue.
 - Failure mode radar summary: universal vectors, live coverage, live-local coverage, and the highest-pressure vector.
@@ -216,6 +236,66 @@ Multi-hackathon packaging lives in `docs/hackathons/`. It ranks realistic altern
 ```bash
 npm run hackathons:check
 ```
+
+The Splunk-specific repository readiness check is self-generating: it builds the workspaces, runs the command-backed suite, runs the live-local agent suite, validates the Splunk app, prepares video assets, and then checks the submission packet.
+
+```bash
+npm run splunk:check
+```
+
+To regenerate the evidence without the final assertion pass:
+
+```bash
+npm run splunk:prepare
+```
+
+The Splunk companion app validation can also be run on its own:
+
+```bash
+npm run splunk:app:check
+```
+
+That command packages the companion app, executes the custom alert-action fixture, extracts the packaged `.tgz` into a clean install directory, and writes `agentguard-runs/splunk-app/install-smoke-report.json`.
+
+Official Splunk Packaging Toolkit and AppInspect validation is pinned to Python 3.12 in `.github/workflows/splunk-companion-app.yml`. Python 3.14 is not compatible with Splunk Packaging Toolkit 1.0.1 because that tool still imports Python's removed `imp` module.
+
+Prepare the Splunk demo video assets without recording:
+
+```bash
+npm run video:prep:splunk
+```
+
+Prepare scene-aligned English voiceover audio without recording:
+
+```bash
+npm run video:audio:prep:splunk
+npm run video:audio:splunk
+```
+
+Record the final Splunk walkthrough only after the local app is running on port `5190` and the submission copy is final:
+
+```bash
+npm run video:record:splunk
+```
+
+Verify the recorded MP4 before upload:
+
+```bash
+npm run video:check:splunk
+```
+
+The video check validates the generated MP4 duration, audio stream, resolution, seven-scene product route list, scene-aligned narration audio, and judge-facing narration text. It is separate from `npm run splunk:check` because recording requires the local web app to be running.
+
+Splunk-specific submission assets live in:
+
+- `docs/submission/splunk-submission-copy.md`
+- `docs/submission/splunk-significant-updates.md`
+- `docs/submission/splunk-judge-readiness.md`
+- `docs/submission/splunk-demo-script.md`
+- `docs/submission/splunk-demo-video-plan.md`
+- `agentguard-runs/splunk-app/install-smoke-report.json`
+- `splunk-apps/agentguard_ci_for_splunk/`
+- `.github/workflows/splunk-companion-app.yml`
 
 ## Project Layout
 

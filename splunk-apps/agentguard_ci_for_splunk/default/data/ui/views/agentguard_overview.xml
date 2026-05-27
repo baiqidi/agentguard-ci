@@ -1,0 +1,51 @@
+<dashboard version="1.1" theme="light">
+  <label>AgentGuard CI for Splunk</label>
+  <description>Companion dashboard for SOC review queues, evidence coverage, and alert-action handoff into AgentGuard CI.</description>
+  <row>
+    <panel>
+      <single>
+        <title>Pending Review Routes</title>
+        <search>
+          <query>| inputlookup agentguard_ci_soc_demo.csv | search risk_state=needs_review OR risk_state=blocked | stats count as pending_review_routes</query>
+          <earliest>-24h</earliest>
+          <latest>now</latest>
+        </search>
+      </single>
+    </panel>
+    <panel>
+      <single>
+        <title>Approval-Gated Actions</title>
+        <search>
+          <query>| inputlookup agentguard_ci_soc_demo.csv | search approval_required=true | stats count as approval_gated_actions</query>
+          <earliest>-24h</earliest>
+          <latest>now</latest>
+        </search>
+      </single>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <chart>
+        <title>Evidence Coverage</title>
+        <search ref="AGCI Evidence Coverage" />
+        <option name="charting.chart">bar</option>
+      </chart>
+    </panel>
+    <panel>
+      <chart>
+        <title>Review Owners</title>
+        <search ref="AGCI Review Queue Owners" />
+        <option name="charting.chart">pie</option>
+      </chart>
+    </panel>
+  </row>
+  <row>
+    <panel>
+      <table>
+        <title>Suppression and Containment Review Queue</title>
+        <search ref="AGCI SOC Pending Review" />
+        <option name="count">10</option>
+      </table>
+    </panel>
+  </row>
+</dashboard>

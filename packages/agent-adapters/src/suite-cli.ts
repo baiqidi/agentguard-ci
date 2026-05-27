@@ -16,8 +16,13 @@ async function main() {
   console.log("AgentGuard agent adapter suite complete");
   console.log(`Validation mode: live-local`);
   console.log(`Agent categories: ${summary.liveAgentTypes}`);
-  console.log(`Scenarios: ${summary.passedScenarios}/${summary.totalScenarios} passed`);
+  console.log(`Promotion-ready scenarios: ${summary.promotedScenarios}/${summary.totalScenarios}`);
+  console.log(
+    `Decision mix: ${summary.promotedScenarios} promote / ${summary.reviewScenarios} review / ${summary.blockedScenarios} block`
+  );
   console.log(`Gate pass rate: ${summary.gatePassRate}%`);
+  console.log(`Security / SOC scenarios: ${summary.securitySocScenarios}`);
+  console.log(`Splunk-integrated scenarios: ${summary.splunkIntegratedScenarios}`);
   console.log(`Review or block findings: ${summary.reviewOrBlockScenarios}`);
   console.log(`Suite JSON: ${paths.json}`);
   console.log(`Suite Markdown: ${paths.markdown}`);

@@ -1,4 +1,5 @@
 import type { ReliabilityGateResult, ReliabilityScore } from "./types.js";
+import { getContestEvidenceConfig } from "./contest.js";
 import { findRiskProfile } from "./risk.js";
 
 function escapeXml(value: string): string {
@@ -62,6 +63,7 @@ export function renderJUnitReport(score: ReliabilityScore): string {
 }
 
 export function renderTestCloudEvidence(score: ReliabilityScore): string {
+  const contestConfig = getContestEvidenceConfig();
   const gates = gateEntries(score).map(([name, gate]) => ({
     name,
     status: gate.passed ? "passed" : "failed",
@@ -72,7 +74,7 @@ export function renderTestCloudEvidence(score: ReliabilityScore): string {
   return JSON.stringify(
     {
       sourceSystem: "AgentGuard CI",
-      targetPlatform: "UiPath Test Cloud",
+      targetPlatform: contestConfig.targetPlatform,
       scenarioId: score.scenarioId,
       status: score.passed ? "passed" : "failed",
       score: {
@@ -99,7 +101,7 @@ export function renderTestCloudEvidence(score: ReliabilityScore): string {
           }
         : {}),
       gates,
-      attachments: ["report.json", "report.md", "junit.xml", "test-cloud-evidence.json"]
+      attachments: ["report.json", "report.md", "junit.xml", contestConfig.evidenceArtifact]
     },
     null,
     2

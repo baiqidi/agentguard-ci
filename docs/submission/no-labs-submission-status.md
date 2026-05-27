@@ -34,7 +34,7 @@ npm run submission:check
 
 ## Honest Scope Statement
 
-AgentGuard CI currently has one command-backed adapter and 12 live-local enterprise agent traces. It does not claim that it has been installed into a hosted UiPath Labs tenant or third-party enterprise workspace yet. Hosted installation requires tenant credentials, API permissions, and the Labs sandbox link.
+AgentGuard CI currently has one command-backed adapter and 14 live-local enterprise agent traces. It does not claim that it has been installed into a hosted UiPath Labs tenant or third-party enterprise workspace yet. Hosted installation requires tenant credentials, API permissions, and the Labs sandbox link.
 
 ## Labs URL Replacement Step
 

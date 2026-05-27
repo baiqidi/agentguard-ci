@@ -23,7 +23,7 @@ AgentGuard CI is a reliability test harness for AI agents. It runs code-repair s
 The prototype includes:
 
 - 24 command-backed code-repair scenarios.
-- 12 live-local enterprise agent scenarios.
+- 14 live-local enterprise agent scenarios, including 3 dedicated SOC routes.
 - A web dashboard for evidence review.
 - GitHub Actions that runs tests, builds, and scenario suites.
 - Markdown, JSON, JUnit, and evidence-packet outputs.

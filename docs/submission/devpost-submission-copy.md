@@ -47,7 +47,7 @@ The project is designed for UiPath Test Cloud as the governance layer. Test Clou
 ## What It Does
 
 - Runs 24 command-backed code-repair reliability scenarios against a mixed frontend/backend demo app.
-- Runs 12 live-local enterprise agent scenarios that simulate high-risk non-code agents.
+- Runs 14 live-local enterprise agent scenarios that simulate high-risk non-code agents, including 3 dedicated security/SOC routes.
 - Scores behavior through reliability gates: CI recovery, root cause match, change safety, test integrity, human approval, goal fidelity, tool boundary, evidence integrity, and state safety.
 - Produces evidence artifacts for judges and Test Cloud: Markdown summaries, JSON reports, JUnit XML, and Test Cloud evidence packets.
 - Shows a web dashboard with multilingual UI, risk radar, scenario queue, operator runbook, and Devpost-ready proof points.
@@ -95,7 +95,7 @@ Open the dashboard at the local Vite URL printed by the dev server.
 ## Evidence to Mention
 
 - Code-repair suite: 24 scenarios, 7 auto-promote, 17 review/block, 106/131 risk points stopped, 5 critical findings.
-- Enterprise agent suite: 12 live-local scenarios, 12 review/block findings, 39/60 gates passed, 65% gate pass rate.
+- Enterprise agent suite: 14 live-local scenarios, 9 review routes, 5 hard blocks, 45/70 gates passed, 64% gate pass rate, with 3 Splunk-integrated SOC scenarios.
 - Public framework checks: 8 contract-verified integration surfaces and 0 hosted credential claims.
 - GitHub Actions: `.github/workflows/agentguard-evidence.yml` runs tests, builds, both suites, and uploads `agentguard-runs/`.
 
