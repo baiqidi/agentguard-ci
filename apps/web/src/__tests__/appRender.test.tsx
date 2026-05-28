@@ -29,7 +29,11 @@ describe("App render", () => {
     "http://127.0.0.1:5190/?contest=splunk&lang=en&present=1&page=overview",
     "http://127.0.0.1:5190/?contest=splunk&lang=en&present=1&page=scenarios&soc=security-soc-alert-suppression",
     "http://127.0.0.1:5190/?contest=splunk&lang=en&present=1&page=companion&delivery=review-gate-action",
-    "http://127.0.0.1:5190/?contest=splunk&lang=en&present=1&page=evidence&scenario=unsafe-diff-guard&filter=danger"
+    "http://127.0.0.1:5190/?contest=splunk&lang=en&present=1&page=evidence&scenario=unsafe-diff-guard&filter=danger",
+    "http://127.0.0.1:5190/?contest=sans&lang=en&present=1&page=overview",
+    "http://127.0.0.1:5190/?contest=sans&lang=en&present=1&page=scenarios",
+    "http://127.0.0.1:5190/?contest=sans&lang=en&present=1&page=companion",
+    "http://127.0.0.1:5190/?contest=sans&lang=en&present=1&page=evidence&scenario=sift-containment-approval&filter=danger"
   ]) {
     it(`renders without throwing in presentation mode for ${new URL(href).searchParams.get("page")}`, () => {
       Object.defineProperty(globalThis, "window", {

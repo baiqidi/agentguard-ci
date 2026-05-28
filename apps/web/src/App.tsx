@@ -96,6 +96,7 @@ import {
 import { BaselineReadinessPanel, JudgingCriteriaPanel } from "./CompetitionPanels.js";
 import { parseSplunkDeliveryId, type SplunkDeliveryId } from "./splunkDeliveryModel.js";
 import { SplunkCompanionAppSection, SplunkContestSection } from "./SplunkPanels.js";
+import { SansIrScenarioSection, SansReplaySection } from "./SansPanels.js";
 import { summarizeSplunkContestSurface } from "./splunkContestData.js";
 import { parseSplunkScenarioId, type SplunkScenarioId } from "./splunkMissionModel.js";
 import "./App.css";
@@ -902,6 +903,7 @@ function ScenariosPage({
           onSelectScenario={setSelectedSplunkScenarioId}
         />
       ) : null}
+      {contestMode === "sans" ? <SansIrScenarioSection locale={locale} /> : null}
       <AgentCoveragePanel coverageSummary={agentCoverageSummary} locale={locale} />
       <RiskRadarPanel locale={locale} riskRadarSummary={riskRadarSummary} />
       <ScenarioWorkbenchPanel
@@ -933,6 +935,7 @@ function CompanionPage({
           onSelectDelivery={setSelectedSplunkDeliveryId}
         />
       ) : null}
+      {contestMode === "sans" ? <SansReplaySection locale={locale} /> : null}
       <OperatorRunbookPanel locale={locale} />
       <section className="trace-band" aria-label={t(locale, "trace.aria")}>
         <TraceStep index="01" title={t(locale, "trace.1.title")} detail={t(locale, "trace.1.detail")} />

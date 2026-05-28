@@ -107,7 +107,8 @@ if (!skipDocs) {
     "docs/hackathons/sans-find-evil-pack.md",
     "docs/submission/sans-find-evil-submission-copy.md",
     "docs/submission/sans-find-evil-judge-readiness.md",
-    "sans-fixtures/case-001/README.md"
+    "sans-fixtures/case-001/README.md",
+    ".github/workflows/sans-find-evil.yml"
   ];
 
   for (const file of requiredDocs) {
@@ -145,6 +146,26 @@ if (!skipDocs) {
       pass("architecture:sans-flow");
     } else {
       fail("architecture:sans-flow", `Missing architecture signal(s): ${missing.join(", ")}`);
+    }
+  }
+
+  if (existsSync(join(root, ".github/workflows/sans-find-evil.yml"))) {
+    const workflow = read(join(root, ".github/workflows/sans-find-evil.yml"));
+    const requiredWorkflowSignals = [
+      "actions/checkout@v4",
+      "actions/setup-node@v4",
+      "node-version: 20",
+      "npm ci",
+      "npm run sans:check",
+      "actions/upload-artifact@v4",
+      "sans-find-evil-evidence"
+    ];
+    const missing = requiredWorkflowSignals.filter((signal) => !workflow.includes(signal));
+
+    if (missing.length === 0) {
+      pass("workflow:sans-find-evil", "CI runs sans:check and uploads judge evidence");
+    } else {
+      fail("workflow:sans-find-evil", `Missing workflow signal(s): ${missing.join(", ")}`);
     }
   }
 }
