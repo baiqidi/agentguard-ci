@@ -46,6 +46,12 @@ TypeScript, React, Vite, Node.js, Vitest, SANS SIFT, Protocol SIFT, incident res
 
 ## Demo Video
 
+Video URL:
+
+```text
+https://youtu.be/CTRoxgFSGlg
+```
+
 Required recording checklist:
 
 - Show a real terminal running `npm run sans:check`.
@@ -71,6 +77,34 @@ npm run video:audio:prep:sans
 npm run video:audio:sans
 npm run video:record:sans
 npm run video:check:sans
+```
+
+## Ready-To-Paste Fields
+
+Video link:
+
+```text
+https://youtu.be/CTRoxgFSGlg
+```
+
+Try it out:
+
+```text
+Repository: https://github.com/baiqidi/agentguard-ci/tree/codex/sans-find-evil
+
+Local verification:
+npm install
+npm run sans:check
+npm run dev -w @agentguard/web
+
+Dashboard:
+http://localhost:5173/?contest=sans
+```
+
+Additional judge note:
+
+```text
+The public branch is the current submission repository. Judges can run `npm install` and `npm run sans:check` to regenerate the evidence bundle, including the terminal-style agent log, accuracy report, evidence dataset, investigative narrative, and adapter-suite summary. The demo uses a safe fixture bundle by default and clearly records `fixture-local` mode when SANS SIFT binaries are unavailable; the same command contract maps to SANS SIFT and Protocol SIFT-style tool calls in a full SIFT environment.
 ```
 
 ## Judge Evidence
