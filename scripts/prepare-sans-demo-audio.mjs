@@ -10,6 +10,7 @@ const shotListPath = join(outDir, "shot-list.json");
 const voiceoverTextPath = join(outDir, "voiceover-en.txt");
 const reviewPath = join(outDir, "voiceover-review-en.md");
 const manifestPath = join(outDir, "audio-manifest.json");
+const reviewManifestPath = join(outDir, "audio-review-manifest.json");
 const canonicalWavPath = join(outDir, "AgentGuard-IR-SANS-Voiceover-en.wav");
 const prepareOnly = process.argv.includes("--prepare-only");
 
@@ -241,9 +242,10 @@ const manifest = {
 };
 
 if (prepareOnly) {
-  writeFileSync(manifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
+  writeFileSync(reviewManifestPath, `${JSON.stringify(manifest, null, 2)}\n`);
   console.log("SANS demo voiceover text prepared.");
   console.log(`Voiceover review: ${reviewPath}`);
+  console.log(`Review manifest: ${reviewManifestPath}`);
   console.log("No audio synthesis or screen recording was started.");
   process.exit(0);
 }

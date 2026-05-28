@@ -117,12 +117,12 @@ describe("SANS FIND EVIL local runner", () => {
     expect(result.status).toBe(0);
 
     const outputDir = join(process.cwd(), "agentguard-runs", "sans-demo-video");
-    const manifest = JSON.parse(await readFile(join(outputDir, "audio-manifest.json"), "utf8"));
+    const manifest = JSON.parse(await readFile(join(outputDir, "audio-review-manifest.json"), "utf8"));
     const review = await readFile(join(outputDir, "voiceover-review-en.md"), "utf8");
 
     expect(manifest.prepareOnly).toBe(true);
-    expect(manifest.targetDurationSeconds).toBe(235);
-    expect(review).toContain("Scene 02 0:24-0:58 - Live terminal run");
+    expect(manifest.targetDurationSeconds).toBe(180);
+    expect(review).toContain("Scene 02 0:21-0:45 - Live terminal run");
     expect(review).not.toContain("terminal:");
   });
 });

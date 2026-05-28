@@ -53,60 +53,60 @@ const dedicatedRepository = "https://github.com/baiqidi/agentguard-ci-sans-ir";
 
 const shotList = [
   {
-    time: "0:00-0:24",
+    time: "0:00-0:21",
     name: "Opening risk",
     url: route("page=overview"),
     focus: ".decision-hero",
     narration:
-      "AgentGuard IR is a reliability gate for autonomous incident-response agents. Before an agent escalates a finding or changes state, it asks whether the claim traces to evidence and whether the next action is safe."
+      "AgentGuard IR is a reliability gate for autonomous incident-response agents. In incident response, speed is not enough. A fast agent can still overstate a finding, lose traceability, or isolate the wrong host. This product asks a stricter question before action: does the claim trace to evidence, and is the next step safe enough to continue."
   },
   {
-    time: "0:24-0:58",
+    time: "0:21-0:45",
     name: "Live terminal run",
     url: "terminal:npm run sans:check",
     focus: "terminal",
     narration:
-      "The demo should show the terminal running npm run sans check. That one command builds the project, replays a SIFT-compatible evidence bundle, runs the SANS adapter suite, prepares video assets, and validates the submission packet."
+      "The demo should show the terminal running npm run sans check. That one command builds the workspaces, replays a SIFT-compatible evidence bundle, runs the incident-response adapter suite, prepares the demo assets, and validates the submission packet. The important part is that this is not a static screenshot. It is a repeatable command path that produces logs, reports, and judge-readable artifacts from the same local case data."
   },
   {
-    time: "0:58-1:34",
+    time: "0:45-1:09",
     name: "Self-correction evidence",
     url: route("page=companion"),
     focus: ".splunk-companion-panel",
     narration:
-      `The run produces structured execution logs with timestamps, tool calls, token usage, and ${selfCorrections} visible self-correction. The agent downgrades an unsupported persistence claim instead of hiding the mistake in a polished final answer.`
+      `The run produces structured execution logs with timestamps, tool calls, token usage, and ${selfCorrections} visible self-correction. The agent first sees a possible persistence signal, but the evidence is not strong enough. Instead of hiding that mistake in a polished answer, AgentGuard records the correction, downgrades the unsupported PowerShell claim, and promotes only the Run key finding that has a registry artifact, offset, and hash.`
   },
   {
-    time: "1:34-2:10",
+    time: "1:09-1:35",
     name: "Accuracy report",
     url: route("page=companion"),
     focus: ".splunk-deployment-grid",
     narration:
-      `The accuracy report contains ${findingCount} findings: ${confirmed} confirmed, ${rejected} rejected, and ${inferred} inferred. Every conclusion points to a file, offset, log line, or flow identifier, so judges can trace the reasoning path.`
+      `The accuracy report contains ${findingCount} findings: ${confirmed} confirmed, ${rejected} rejected, and ${inferred} inferred. The key distinction is that not every suspicious signal becomes a confirmed compromise. A password-spraying burst is confirmed from auth log lines, but successful compromise is rejected when no accepted login exists from the attacker source. Every conclusion points to a file, offset, log line, or flow identifier, so judges can trace the reasoning path.`
   },
   {
-    time: "2:10-2:48",
+    time: "1:35-2:04",
     name: "IR scenario coverage",
     url: route("page=scenarios"),
     focus: ".splunk-contest-panel",
     narration:
-      "The FIND EVIL routes cover disk persistence, authentication-log accuracy, and containment approval. Evidence-backed analysis can continue, but unsafe mutation, weak claims, and unapproved endpoint isolation are routed to review or blocked."
+      "The FIND EVIL routes cover disk persistence, authentication-log accuracy, and containment approval. The first route tests whether the agent corrects weak persistence evidence. The second tests whether it separates password spraying from actual account compromise. The third tests whether it tries to isolate endpoint HR-17 without incident commander approval or rollback evidence. Evidence-backed analysis can continue, but unsafe mutation, weak claims, and unapproved containment are routed to review or blocked."
   },
   {
-    time: "2:48-3:26",
+    time: "2:04-2:31",
     name: "Audit trail and constraints",
     url: route("page=scenarios"),
     focus: ".splunk-scenario-grid",
     narration:
-      "The guardrails are enforced as a scoring and evidence contract, not just a prompt instruction. AgentGuard checks goal fidelity, tool boundaries, evidence integrity, state safety, and human approval before an autonomous IR action can proceed."
+      "The guardrails are enforced as a scoring and evidence contract, not just a prompt instruction. AgentGuard checks goal fidelity, tool boundaries, evidence integrity, state safety, and human approval before an autonomous IR action can proceed. That matters because response automation is allowed to touch real systems. If the agent cannot explain the evidence, cannot preserve state, or cannot show named approval for a high-risk action, the safest answer is not to act yet."
   },
   {
-    time: "3:26-3:55",
+    time: "2:31-3:00",
     name: "Repository and local setup",
     url: route("page=companion"),
     focus: ".splunk-deployment-grid",
     narration:
-      `The public repository includes MIT licensing, setup instructions, safe replay fixtures, architecture, logs, accuracy reporting, and Devpost copy. The broader adapter suite now covers ${adapters.totalScenarios} local agent scenarios across ${adapters.liveAgentTypes} agent categories.`
+      `The public repository includes MIT licensing, setup instructions, safe replay fixtures, architecture, logs, accuracy reporting, and Devpost copy. The broader adapter suite now covers ${adapters.totalScenarios} local agent scenarios across ${adapters.liveAgentTypes} agent categories, so the SANS version is not a one-off demo. It is the incident-response package of a general reliability firewall for enterprise agents. Judges can clone the branch, run the same command, and inspect the same evidence.`
   }
 ];
 
@@ -154,7 +154,7 @@ const manifest = {
   generatedAt: new Date().toISOString(),
   outputDir: resolve(outDir),
   baseUrl,
-  targetDuration: "3:55",
+  targetDuration: "3:00",
   primaryRepository,
   dedicatedRepository,
   verifiedEvidence: {

@@ -11,6 +11,8 @@ const minWidth = Number(process.env.AGENTGUARD_SANS_VIDEO_MIN_WIDTH ?? 1280);
 const minHeight = Number(process.env.AGENTGUARD_SANS_VIDEO_MIN_HEIGHT ?? 720);
 const minBytes = Number(process.env.AGENTGUARD_SANS_VIDEO_MIN_BYTES ?? 10_000);
 const syncToleranceSeconds = Number(process.env.AGENTGUARD_SANS_VIDEO_SYNC_TOLERANCE_SECONDS ?? 6);
+const maxSegmentPaddingSeconds = Number(process.env.AGENTGUARD_SANS_AUDIO_MAX_SEGMENT_PADDING_SECONDS ?? 3);
+const maxDetectedSilenceSeconds = Number(process.env.AGENTGUARD_SANS_AUDIO_MAX_DETECTED_SILENCE_SECONDS ?? 3.5);
 let inspectedVideoDurationSeconds = null;
 
 const paths = {
@@ -78,6 +80,19 @@ function parseResolution(output) {
   }
 
   return { width: Number(match[1]), height: Number(match[2]) };
+}
+
+function detectSilences(path) {
+  const result = spawnSync(
+    ffmpeg.path,
+    ["-hide_banner", "-i", path, "-af", "silencedetect=noise=-45dB:d=0.7", "-f", "null", "-"],
+    {
+      encoding: "utf8",
+      maxBuffer: 1024 * 1024 * 10
+    }
+  );
+  const output = `${result.stdout ?? ""}\n${result.stderr ?? ""}`;
+  return [...output.matchAll(/silence_duration:\s*(\d+(?:\.\d+)?)/g)].map((match) => Number(match[1]));
 }
 
 function checkRequiredFiles() {
@@ -183,17 +198,39 @@ function checkShotListAndAudio() {
 
   const audioDuration = Number(audioManifest.durationSeconds);
   const segmentCount = Array.isArray(audioManifest.segments) ? audioManifest.segments.length : 0;
+  const maxPadding = Array.isArray(audioManifest.segments)
+    ? Math.max(...audioManifest.segments.map((segment) => Number(segment.paddedSeconds ?? 0)))
+    : Number.POSITIVE_INFINITY;
   if (
     audioManifest.status === "audio-generated" &&
     segmentCount === shotList.length &&
     Number.isFinite(audioDuration) &&
-    Math.abs(audioDuration - totalSeconds) <= 1.5
+    Math.abs(audioDuration - totalSeconds) <= 1.5 &&
+    maxPadding <= maxSegmentPaddingSeconds
   ) {
-    pass("audio:scene-aligned", `${segmentCount} segments / ${audioDuration}s`);
+    pass("audio:scene-aligned", `${segmentCount} segments / ${audioDuration}s / max padding ${maxPadding}s`);
   } else {
     fail(
       "audio:scene-aligned",
-      `Expected generated audio with ${shotList.length} segments and duration near ${totalSeconds}s. Status: ${audioManifest.status}; segments: ${segmentCount}; duration: ${audioManifest.durationSeconds}.`
+      `Expected generated audio with ${shotList.length} segments, duration near ${totalSeconds}s, and no padding over ${maxSegmentPaddingSeconds}s. Status: ${audioManifest.status}; segments: ${segmentCount}; duration: ${audioManifest.durationSeconds}; max padding: ${maxPadding}.`
+    );
+  }
+}
+
+function checkAudioSilence() {
+  if (!existsSync(paths.mp4)) {
+    return;
+  }
+
+  const silences = detectSilences(paths.mp4);
+  const maxSilence = silences.length > 0 ? Math.max(...silences) : 0;
+
+  if (maxSilence <= maxDetectedSilenceSeconds) {
+    pass("audio:silence-budget", `${silences.length} detected pauses / max ${maxSilence.toFixed(1)}s`);
+  } else {
+    fail(
+      "audio:silence-budget",
+      `Expected no detected silence over ${maxDetectedSilenceSeconds}s; longest was ${maxSilence.toFixed(1)}s.`
     );
   }
 }
@@ -236,6 +273,7 @@ function checkNarration() {
 checkRequiredFiles();
 checkVideo();
 checkShotListAndAudio();
+checkAudioSilence();
 checkNarration();
 
 for (const check of checks) {
