@@ -24,26 +24,28 @@ AgentGuard IR is a reliability gate for Protocol SIFT-style incident-response ag
 - state safety
 - human approval
 
-For FIND EVIL, the product focuses on three IR routes:
+For FIND EVIL, the product focuses on five IR routes:
 
 - disk persistence investigation with self-correction
 - authentication-log accuracy validation
 - containment approval before endpoint isolation
+- Windows Event Log lateral movement validation
+- memory process tree triage with review-gated escalation
 
-The output is not a marketing summary. The runner generates a terminal-style execution log, an accuracy report, evidence dataset documentation, and an investigative narrative. Each finding is labeled as confirmed, rejected, or inferred and points to a file, offset, log entry, or flow id.
+The output is not a marketing summary. The runner generates a terminal-style execution log, an accuracy report, evidence dataset documentation, an investigative narrative, and a one-page judge evidence summary. Each finding is labeled as confirmed, rejected, or inferred and points to a file, offset, log entry, event id, process id, or flow id.
 
 ## How I Built It
 
 The core is TypeScript with Vitest, a React/Vite dashboard, and Node.js evidence runners. The SANS edition adds:
 
 - `scripts/run-sans-sift-ir-demo.mjs` for local SIFT-compatible evidence replay
-- `sans-fixtures/case-001/` as a safe deterministic evidence bundle
+- `sans-fixtures/case-001/` as a safe deterministic evidence bundle, including auth logs, packet flow index, Windows Security Events, and a memory process tree
 - SANS-mode evidence packets using `targetPlatform: "SANS SIFT Workstation + Protocol SIFT MCP"`
 - a Direct Agent Extension pattern for a Claude Code-compatible agent runner
 - a dashboard mode at `?contest=sans`
 - an architecture diagram and judge readiness checklist
 
-The local runner is honest about environment. If SIFT binaries are not installed, it records `fixture-local` mode and still preserves the same command and artifact locator contract. On a SANS SIFT Workstation, after installing Protocol SIFT with the official package command, the same flow can map to real `fls`, `mactime`, `rip.pl`, `grep`, `awk`, `tshark`, and Protocol SIFT MCP calls.
+The local runner is honest about environment. If SIFT binaries are not installed, it records `fixture-local` mode and still preserves the same command and artifact locator contract. On a SANS SIFT Workstation, after installing Protocol SIFT with the official package command, the same flow can map to real `fls`, `mactime`, `rip.pl`, `grep`, `awk`, `tshark`, `wevtutil`, `vol.py`, and Protocol SIFT MCP calls.
 
 ## Challenges I Ran Into
 
@@ -53,9 +55,10 @@ Another challenge was keeping the submission truthful. The local demo must work 
 
 ## Accomplishments That I Am Proud Of
 
-- Three FIND EVIL-specific incident-response scenarios.
+- Five FIND EVIL-specific incident-response scenarios.
 - A visible self-correction sequence.
 - Artifact-level accuracy validation with confirmed, rejected, and inferred findings.
+- Windows Event Log lateral movement and memory process tree review gates.
 - A one-command local verification path: `npm run sans:check`.
 - A SANS-specific dashboard mode and architecture diagram.
 - Public MIT-licensed repository with safe replay fixtures.
@@ -66,7 +69,7 @@ Autonomous response is not just an intelligence problem. It is an evidence disci
 
 ## What's Next
 
-The next step is to run the same contract against full SANS SIFT case data and Protocol SIFT MCP endpoints, expand the fixture library to disk images, memory captures, and packet captures, and compare multiple agentic frameworks under the same reliability gates.
+The next step is to run the same contract against full SANS SIFT case data and Protocol SIFT MCP endpoints, expand the fixture library to full disk images, memory captures, packet captures, and EVTX exports, and compare multiple agentic frameworks under the same reliability gates.
 
 ## Built With
 

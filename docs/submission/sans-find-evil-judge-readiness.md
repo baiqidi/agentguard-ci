@@ -12,6 +12,8 @@ Current implementation:
 - Produces terminal-style execution logs with timestamps, tool calls, and token usage.
 - Demonstrates self-correction.
 - Produces an accuracy report with artifact locators.
+- Adds Windows Event Log lateral movement and memory process tree triage to the replayable local case.
+- Generates a one-page `judge-evidence-summary.md`.
 - Includes a SANS architecture diagram.
 
 ## Judging Criteria Map
@@ -22,6 +24,7 @@ Evidence:
 
 - `agentguard-runs/sans-find-evil/agent-execution-log.jsonl`
 - self-correction event in the run log
+- `wevtutil` and `vol.py` entries in the run log
 - `scripts/run-sans-sift-ir-demo.mjs`
 
 Why it matters:
@@ -36,6 +39,8 @@ Evidence:
 - `agentguard-runs/sans-find-evil/sift-readiness.json`
 - confirmed, rejected, and inferred finding statuses
 - locators such as `NTUSER.DAT:Software\Microsoft\Windows\CurrentVersion\Run@0x1f4a`
+- locators such as `Security.evtx:WS-23:eventIds=4624,4672,7045:source=198.51.100.44`
+- locators such as `memory-process-tree:missing lsass handle evidence`
 
 Why it matters:
 
@@ -48,10 +53,12 @@ Evidence:
 - `sift-disk-persistence-self-correction`
 - `sift-auth-log-accuracy-validation`
 - `sift-containment-approval`
+- `sift-windows-event-log-lateral-movement`
+- `sift-memory-process-tree-review`
 
 Why it matters:
 
-The scenarios cover disk persistence, Linux authentication logs, and network/endpoint containment decisions.
+The scenarios cover disk persistence, Linux authentication logs, network/endpoint containment decisions, Windows Event Log lateral movement, and memory process tree triage.
 
 ### Audit Trail Quality
 
@@ -61,6 +68,7 @@ Evidence:
 - `sift-readiness.json`
 - `evidence-dataset.md`
 - `investigative-narrative.md`
+- `judge-evidence-summary.md`
 - SANS-mode `sift-ir-evidence.json` files from the adapter suite
 
 Why it matters:
@@ -102,4 +110,5 @@ Expected generated artifacts:
 - `agentguard-runs/sans-find-evil/sift-readiness.json`
 - `agentguard-runs/sans-find-evil/evidence-dataset.md`
 - `agentguard-runs/sans-find-evil/investigative-narrative.md`
+- `agentguard-runs/sans-find-evil/judge-evidence-summary.md`
 - `agentguard-runs/sans-agent-adapters/agent-adapter-suite-summary.json`

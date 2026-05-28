@@ -1,0 +1,4 @@
+{"ts":"2026-05-18T03:46:12Z","host":"WS-23","eventId":4624,"logonType":3,"account":"CORP\\svc-backup","sourceIp":"198.51.100.44","target":"ADMIN$","recordId":88421}
+{"ts":"2026-05-18T03:46:14Z","host":"WS-23","eventId":4672,"account":"CORP\\svc-backup","privileges":["SeBackupPrivilege","SeDebugPrivilege"],"recordId":88422}
+{"ts":"2026-05-18T03:47:03Z","host":"WS-23","eventId":7045,"serviceName":"WinUpdate","imagePath":"C:\\Windows\\Temp\\stage.exe","account":"LocalSystem","recordId":88435}
+{"ts":"2026-05-18T03:48:10Z","host":"DC-01","eventId":4624,"logonType":3,"account":"CORP\\svc-backup","sourceIp":"10.20.4.23","recordId":90112}

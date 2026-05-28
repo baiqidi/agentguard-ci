@@ -46,7 +46,8 @@ const runtimeFiles = [
   "accuracy-report.json",
   "sift-readiness.json",
   "evidence-dataset.md",
-  "investigative-narrative.md"
+  "investigative-narrative.md",
+  "judge-evidence-summary.md"
 ];
 
 for (const file of runtimeFiles) {
@@ -60,6 +61,8 @@ if (existsSync(join(outputDir, "agent-execution-log.jsonl"))) {
     '"tool":"fls"',
     '"tool":"rip.pl"',
     '"tool":"grep"',
+    '"tool":"wevtutil"',
+    '"tool":"vol.py"',
     '"event":"self_correction"',
     "tokenUsage"
   ];
@@ -92,7 +95,7 @@ if (existsSync(join(outputDir, "accuracy-report.json"))) {
 if (existsSync(join(outputDir, "sift-readiness.json"))) {
   const readiness = JSON.parse(read(join(outputDir, "sift-readiness.json")));
   const toolNames = (readiness.toolMatrix ?? []).map((tool) => tool.name);
-  const requiredTools = ["fls", "mactime", "rip.pl", "tshark"];
+  const requiredTools = ["fls", "mactime", "rip.pl", "tshark", "wevtutil", "vol.py"];
   const missingToolRows = requiredTools.filter((tool) => !toolNames.includes(tool));
   const hasInstallCommand = readiness.protocolSift?.installCommand?.includes("protocol-sift/main/install.sh");
 
@@ -129,6 +132,8 @@ if (existsSync(join(outputDir, "evidence-dataset.md"))) {
     "registry-run-key.txt",
     "auth.log",
     "pcap-flow-index.json",
+    "windows-security-events.jsonl",
+    "memory-process-tree.json",
     "Execution mode",
     "Protocol SIFT install command",
     "sift-readiness.json"
@@ -139,6 +144,40 @@ if (existsSync(join(outputDir, "evidence-dataset.md"))) {
     pass("dataset:documentation", "fixture evidence sources are documented");
   } else {
     fail("dataset:documentation", `Missing dataset signal(s): ${missing.join(", ")}`);
+  }
+
+  const breadthSignals = [
+    "Windows Security Event",
+    "lateral movement",
+    "memory process tree",
+    "review-gated",
+    "judge-evidence-summary.md"
+  ];
+  const missingBreadthSignals = breadthSignals.filter((signal) => !dataset.includes(signal));
+
+  if (missingBreadthSignals.length === 0) {
+    pass("dataset:dfir-breadth", "Windows event, memory triage, and replay artifacts are documented");
+  } else {
+    fail("dataset:dfir-breadth", `Missing DFIR breadth signal(s): ${missingBreadthSignals.join(", ")}`);
+  }
+}
+
+if (existsSync(join(outputDir, "judge-evidence-summary.md"))) {
+  const judgeSummary = read(join(outputDir, "judge-evidence-summary.md"));
+  const requiredJudgeSignals = [
+    "Five realistic DFIR checkpoints",
+    "Windows Event Log lateral movement",
+    "Memory process tree triage",
+    "npm run sans:check",
+    "wevtutil",
+    "vol.py"
+  ];
+  const missingJudgeSignals = requiredJudgeSignals.filter((signal) => !judgeSummary.includes(signal));
+
+  if (missingJudgeSignals.length === 0) {
+    pass("judge-summary:readable-packet", "one-page judge packet maps evidence to replay commands");
+  } else {
+    fail("judge-summary:readable-packet", `Missing judge-summary signal(s): ${missingJudgeSignals.join(", ")}`);
   }
 }
 
@@ -153,6 +192,8 @@ if (!skipDocs) {
     "docs/submission/sans-find-evil-judge-readiness.md",
     "sans-fixtures/case-001/README.md",
     "sans-fixtures/case-001/auth.log",
+    "sans-fixtures/case-001/windows-security-events.jsonl",
+    "sans-fixtures/case-001/memory-process-tree.json",
     "scripts/prepare-sans-demo-audio.mjs",
     "scripts/record-sans-demo-video.mjs",
     "scripts/verify-sans-demo-video.mjs",

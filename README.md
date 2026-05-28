@@ -77,13 +77,15 @@ The SANS wrapper positions AgentGuard as the audit and reliability gate before a
 - The dashboard can run in SANS mode with `?contest=sans`.
 - Evidence payloads switch to `targetPlatform: "SANS SIFT Workstation + Protocol SIFT MCP"`.
 - The evidence artifact name becomes `sift-ir-evidence.json`.
-- The local runner writes terminal-style execution logs, an accuracy report, dataset documentation, an investigative narrative, and a SIFT readiness preflight that records whether the run is fixture-local, SIFT-compatible local, or SIFT-live:
+- The local runner writes terminal-style execution logs, an accuracy report, dataset documentation, an investigative narrative, a judge evidence summary, and a SIFT readiness preflight that records whether the run is fixture-local, SIFT-compatible local, or SIFT-live:
 
 ```bash
 npm run sans:check
 ```
 
-The local fixture path is intentionally honest. On a workstation without SIFT binaries, the runner records `fixture-local` mode while preserving the same artifact locator and command contract. On a SANS SIFT Workstation, the same flow can be mapped to real `fls`, `mactime`, `rip.pl`, `grep`, `awk`, `tshark`, and MCP-mediated Protocol SIFT calls.
+The local fixture path is intentionally honest. On a workstation without SIFT binaries, the runner records `fixture-local` mode while preserving the same artifact locator and command contract. On a SANS SIFT Workstation, the same flow can be mapped to real `fls`, `mactime`, `rip.pl`, `grep`, `awk`, `tshark`, `wevtutil`, `vol.py`, and MCP-mediated Protocol SIFT calls.
+
+The current FIND EVIL pack covers five realistic DFIR checkpoints: disk persistence, authentication spraying, network containment, Windows Event Log lateral movement, and memory process tree triage.
 
 SANS-specific artifacts:
 
@@ -92,6 +94,8 @@ SANS-specific artifacts:
 - `agentguard-runs/sans-find-evil/sift-readiness.json`: required SIFT tools, Protocol SIFT install path, execution mode, and starter-case-data override.
 - `agentguard-runs/sans-find-evil/agent-execution-log.jsonl`: timestamped tool execution and self-correction log.
 - `agentguard-runs/sans-find-evil/accuracy-report.json`: confirmed, rejected, and inferred findings with artifact locators.
+- `agentguard-runs/sans-find-evil/evidence-dataset.md`: documents the safe fixture bundle, including Windows Security Event and memory process tree sources.
+- `agentguard-runs/sans-find-evil/judge-evidence-summary.md`: one-page replay and judging packet for Devpost reviewers.
 - `agentguard-runs/sans-demo-video/shot-list.json`: under-five-minute FIND EVIL demo storyboard with a required terminal scene.
 - `docs/submission/sans-find-evil-submission-copy.md`: ready-to-paste Devpost story.
 - `docs/submission/sans-find-evil-judge-readiness.md`: mapping to FIND EVIL judging criteria.

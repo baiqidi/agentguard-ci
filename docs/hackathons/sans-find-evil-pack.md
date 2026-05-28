@@ -33,10 +33,12 @@ The current AgentGuard suite already includes a Security/SOC adapter that blocks
 
 Implemented for the SANS path:
 
-- Three incident-response scenarios:
+- Five incident-response scenarios:
   - `sift-disk-persistence-self-correction`
   - `sift-auth-log-accuracy-validation`
   - `sift-containment-approval`
+  - `sift-windows-event-log-lateral-movement`
+  - `sift-memory-process-tree-review`
 - SANS contest mode with `targetPlatform: "SANS SIFT Workstation + Protocol SIFT MCP"`.
 - SANS evidence artifact name: `sift-ir-evidence.json`.
 - Local SIFT-compatible runner: `scripts/run-sans-sift-ir-demo.mjs`.

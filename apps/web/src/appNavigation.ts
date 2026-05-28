@@ -34,19 +34,19 @@ export function getPageNavigation(locale: Locale, contestMode: ContestMode): Pag
           id: "scenarios",
           label: "SIFT 场景",
           eyebrow: "证据路线",
-          description: "看磁盘持久化、认证日志准确性、自我纠错和处置审批如何被测试。"
+          description: "查看磁盘持久化、认证日志、网络处置、Windows 事件日志和内存进程树如何被测试。"
         },
         {
           id: "companion",
           label: "本地运行",
           eyebrow: "复现",
-          description: "看 fixture、终端日志、准确性报告和 SIFT 迁移说明。"
+          description: "查看 fixture、终端日志、准确性报告、评委摘要和 SIFT 迁移说明。"
         },
         {
           id: "evidence",
           label: "证据",
           eyebrow: "审计",
-          description: "看每个结论如何落到文件、offset、日志行或网络流。"
+          description: "查看每个结论如何落到文件、offset、日志行、事件 ID、进程 ID 或网络流。"
         }
       ];
     }
@@ -62,19 +62,20 @@ export function getPageNavigation(locale: Locale, contestMode: ContestMode): Pag
         id: "scenarios",
         label: "SIFT Scenarios",
         eyebrow: "Evidence paths",
-        description: "Show disk persistence, authentication-log accuracy, self-correction, and containment approval."
+        description:
+          "Show disk persistence, authentication-log accuracy, containment approval, Windows Event Log lateral movement, and memory process tree triage."
       },
       {
         id: "companion",
         label: "Run Locally",
         eyebrow: "Replay",
-        description: "Show the fixture runner, terminal logs, accuracy report, and SIFT migration path."
+        description: "Show the fixture runner, terminal logs, accuracy report, judge summary, and SIFT migration path."
       },
       {
         id: "evidence",
         label: "Evidence",
         eyebrow: "Audit",
-        description: "Show how each claim maps to a file, offset, log line, or flow id."
+        description: "Show how each claim maps to a file, offset, log line, event id, process id, or flow id."
       }
     ];
   }
@@ -92,19 +93,19 @@ export function getPageNavigation(locale: Locale, contestMode: ContestMode): Pag
           id: "scenarios",
           label: "场景路线",
           eyebrow: "SOC 路线",
-          description: "看三条真实高风险路线、已覆盖的 Agent 类型，以及最重要的失败模式。"
+          description: "查看三条真实高风险路线、已覆盖的 Agent 类型，以及最重要的失败模式。"
         },
         {
           id: "companion",
           label: "配套应用",
           eyebrow: "交付",
-          description: "看 companion app、saved searches、告警动作和可交付的 Splunk 资产。"
+          description: "查看 companion app、saved searches、告警动作和可交付的 Splunk 资产。"
         },
         {
           id: "evidence",
           label: "证据与治理",
           eyebrow: "评审",
-          description: "看证据包、风险归因、复核队列，以及为什么这次动作该放行或该拦下。"
+          description: "查看证据包、风险归因、复核队列，以及为什么这次动作该放行或该拦下。"
         }
       ];
     }
@@ -149,19 +150,19 @@ export function getPageNavigation(locale: Locale, contestMode: ContestMode): Pag
         id: "scenarios",
         label: "场景",
         eyebrow: "覆盖",
-        description: "看已覆盖的 Agent 类型、风险雷达和优先级最高的测试路线。"
+        description: "查看已覆盖的 Agent 类型、风险雷达和优先级最高的测试路线。"
       },
       {
         id: "companion",
         label: "运行与交付",
         eyebrow: "运行",
-        description: "看运行手册、证据链，以及一线评委如何快速复现。"
+        description: "查看运行手册、证据链，以及一线评委如何快速复现。"
       },
       {
         id: "evidence",
         label: "证据与治理",
         eyebrow: "评审",
-        description: "看证据包、复核队列、失败模式地图和研究支撑。"
+        description: "查看证据包、复核队列、失败模式地图和研究支撑。"
       }
     ];
   }

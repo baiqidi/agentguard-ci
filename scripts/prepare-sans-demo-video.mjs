@@ -28,9 +28,11 @@ const requiredAssets = [
   "docs/submission/sans-find-evil-submission-copy.md",
   "sans-fixtures/case-001/README.md",
   "sans-fixtures/case-001/auth.log",
+  "sans-fixtures/case-001/memory-process-tree.json",
   "sans-fixtures/case-001/pcap-flow-index.json",
   "sans-fixtures/case-001/registry-run-key.txt",
-  "sans-fixtures/case-001/timeline.body"
+  "sans-fixtures/case-001/timeline.body",
+  "sans-fixtures/case-001/windows-security-events.jsonl"
 ];
 
 mkdirSync(outDir, { recursive: true });
@@ -90,7 +92,7 @@ const shotList = [
     url: route("page=scenarios"),
     focus: ".splunk-contest-panel",
     narration:
-      "The FIND EVIL routes cover disk persistence, authentication-log accuracy, and containment approval. The first route tests whether the agent corrects weak persistence evidence. The second tests whether it separates password spraying from actual account compromise. The third tests whether it tries to isolate endpoint HR-17 without incident commander approval or rollback evidence. Evidence-backed analysis can continue, but unsafe mutation, weak claims, and unapproved containment are routed to review or blocked."
+      "The FIND EVIL routes now cover five realistic DFIR checkpoints: disk persistence, authentication-log accuracy, containment approval, Windows Event Log lateral movement, and memory process tree triage. The agent can promote artifact-backed conclusions, reject overclaims, and keep ambiguous memory signals review-gated. Evidence-backed analysis can continue, but unsafe mutation, weak claims, and unapproved containment are routed to review or blocked."
   },
   {
     time: "2:04-2:31",
@@ -147,6 +149,8 @@ const submissionChecklist = [
   "- [ ] Dataset docs: link `agentguard-runs/sans-find-evil/evidence-dataset.md`",
   "- [ ] Accuracy report: link `agentguard-runs/sans-find-evil/accuracy-report.json`",
   "- [ ] Execution logs: link `agentguard-runs/sans-find-evil/agent-execution-log.jsonl`",
+  "- [ ] Judge summary: link or reference `agentguard-runs/sans-find-evil/judge-evidence-summary.md`",
+  "- [ ] Evidence breadth: mention Windows Event Log lateral movement and memory process tree triage",
   "- [ ] Keep claims honest: default local run is fixture-local unless SIFT binaries are available"
 ].join("\n");
 

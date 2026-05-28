@@ -25,6 +25,8 @@ describe("app navigation", () => {
       "Run Locally",
       "Evidence"
     ]);
-    expect(getPageNavigation("en", "sans")[1].description).toContain("self-correction");
+    expect(getPageNavigation("en", "sans")[1].description).toContain("Windows Event Log");
+    expect(getPageNavigation("en", "sans")[1].description).toContain("memory process tree");
+    expect(getPageNavigation("zh", "sans")[1].description).toContain("Windows 事件日志");
   });
 });

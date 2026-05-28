@@ -29,12 +29,23 @@ describe("SANS FIND EVIL local runner", () => {
     const report = JSON.parse(await readFile(join(outputDir, "accuracy-report.json"), "utf8"));
     const dataset = await readFile(join(outputDir, "evidence-dataset.md"), "utf8");
     const narrative = await readFile(join(outputDir, "investigative-narrative.md"), "utf8");
+    const judgeSummary = await readFile(join(outputDir, "judge-evidence-summary.md"), "utf8");
     const readiness = JSON.parse(await readFile(join(outputDir, "sift-readiness.json"), "utf8"));
 
     expect(log).toContain('"event":"sift_preflight"');
     expect(log).toContain('"tool":"fls"');
+    expect(log).toContain('"tool":"wevtutil"');
+    expect(log).toContain('"tool":"vol.py"');
     expect(log).toContain('"event":"self_correction"');
     expect(report.summary.selfCorrections).toBe(1);
+    expect(report.summary.totalFindings).toBeGreaterThanOrEqual(6);
+    expect(report.summary.realisticDfirScenarios).toEqual([
+      "disk persistence",
+      "authentication spraying",
+      "network containment",
+      "windows event log lateral movement",
+      "memory process tree triage"
+    ]);
     expect(report.siftReadiness).toMatchObject({
       readinessArtifact: "sift-readiness.json",
       architecturalPattern: "Direct Agent Extension"
@@ -54,13 +65,22 @@ describe("SANS FIND EVIL local runner", () => {
       "fls",
       "mactime",
       "rip.pl",
-      "tshark"
+      "tshark",
+      "wevtutil",
+      "vol.py"
     ]);
     expect(dataset).toContain("sans-fixtures/case-001/auth.log");
+    expect(dataset).toContain("windows-security-events.jsonl");
+    expect(dataset).toContain("memory-process-tree.json");
     expect(dataset).toContain("Protocol SIFT install command");
     expect(dataset).toContain("sift-readiness.json");
+    expect(judgeSummary).toContain("Five realistic DFIR checkpoints");
+    expect(judgeSummary).toContain("Windows Event Log lateral movement");
+    expect(judgeSummary).toContain("Memory process tree triage");
     expect(narrative).toContain("Confirmed password spraying");
     expect(narrative).toContain("Unsupported compromise claim corrected");
+    expect(narrative).toContain("Confirmed lateral movement");
+    expect(narrative).toContain("Memory process tree remains review-gated");
 
     const verify = spawnSync(
       "node",
@@ -73,6 +93,8 @@ describe("SANS FIND EVIL local runner", () => {
 
     expect(verify.status).toBe(0);
     expect(verify.stdout).toContain("PASS readiness:sift-preflight");
+    expect(verify.stdout).toContain("PASS dataset:dfir-breadth");
+    expect(verify.stdout).toContain("PASS judge-summary:readable-packet");
     expect(verify.stdout).toContain("SANS FIND EVIL submission check passed");
   });
 

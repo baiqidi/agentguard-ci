@@ -110,7 +110,7 @@ Optional full SIFT path:
 Additional judge note:
 
 ```text
-The public branch is the current submission repository. Judges can run `npm install` and `npm run sans:check` to regenerate the evidence bundle, including the terminal-style agent log, accuracy report, evidence dataset, investigative narrative, and adapter-suite summary. The demo uses a safe fixture bundle by default and clearly records `fixture-local` mode when SANS SIFT binaries are unavailable; the same command contract maps to SANS SIFT and Protocol SIFT-style tool calls in a full SIFT environment.
+The public branch is the current submission repository. Judges can run `npm install` and `npm run sans:check` to regenerate the evidence bundle, including the terminal-style agent log, accuracy report, evidence dataset, investigative narrative, judge evidence summary, and adapter-suite summary. The demo uses a safe fixture bundle by default and clearly records `fixture-local` mode when SANS SIFT binaries are unavailable; the same command contract maps to SANS SIFT and Protocol SIFT-style tool calls in a full SIFT environment. The updated case covers five DFIR checkpoints: disk persistence, authentication spraying, network containment, Windows Event Log lateral movement, and memory process tree triage.
 ```
 
 ## Judge Evidence
@@ -130,6 +130,7 @@ agentguard-runs/sans-find-evil/agent-execution-log.jsonl
 agentguard-runs/sans-find-evil/accuracy-report.json
 agentguard-runs/sans-find-evil/evidence-dataset.md
 agentguard-runs/sans-find-evil/investigative-narrative.md
+agentguard-runs/sans-find-evil/judge-evidence-summary.md
 agentguard-runs/sans-agent-adapters/agent-adapter-suite-summary.json
 ```
 

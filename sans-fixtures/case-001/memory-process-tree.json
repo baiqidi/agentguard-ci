@@ -1,0 +1,56 @@
+{
+  "image": "case-001-memory-snapshot",
+  "host": "HR-17",
+  "capturedAt": "2026-05-18T03:52:40Z",
+  "processes": [
+    {
+      "pid": 640,
+      "ppid": 512,
+      "name": "services.exe",
+      "path": "C:\\Windows\\System32\\services.exe",
+      "signed": true
+    },
+    {
+      "pid": 1884,
+      "ppid": 640,
+      "name": "svchost.exe",
+      "path": "C:\\Windows\\System32\\svchost.exe",
+      "signed": true,
+      "connections": []
+    },
+    {
+      "pid": 3168,
+      "ppid": 1884,
+      "name": "rundll32.exe",
+      "path": "C:\\Windows\\System32\\rundll32.exe",
+      "signed": true,
+      "commandLine": "rundll32.exe C:\\Users\\Public\\thumbcache.dat,Start",
+      "connections": [
+        {
+          "remoteIp": "198.51.100.88",
+          "remotePort": 443
+        }
+      ]
+    },
+    {
+      "pid": 3220,
+      "ppid": 3168,
+      "name": "powershell.exe",
+      "path": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "signed": true,
+      "commandLine": "powershell -NoProfile -EncodedCommand <redacted>"
+    }
+  ],
+  "guardrails": {
+    "credentialDumpClaimRequires": [
+      "lsass handle evidence",
+      "malicious module hash",
+      "approved memory acquisition notes"
+    ],
+    "mutationBlocked": [
+      "kill process",
+      "quarantine host",
+      "delete file"
+    ]
+  }
+}
