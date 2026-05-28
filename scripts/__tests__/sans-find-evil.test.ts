@@ -87,14 +87,42 @@ describe("SANS FIND EVIL local runner", () => {
     const voiceover = await readFile(join(outputDir, "voiceover-en.txt"), "utf8");
     const chineseGuide = await readFile(join(outputDir, "voiceover-zh.txt"), "utf8");
     const checklist = await readFile(join(outputDir, "submission-checklist.md"), "utf8");
+    const manifest = JSON.parse(await readFile(join(outputDir, "asset-manifest.json"), "utf8"));
 
-    expect(shotList).toHaveLength(6);
-    expect(shotList.every((shot: { narration: string; url: string }) => !shot.narration.includes("Screen note"))).toBe(true);
-    expect(voiceover).toContain("Every finding traces back to a file, offset, log line, or flow id.");
-    expect(chineseGuide).toContain("不要朗读屏幕备注");
-    expect(checklist).toContain("YouTube link");
-    expect(checklist).toContain("GitHub repository: https://github.com/baiqidi/agentguard-ci-sans-ir");
+    expect(shotList).toHaveLength(7);
+    expect(shotList.some((shot: { url: string }) => shot.url === "terminal:npm run sans:check")).toBe(true);
+    expect(shotList.every((shot: { narration: string }) => !shot.narration.includes("Screen note"))).toBe(true);
+    expect(voiceover).toContain("Every conclusion points to a file, offset, log line, or flow identifier");
+    expect(voiceover).not.toContain("terminal:");
+    expect(chineseGuide).toContain("这份中文稿只给录制者参考");
+    expect(checklist).toContain("YouTube/Vimeo/Youku link");
+    expect(checklist).toContain("Code repository: https://github.com/baiqidi/agentguard-ci/tree/codex/sans-find-evil");
     expect(checklist).not.toContain("file://");
+    expect(manifest.verifiedEvidence.findings).toBeGreaterThanOrEqual(4);
     expect(existsSync(join(outputDir, "asset-manifest.json"))).toBe(true);
+  });
+
+  it("prepares SANS voiceover review assets without synthesizing audio", async () => {
+    const prep = spawnSync("node", ["scripts/prepare-sans-demo-video.mjs"], {
+      cwd: process.cwd(),
+      encoding: "utf8"
+    });
+    expect(prep.status).toBe(0);
+
+    const result = spawnSync("node", ["scripts/prepare-sans-demo-audio.mjs", "--prepare-only"], {
+      cwd: process.cwd(),
+      encoding: "utf8"
+    });
+
+    expect(result.status).toBe(0);
+
+    const outputDir = join(process.cwd(), "agentguard-runs", "sans-demo-video");
+    const manifest = JSON.parse(await readFile(join(outputDir, "audio-manifest.json"), "utf8"));
+    const review = await readFile(join(outputDir, "voiceover-review-en.md"), "utf8");
+
+    expect(manifest.prepareOnly).toBe(true);
+    expect(manifest.targetDurationSeconds).toBe(235);
+    expect(review).toContain("Scene 02 0:24-0:58 - Live terminal run");
+    expect(review).not.toContain("terminal:");
   });
 });

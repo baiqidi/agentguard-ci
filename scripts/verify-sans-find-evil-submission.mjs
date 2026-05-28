@@ -105,10 +105,14 @@ if (!skipDocs) {
     "LICENSE",
     "architecture_diagram_sans.md",
     "docs/hackathons/sans-find-evil-pack.md",
+    "docs/submission/sans-devpost-field-guide.md",
     "docs/submission/sans-find-evil-submission-copy.md",
     "docs/submission/sans-find-evil-judge-readiness.md",
     "sans-fixtures/case-001/README.md",
     "sans-fixtures/case-001/auth.log",
+    "scripts/prepare-sans-demo-audio.mjs",
+    "scripts/record-sans-demo-video.mjs",
+    "scripts/verify-sans-demo-video.mjs",
     ".github/workflows/sans-find-evil.yml"
   ];
 
@@ -131,10 +135,21 @@ if (!skipDocs) {
   if (existsSync(join(root, "package.json"))) {
     const scripts = JSON.parse(read(join(root, "package.json"))).scripts ?? {};
 
-    if (scripts["sans:prepare"] && scripts["sans:check"] && scripts["video:prep:sans"]) {
-      pass("package:sans-scripts");
+    const requiredScripts = [
+      "sans:prepare",
+      "sans:check",
+      "video:prep:sans",
+      "video:audio:prep:sans",
+      "video:audio:sans",
+      "video:record:sans",
+      "video:check:sans"
+    ];
+    const missingScripts = requiredScripts.filter((scriptName) => !scripts[scriptName]);
+
+    if (missingScripts.length === 0) {
+      pass("package:sans-scripts", `${requiredScripts.length} SANS commands`);
     } else {
-      fail("package:sans-scripts", "package.json must expose sans:prepare, sans:check, and video:prep:sans.");
+      fail("package:sans-scripts", `package.json is missing SANS script(s): ${missingScripts.join(", ")}`);
     }
   }
 

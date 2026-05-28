@@ -50,4 +50,22 @@ describe("App render", () => {
       expect(() => renderToString(<App />)).not.toThrow();
     });
   }
+
+  it("uses SANS-specific replay copy instead of Test Cloud copy on the SANS companion page", () => {
+    Object.defineProperty(globalThis, "window", {
+      value: {
+        location: new URL("http://127.0.0.1:5190/?contest=sans&lang=en&present=1&page=companion"),
+        history: { replaceState: () => undefined },
+        navigator: { language: "en-US" },
+        scrollTo: () => undefined
+      },
+      configurable: true,
+      writable: true
+    });
+
+    const html = renderToString(<App />);
+    expect(html).toContain("Five steps from clone to auditable IR evidence.");
+    expect(html).toContain("npm run sans:check");
+    expect(html).not.toContain("Five steps from clone to Test Cloud evidence.");
+  });
 });

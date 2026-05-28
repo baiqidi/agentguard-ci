@@ -30,9 +30,13 @@
     "video:audio:piper:tencent": "node scripts/prepare-tencent-demo-audio.mjs --engine=piper",
     "video:audio:prep:splunk": "node scripts/prepare-splunk-demo-audio.mjs --prepare-only",
     "video:audio:splunk": "node scripts/prepare-splunk-demo-audio.mjs",
+    "video:audio:prep:sans": "node scripts/prepare-sans-demo-audio.mjs --prepare-only",
+    "video:audio:sans": "node scripts/prepare-sans-demo-audio.mjs",
     "video:record:tencent": "node scripts/record-tencent-demo-video.mjs",
     "video:record:splunk": "node scripts/record-splunk-demo-video.mjs",
-    "video:check:splunk": "node scripts/verify-splunk-demo-video.mjs"
+    "video:record:sans": "node scripts/record-sans-demo-video.mjs",
+    "video:check:splunk": "node scripts/verify-splunk-demo-video.mjs",
+    "video:check:sans": "node scripts/verify-sans-demo-video.mjs"
   },
   "devDependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",

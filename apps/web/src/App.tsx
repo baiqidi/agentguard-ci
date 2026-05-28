@@ -936,7 +936,7 @@ function CompanionPage({
         />
       ) : null}
       {contestMode === "sans" ? <SansReplaySection locale={locale} /> : null}
-      <OperatorRunbookPanel locale={locale} />
+      <OperatorRunbookPanel contestMode={contestMode} locale={locale} />
       <section className="trace-band" aria-label={t(locale, "trace.aria")}>
         <TraceStep index="01" title={t(locale, "trace.1.title")} detail={t(locale, "trace.1.detail")} />
         <TraceStep index="02" title={t(locale, "trace.2.title")} detail={t(locale, "trace.2.detail")} />
@@ -1092,16 +1092,124 @@ function Metric({ label, value, detail }: { label: string; value: string; detail
   );
 }
 
-function OperatorRunbookPanel({ locale }: { locale: Locale }) {
+const sansOperatorWorkflowSteps: Record<Locale, OperatorWorkflowStep[]> = {
+  en: [
+    {
+      id: "sans-install",
+      title: "Install and verify the workspace",
+      command: "npm install; npm test",
+      artifact: "Vitest output",
+      why: "Proves the local environment can run the product before collecting incident-response evidence."
+    },
+    {
+      id: "sans-run-check",
+      title: "Run the SANS evidence gate",
+      command: "npm run sans:check",
+      artifact: "agentguard-runs/sans-find-evil/",
+      why: "Builds the workspaces, replays the SIFT-compatible case, runs adapter scenarios, and verifies the submission packet."
+    },
+    {
+      id: "sans-review-log",
+      title: "Inspect the self-correction log",
+      command: "Get-Content agentguard-runs/sans-find-evil/agent-execution-log.jsonl",
+      artifact: "agent-execution-log.jsonl",
+      why: "Shows the exact tool calls, token usage, and unsupported claim that was corrected before the final narrative."
+    },
+    {
+      id: "sans-review-accuracy",
+      title: "Review confirmed, rejected, and inferred findings",
+      command: "Get-Content agentguard-runs/sans-find-evil/accuracy-report.json",
+      artifact: "accuracy-report.json",
+      why: "Lets judges trace each conclusion to an artifact locator instead of trusting a generic summary."
+    },
+    {
+      id: "sans-video",
+      title: "Prepare the under-five-minute demo",
+      command: "npm run video:prep:sans",
+      artifact: "agentguard-runs/sans-demo-video/",
+      why: "Creates the shot list, narration, and submission checklist for a video that includes terminal execution and audio."
+    }
+  ],
+  zh: [
+    {
+      id: "sans-install",
+      title: "安装并验证工作区",
+      command: "npm install; npm test",
+      artifact: "Vitest 输出",
+      why: "先证明本地环境可以运行产品，再收集事件响应证据。"
+    },
+    {
+      id: "sans-run-check",
+      title: "运行 SANS 证据门禁",
+      command: "npm run sans:check",
+      artifact: "agentguard-runs/sans-find-evil/",
+      why: "构建工作区、重放 SIFT 兼容案例、运行适配器场景，并验证提交包。"
+    },
+    {
+      id: "sans-review-log",
+      title: "检查自我纠错日志",
+      command: "Get-Content agentguard-runs/sans-find-evil/agent-execution-log.jsonl",
+      artifact: "agent-execution-log.jsonl",
+      why: "展示具体工具调用、token 用量，以及最终叙事前被纠正的弱证据结论。"
+    },
+    {
+      id: "sans-review-accuracy",
+      title: "复查 confirmed、rejected 和 inferred 结论",
+      command: "Get-Content agentguard-runs/sans-find-evil/accuracy-report.json",
+      artifact: "accuracy-report.json",
+      why: "让评委把每个结论追溯到 artifact locator，而不是只相信摘要。"
+    },
+    {
+      id: "sans-video",
+      title: "准备五分钟以内演示视频",
+      command: "npm run video:prep:sans",
+      artifact: "agentguard-runs/sans-demo-video/",
+      why: "生成镜头表、旁白和提交清单，确保视频包含终端运行和音频讲解。"
+    }
+  ]
+};
+
+function OperatorRunbookPanel({
+  contestMode,
+  locale
+}: {
+  contestMode: ReturnType<typeof getContestMode>;
+  locale: Locale;
+}) {
+  const isSans = contestMode === "sans";
+  const copy =
+    isSans && locale === "zh"
+      ? {
+          aria: "SANS 证据复现 Runbook",
+          kicker: "SANS REPLAY RUNBOOK",
+          title: "从克隆仓库到可审计 IR 证据，只需五步。",
+          body: "评委可以运行同一条 SIFT 兼容证据链，查看自我纠错、准确性报告和提交视频素材，而不用相信截图。"
+        }
+      : isSans
+        ? {
+            aria: "SANS evidence replay runbook",
+            kicker: "SANS REPLAY RUNBOOK",
+            title: "Five steps from clone to auditable IR evidence.",
+            body:
+              "A judge can run the same SIFT-compatible evidence chain, inspect self-correction, review accuracy, and prepare the demo package without trusting screenshots."
+          }
+        : {
+            aria: t(locale, "runbook.aria"),
+            kicker: t(locale, "runbook.kicker"),
+            title: t(locale, "runbook.title"),
+            body: t(locale, "runbook.body")
+          };
+  const steps = isSans ? sansOperatorWorkflowSteps[locale] : operatorWorkflowSteps;
+
   return (
-    <section className="operator-runbook-panel" aria-label={t(locale, "runbook.aria")}>
+    <section className="operator-runbook-panel" aria-label={copy.aria}>
       <div className="operator-runbook-copy">
-        <span>{t(locale, "runbook.kicker")}</span>
-        <h2>{t(locale, "runbook.title")}</h2>
-        <p>{t(locale, "runbook.body")}</p>
+        <span>{copy.kicker}</span>
+        <h2>{copy.title}</h2>
+        <p>{copy.body}</p>
       </div>
       <div className="operator-step-grid">
-        {operatorWorkflowSteps.map((step, index) => (
+        {steps.map((step, index) => (
           <OperatorStepCard index={index + 1} key={step.id} locale={locale} step={step} />
         ))}
       </div>

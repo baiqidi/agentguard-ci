@@ -91,8 +91,21 @@ SANS-specific artifacts:
 - `sans-fixtures/case-001/`: safe local evidence bundle for replay.
 - `agentguard-runs/sans-find-evil/agent-execution-log.jsonl`: timestamped tool execution and self-correction log.
 - `agentguard-runs/sans-find-evil/accuracy-report.json`: confirmed, rejected, and inferred findings with artifact locators.
+- `agentguard-runs/sans-demo-video/shot-list.json`: under-five-minute FIND EVIL demo storyboard with a required terminal scene.
 - `docs/submission/sans-find-evil-submission-copy.md`: ready-to-paste Devpost story.
 - `docs/submission/sans-find-evil-judge-readiness.md`: mapping to FIND EVIL judging criteria.
+
+SANS video prep commands:
+
+```bash
+npm run video:prep:sans
+npm run video:audio:prep:sans
+npm run video:audio:sans
+npm run video:record:sans
+npm run video:check:sans
+```
+
+The official final recording should still show a real terminal running `npm run sans:check`; the automated recorder includes a terminal-style replay scene to keep the product walkthrough scene-aligned.
 
 ## Product Thesis
 
