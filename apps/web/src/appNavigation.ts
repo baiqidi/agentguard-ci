@@ -21,6 +21,64 @@ export function parseAppPage(page: string | null | undefined): AppPage {
 }
 
 export function getPageNavigation(locale: Locale, contestMode: ContestMode): PageNavigationItem[] {
+  if (contestMode === "sans") {
+    if (locale === "zh") {
+      return [
+        {
+          id: "overview",
+          label: "IR 总览",
+          eyebrow: "FIND EVIL",
+          description: "先看产品如何把自主事件响应变成可追溯、可纠错、可审批的证据流程。"
+        },
+        {
+          id: "scenarios",
+          label: "SIFT 场景",
+          eyebrow: "证据路线",
+          description: "看磁盘持久化、认证日志准确性、自我纠错和处置审批如何被测试。"
+        },
+        {
+          id: "companion",
+          label: "本地运行",
+          eyebrow: "复现",
+          description: "看 fixture、终端日志、准确性报告和 SIFT 迁移说明。"
+        },
+        {
+          id: "evidence",
+          label: "证据",
+          eyebrow: "审计",
+          description: "看每个结论如何落到文件、offset、日志行或网络流。"
+        }
+      ];
+    }
+
+    return [
+      {
+        id: "overview",
+        label: "IR Overview",
+        eyebrow: "FIND EVIL",
+        description: "Show how autonomous incident response becomes traceable, self-correcting, and approval-aware."
+      },
+      {
+        id: "scenarios",
+        label: "SIFT Scenarios",
+        eyebrow: "Evidence paths",
+        description: "Show disk persistence, authentication-log accuracy, self-correction, and containment approval."
+      },
+      {
+        id: "companion",
+        label: "Run Locally",
+        eyebrow: "Replay",
+        description: "Show the fixture runner, terminal logs, accuracy report, and SIFT migration path."
+      },
+      {
+        id: "evidence",
+        label: "Evidence",
+        eyebrow: "Audit",
+        description: "Show how each claim maps to a file, offset, log line, or flow id."
+      }
+    ];
+  }
+
   if (contestMode === "splunk") {
     if (locale === "zh") {
       return [

@@ -7,6 +7,7 @@ The repository now supports multiple contest wrappers on top of the same product
 - **UiPath**: Test Cloud governance and evidence import workflow.
 - **Tencent Cloud**: Chinese enterprise AI governance packaging.
 - **Splunk**: Security-track packaging for agentic SOC workflows with Splunk MCP evidence.
+- **SANS FIND EVIL**: Protocol SIFT / SIFT Workstation incident-response packaging with self-correction and artifact-level accuracy evidence.
 
 Public repository: https://github.com/baiqidi/agentguard-ci
 
@@ -17,12 +18,14 @@ License: MIT, covering the original AgentGuard CI solution code in this reposito
 - UiPath Track 3: code-repair reliability plus Test Cloud evidence.
 - Tencent Cloud AI contest: Chinese enterprise governance story and localized dashboard.
 - Splunk Agentic Ops: Security track plus Best Use of Splunk MCP Server.
+- SANS FIND EVIL: autonomous incident-response reliability gate for Protocol SIFT workflows.
 
 Open the web console in different modes:
 
 - Default: `http://localhost:5173/`
 - Tencent wrapper: `http://localhost:5173/?contest=tencent`
 - Splunk wrapper: `http://localhost:5173/?contest=splunk`
+- SANS FIND EVIL wrapper: `http://localhost:5173/?contest=sans`
 
 ## Project Description
 
@@ -66,6 +69,30 @@ The Splunk wrapper positions AgentGuard as a security control layer around agent
 - Evidence payloads switch to `targetPlatform: "Splunk MCP Server"`.
 - The evidence artifact name becomes `splunk-mcp-evidence.json`.
 - The root repository includes [`architecture_diagram.md`](./architecture_diagram.md), which satisfies Splunk's architecture-diagram requirement.
+
+## SANS FIND EVIL Edition
+
+The SANS wrapper positions AgentGuard as the audit and reliability gate before an autonomous incident-response agent mutates evidence, overstates findings, or contains a system without approval:
+
+- The dashboard can run in SANS mode with `?contest=sans`.
+- Evidence payloads switch to `targetPlatform: "SANS SIFT Workstation + Protocol SIFT MCP"`.
+- The evidence artifact name becomes `sift-ir-evidence.json`.
+- The local runner writes terminal-style execution logs, an accuracy report, dataset documentation, and an investigative narrative:
+
+```bash
+npm run sans:check
+```
+
+The local fixture path is intentionally honest. On a workstation without SIFT binaries, the runner records `fixture-local` mode while preserving the same artifact locator and command contract. On a SANS SIFT Workstation, the same flow can be mapped to real `fls`, `mactime`, `rip.pl`, `grep`, `awk`, `tshark`, and MCP-mediated Protocol SIFT calls.
+
+SANS-specific artifacts:
+
+- `architecture_diagram_sans.md`: agent, SIFT tools, MCP, evidence sources, and output pipeline.
+- `sans-fixtures/case-001/`: safe local evidence bundle for replay.
+- `agentguard-runs/sans-find-evil/agent-execution-log.jsonl`: timestamped tool execution and self-correction log.
+- `agentguard-runs/sans-find-evil/accuracy-report.json`: confirmed, rejected, and inferred findings with artifact locators.
+- `docs/submission/sans-find-evil-submission-copy.md`: ready-to-paste Devpost story.
+- `docs/submission/sans-find-evil-judge-readiness.md`: mapping to FIND EVIL judging criteria.
 
 ## Product Thesis
 

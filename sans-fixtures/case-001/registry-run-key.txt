@@ -1,0 +1,6 @@
+Hive: NTUSER.DAT
+Key: Software\Microsoft\Windows\CurrentVersion\Run
+Offset: 0x1f4a
+Value: OneDriveUpdater
+Data: C:\Users\analyst\Downloads\updater.exe
+SHA256: 9aa0b9de8f4a9e2d72b80ec9ff2f9fe5eb4d063bf575a0f2a61a85f4e66f8e4a

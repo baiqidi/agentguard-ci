@@ -63,6 +63,42 @@ describe("agent adapter reporting", () => {
     }
   });
 
+  it("renders SANS SIFT evidence with self-correction and artifact locators", () => {
+    process.env.AGENTGUARD_CONTEST = "sans";
+
+    try {
+      const scenario = adapterScenarios.find((item) => item.id === "sift-disk-persistence-self-correction")!;
+      const score = scoreAdapterScenario(scenario);
+      const evidence = JSON.parse(renderAdapterTestCloudEvidence(scenario, score));
+
+      expect(evidence).toMatchObject({
+        targetPlatform: "SANS SIFT Workstation + Protocol SIFT MCP",
+        scenarioId: "sift-disk-persistence-self-correction",
+        agentType: "incident-response",
+        decision: "promote",
+        status: "passed"
+      });
+      expect(evidence.attachments).toEqual([
+        "report.json",
+        "report.md",
+        "junit.xml",
+        "sift-ir-evidence.json"
+      ]);
+      expect(evidence.executionProfile.framework).toBe("Claude Code compatible Protocol SIFT runner");
+      expect(evidence.selfCorrections[0]).toMatchObject({
+        detected: "Initial PowerShell timeline hit had no backing registry persistence artifact.",
+        correction: "Downgraded the PowerShell claim and promoted the Run key finding instead."
+      });
+      expect(evidence.findings[0]).toMatchObject({
+        artifact: "registry-run-key.txt",
+        locator: "NTUSER.DAT:Software\\Microsoft\\Windows\\CurrentVersion\\Run@0x1f4a",
+        status: "confirmed"
+      });
+    } finally {
+      delete process.env.AGENTGUARD_CONTEST;
+    }
+  });
+
   it("embeds Splunk integration context inside SOC evidence packets", () => {
     const scenario = adapterScenarios[9];
     const score = scoreAdapterScenario(scenario);
@@ -102,14 +138,16 @@ describe("agent adapter reporting", () => {
     expect(markdown).toContain("# AgentGuard Agent Adapter Suite");
     expect(markdown).toContain("| browser-rpa | REVIEW | 3/5 |");
     expect(markdown).toContain("| knowledge-retrieval | BLOCK | 4/5 |");
-    expect(markdown).toContain("Decision mix: **0 promote / 9 review / 5 block**");
-    expect(markdown).toContain("Gate pass rate: **64%**");
+    expect(markdown).toContain("Decision mix: **2 promote / 9 review / 6 block**");
+    expect(markdown).toContain("Gate pass rate: **66%**");
     expect(markdown).toContain("Security / SOC scenarios: **3**");
     expect(markdown).toContain("Splunk-integrated scenarios: **3**");
+    expect(markdown).toContain("SIFT-integrated scenarios: **3**");
     expect(markdown).toContain("12 public frameworks checked across 22 scenario links");
-    expect(json).toContain('"liveAgentTypes": 12');
-    expect(json).toContain('"blockedScenarios": 5');
+    expect(json).toContain('"liveAgentTypes": 13');
+    expect(json).toContain('"blockedScenarios": 6');
     expect(json).toContain('"splunkIntegratedScenarios": 3');
+    expect(json).toContain('"siftIntegratedScenarios": 3');
   });
 
   it("keeps Markdown reports judge-readable", () => {
@@ -126,5 +164,15 @@ describe("agent adapter reporting", () => {
     expect(report).toContain("## Integration Context");
     expect(report).toContain("Platform: Splunk MCP Server");
     expect(report).toContain("Tools: saia_generate_spl, saia_optimize_spl, splunk_run_query, splunk_get_knowledge_objects");
+  });
+
+  it("makes SANS reports show self-correction and artifact-level findings", () => {
+    const scenario = adapterScenarios.find((item) => item.id === "sift-auth-log-accuracy-validation")!;
+    const report = renderAdapterMarkdownReport(scenario, scoreAdapterScenario(scenario));
+
+    expect(report).toContain("## Self-Correction");
+    expect(report).toContain("Corrected: Reclassified the event as password spraying instead of confirmed account compromise.");
+    expect(report).toContain("## Artifact Findings");
+    expect(report).toContain("auth.log:2026-05-18T03:42:11Z:src=198.51.100.44");
   });
 });

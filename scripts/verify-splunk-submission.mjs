@@ -293,21 +293,21 @@ if (existsSync(join(root, "agentguard-runs/suite-summary.json"))) {
 if (existsSync(join(root, "agentguard-runs/agent-adapters/agent-adapter-suite-summary.json"))) {
   const adapters = JSON.parse(read("agentguard-runs/agent-adapters/agent-adapter-suite-summary.json"));
   if (
-    adapters.summary?.totalScenarios === 14 &&
-    adapters.summary?.liveAgentTypes === 12 &&
+    adapters.summary?.totalScenarios >= 17 &&
+    adapters.summary?.liveAgentTypes >= 13 &&
     adapters.summary?.splunkIntegratedScenarios === 3 &&
     adapters.summary?.reviewScenarios === 9 &&
-    adapters.summary?.blockedScenarios === 5 &&
+    adapters.summary?.blockedScenarios >= 6 &&
     adapters.publicAgentInstallSummary?.frameworks === 12
   ) {
     pass(
       "adapter-summary:breadth",
-      "14 live-local scenarios / 9 review routes / 5 hard blocks / 12 agent types / 3 Splunk-integrated scenarios / 12 public framework checks"
+      `${adapters.summary.totalScenarios} live-local scenarios / ${adapters.summary.reviewScenarios} review routes / ${adapters.summary.blockedScenarios} hard blocks / ${adapters.summary.liveAgentTypes} agent types / 3 Splunk-integrated scenarios / 12 public framework checks`
     );
   } else {
     fail(
       "adapter-summary:breadth",
-      "Expected 14 live-local scenarios, 9 review routes, 5 hard blocks, 12 agent types, 3 Splunk-integrated scenarios, and 12 framework checks."
+      "Expected at least 17 live-local scenarios, 9 review routes, at least 6 hard blocks, at least 13 agent types, 3 Splunk-integrated scenarios, and 12 framework checks."
     );
   }
 }

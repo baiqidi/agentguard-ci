@@ -560,6 +560,115 @@ function OverviewProofPanel({
   releaseDecision: ReturnType<typeof buildReleaseDecisionSummary>;
   summary: ReturnType<typeof buildConsoleSummary>;
 }) {
+  if (contestMode === "sans") {
+    const copy =
+      locale === "zh"
+        ? {
+            kicker: "FIND EVIL 证据",
+            title: "先证明 Agent 会纠错，再让它响应事件。",
+            body: "SANS 的重点不是漂亮聊天，而是自主事件响应是否能在真实证据前保持诚实。AgentGuard IR 把每次工具调用、纠错、准确性判断和处置审批都变成可检查材料。",
+            suiteLabel: "SIFT 场景",
+            suiteValue: "3 条 IR 路线",
+            suiteDetail: "磁盘持久化 · 认证日志 · 网络处置",
+            coverageLabel: "自我纠错",
+            coverageValue: "1 条明确纠错链",
+            coverageDetail: "错误假设被降级，证据充分的结论被保留",
+            deliveryLabel: "可复现材料",
+            deliveryValue: "4 个本地 artifact",
+            deliveryDetail: "执行日志 · 准确性报告 · 数据集说明 · 调查叙事",
+            verifyLabel: "评委能验证什么",
+            verifyTitle: "每个 finding 都能追到 artifact locator。",
+            verifyBody: "不是让评委相信旁白，而是让评委打开文件、offset、日志行或 flow id 自己复核。",
+            verifyFoot: "agent-execution-log.jsonl · accuracy-report.json · sift-ir-evidence.json",
+            wedgeLabel: "为什么它适合 SANS",
+            wedgeTitle: "它不是另一个 IR chatbot，而是 IR agent 上线前的安全审计门。",
+            wedgeBody: "自动响应越快，越需要证据完整性、准确性边界和人工审批关口。",
+            blockedAction: "打开证据",
+            routeAction: "打开 SIFT 场景",
+            deliveryAction: "打开本地运行"
+          }
+        : {
+            kicker: "FIND EVIL proof",
+            title: "Prove the agent can correct itself before it responds.",
+            body: "SANS is not asking for a prettier chatbot. The question is whether autonomous incident response stays honest in front of evidence. AgentGuard IR turns tool calls, corrections, accuracy checks, and approval gates into reviewable artifacts.",
+            suiteLabel: "SIFT scenarios",
+            suiteValue: "3 IR routes",
+            suiteDetail: "disk persistence · auth logs · containment",
+            coverageLabel: "Self-correction",
+            coverageValue: "1 explicit correction chain",
+            coverageDetail: "unsupported claims are downgraded; evidence-backed findings remain",
+            deliveryLabel: "Replayable assets",
+            deliveryValue: "4 local artifacts",
+            deliveryDetail: "execution log · accuracy report · dataset docs · narrative",
+            verifyLabel: "What judges can verify",
+            verifyTitle: "Every finding traces back to an artifact locator.",
+            verifyBody: "Judges do not have to trust the narration. They can inspect the file, offset, log line, or flow id behind each claim.",
+            verifyFoot: "agent-execution-log.jsonl · accuracy-report.json · sift-ir-evidence.json",
+            wedgeLabel: "Why this fits SANS",
+            wedgeTitle: "This is not another IR chatbot. It is the audit gate before an IR agent acts.",
+            wedgeBody: "The faster response becomes, the more evidence integrity, accuracy boundaries, and approval gates matter.",
+            blockedAction: "Open evidence",
+            routeAction: "Open SIFT scenarios",
+            deliveryAction: "Open local run"
+          };
+
+    return (
+      <section className="proof-signal-panel" aria-label={copy.kicker}>
+        <div className="proof-signal-grid">
+          <article className="proof-signal-lead">
+            <span>{copy.kicker}</span>
+            <h2>{copy.title}</h2>
+            <p>{copy.body}</p>
+            <div className="proof-signal-list">
+              <article className="proof-signal-item">
+                <small>{copy.suiteLabel}</small>
+                <strong>{copy.suiteValue}</strong>
+                <p>{copy.suiteDetail}</p>
+              </article>
+              <article className="proof-signal-item">
+                <small>{copy.coverageLabel}</small>
+                <strong>{copy.coverageValue}</strong>
+                <p>{copy.coverageDetail}</p>
+              </article>
+              <article className="proof-signal-item">
+                <small>{copy.deliveryLabel}</small>
+                <strong>{copy.deliveryValue}</strong>
+                <p>{copy.deliveryDetail}</p>
+              </article>
+            </div>
+            <div className="proof-action-row">
+              <button onClick={() => onLaunchPreset("overview-to-evidence")} type="button">
+                <small>{copy.verifyLabel}</small>
+                <strong>{copy.blockedAction}</strong>
+              </button>
+              <button onClick={() => onLaunchPreset("overview-to-scenarios")} type="button">
+                <small>{copy.coverageLabel}</small>
+                <strong>{copy.routeAction}</strong>
+              </button>
+              <button onClick={() => onLaunchPreset("overview-to-companion")} type="button">
+                <small>{copy.deliveryLabel}</small>
+                <strong>{copy.deliveryAction}</strong>
+              </button>
+            </div>
+          </article>
+          <div className="proof-signal-side">
+            <article className="proof-signal-card">
+              <span>{copy.verifyLabel}</span>
+              <strong>{copy.verifyTitle}</strong>
+              <p>{copy.verifyBody}</p>
+              <small>{copy.verifyFoot}</small>
+            </article>
+            <article className="proof-signal-card is-accent">
+              <span>{copy.wedgeLabel}</span>
+              <strong>{copy.wedgeTitle}</strong>
+              <p>{copy.wedgeBody}</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   if (contestMode !== "splunk") {
     return null;
   }

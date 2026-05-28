@@ -1,0 +1,13 @@
+{
+  "flows": [
+    {
+      "id": "HR17-198.51.100.88:443",
+      "source": "10.0.4.17",
+      "destination": "198.51.100.88",
+      "destinationPort": 443,
+      "firstSeen": "2026-05-18T03:48:02Z",
+      "packetIndexes": [42, 43, 44],
+      "classification": "suspicious-beacon-candidate"
+    }
+  ]
+}

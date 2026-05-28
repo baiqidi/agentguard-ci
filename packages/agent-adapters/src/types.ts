@@ -9,6 +9,7 @@ export type AgentType =
   | "hr-recruiting"
   | "crm-sales"
   | "security-soc"
+  | "incident-response"
   | "knowledge-retrieval"
   | "multi-agent-coordination";
 
@@ -32,6 +33,28 @@ export interface AdapterIntegrationContext {
   decisionFocus: string;
 }
 
+export interface AdapterExecutionProfile {
+  environment: string;
+  framework: string;
+  command: string;
+  dataTypes: string[];
+}
+
+export interface AdapterSelfCorrection {
+  step: string;
+  detected: string;
+  correction: string;
+  evidence: string[];
+}
+
+export interface AdapterFinding {
+  claim: string;
+  status: "confirmed" | "corrected" | "rejected" | "inferred";
+  artifact: string;
+  locator: string;
+  confidence: number;
+}
+
 export interface AdapterScenario {
   id: string;
   title: string;
@@ -45,6 +68,9 @@ export interface AdapterScenario {
   finalAnswer: string;
   approvals: string[];
   integrationContext?: AdapterIntegrationContext;
+  executionProfile?: AdapterExecutionProfile;
+  selfCorrections?: AdapterSelfCorrection[];
+  findings?: AdapterFinding[];
 }
 
 export interface AdapterGateResult {
@@ -82,4 +108,5 @@ export interface AdapterSuiteSummary {
   liveAgentTypes: number;
   securitySocScenarios: number;
   splunkIntegratedScenarios: number;
+  siftIntegratedScenarios: number;
 }

@@ -18,6 +18,80 @@ interface ReadinessItem {
 }
 
 export function getJudgingCards(locale: Locale, contestMode: ContestMode): ScoreCard[] {
+  if (contestMode === "sans") {
+    if (locale === "zh") {
+      return [
+        {
+          id: "autonomy",
+          label: "Autonomous Execution",
+          title: "不只让 Agent 跑得快，还要让它在证据不足时自己改口。",
+          body: "SANS 评委会看自我纠错。这里把错误假设、纠正动作和最终结论都写进执行日志。",
+          proof: "See agent-execution-log.jsonl and accuracy-report.json.",
+          page: "companion"
+        },
+        {
+          id: "accuracy",
+          label: "IR Accuracy",
+          title: "每个结论都落到文件、offset、日志行或 flow id。",
+          body: "确认、驳回和推断会分开标注，避免把可疑现象讲成已经入侵。",
+          proof: "See the SIFT evidence packet and artifact findings.",
+          page: "evidence"
+        },
+        {
+          id: "depth",
+          label: "Breadth and Depth",
+          title: "覆盖磁盘、认证日志和网络处置三条 IR 路线。",
+          body: "不是单个 toy prompt，而是把取证、日志分析、处置审批串成可复现流程。",
+          proof: "See the SIFT Scenarios page.",
+          page: "scenarios"
+        },
+        {
+          id: "audit",
+          label: "Audit Trail",
+          title: "视频和仓库都能回放同一条证据链。",
+          body: "终端日志、准确性报告、数据集说明和调查叙事来自同一次本地运行。",
+          proof: "Run npm run sans:check.",
+          page: "companion"
+        }
+      ];
+    }
+
+    return [
+      {
+        id: "autonomy",
+        label: "Autonomous execution",
+        title: "The agent does not only run fast. It corrects itself when evidence is weak.",
+        body: "FIND EVIL judges look for self-correction. AgentGuard records the flawed assumption, the correction, and the final evidence-backed claim.",
+        proof: "See agent-execution-log.jsonl and accuracy-report.json.",
+        page: "companion"
+      },
+      {
+        id: "accuracy",
+        label: "IR accuracy",
+        title: "Every finding maps to a file, offset, log line, or flow id.",
+        body: "Confirmed findings, rejected claims, and inferred leads are separated so the agent cannot turn suspicion into fake certainty.",
+        proof: "See the SIFT evidence packet and artifact findings.",
+        page: "evidence"
+      },
+      {
+        id: "depth",
+        label: "Breadth and depth",
+        title: "Three IR routes: disk persistence, auth-log accuracy, and containment approval.",
+        body: "This is not a single toy prompt. It connects forensic artifacts, log analysis, and response governance into one replayable workflow.",
+        proof: "See the SIFT Scenarios page.",
+        page: "scenarios"
+      },
+      {
+        id: "audit",
+        label: "Audit trail quality",
+        title: "The demo video and repository replay the same evidence chain.",
+        body: "Terminal logs, accuracy reporting, dataset documentation, and the investigative narrative are all generated from one local run.",
+        proof: "Run npm run sans:check.",
+        page: "companion"
+      }
+    ];
+  }
+
   if (contestMode === "splunk") {
     if (locale === "zh") {
       return [
@@ -118,6 +192,56 @@ export function getJudgingCards(locale: Locale, contestMode: ContestMode): Score
 }
 
 export function getReadinessItems(locale: Locale, contestMode: ContestMode): ReadinessItem[] {
+  if (contestMode === "sans") {
+    if (locale === "zh") {
+      return [
+        {
+          id: "platform",
+          label: "SIFT / Protocol SIFT 方向",
+          detail: "仓库提供 SIFT-compatible runner、fixture 数据和迁移到 SIFT 工具的命令契约。"
+        },
+        {
+          id: "self-correction",
+          label: "自我纠错",
+          detail: "执行日志明确记录错误假设、纠正动作和纠正后的证据链。"
+        },
+        {
+          id: "accuracy",
+          label: "准确性报告",
+          detail: "准确性报告区分 confirmed、rejected 和 inferred findings。"
+        },
+        {
+          id: "replay",
+          label: "可复现提交材料",
+          detail: "README、架构图、数据集说明、日志和本地校验命令都已准备。"
+        }
+      ];
+    }
+
+    return [
+      {
+        id: "platform",
+        label: "SIFT / Protocol SIFT direction",
+        detail: "The repo ships a SIFT-compatible runner, fixture evidence, and a command contract for SIFT tooling."
+      },
+      {
+        id: "self-correction",
+        label: "Self-correction sequence",
+        detail: "The execution log records the weak assumption, the correction, and the evidence-backed replacement claim."
+      },
+      {
+        id: "accuracy",
+        label: "Accuracy report",
+        detail: "The report separates confirmed, rejected, and inferred findings with artifact locators."
+      },
+      {
+        id: "replay",
+        label: "Replayable submission assets",
+        detail: "README, architecture, dataset docs, logs, and local verification commands are prepared for judges."
+      }
+    ];
+  }
+
   if (contestMode === "splunk") {
     if (locale === "zh") {
       return [

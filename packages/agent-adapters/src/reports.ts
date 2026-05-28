@@ -29,6 +29,40 @@ function gateEntries(score: AdapterScore): Array<[string, AdapterGateResult]> {
   return Object.entries(score.gates);
 }
 
+function renderSelfCorrectionMarkdown(scenario: AdapterScenario): string[] {
+  if (!scenario.selfCorrections?.length) {
+    return [];
+  }
+
+  return [
+    "",
+    "## Self-Correction",
+    ...scenario.selfCorrections.map(
+      (correction) =>
+        `- ${correction.step}: ${correction.detected} ${correction.correction} Evidence: ${correction.evidence.join(", ")}`
+    )
+  ];
+}
+
+function renderFindingsMarkdown(scenario: AdapterScenario): string[] {
+  if (!scenario.findings?.length) {
+    return [];
+  }
+
+  return [
+    "",
+    "## Artifact Findings",
+    "| Claim | Status | Artifact | Locator | Confidence |",
+    "| --- | --- | --- | --- | --- |",
+    ...scenario.findings.map(
+      (finding) =>
+        `| ${finding.claim} | ${finding.status} | ${finding.artifact} | ${finding.locator} | ${Math.round(
+          finding.confidence * 100
+        )}% |`
+    )
+  ];
+}
+
 export function renderAdapterJsonReport(scenario: AdapterScenario, score: AdapterScore): string {
   return JSON.stringify(
     {
@@ -76,6 +110,18 @@ export function renderAdapterMarkdownReport(scenario: AdapterScenario, score: Ad
           `Decision focus: ${scenario.integrationContext.decisionFocus}`
         ]
       : []),
+    ...(scenario.executionProfile
+      ? [
+          "",
+          "## Execution Profile",
+          `Environment: ${scenario.executionProfile.environment}`,
+          `Framework: ${scenario.executionProfile.framework}`,
+          `Command: \`${scenario.executionProfile.command}\``,
+          `Data types: ${scenario.executionProfile.dataTypes.join(", ")}`
+        ]
+      : []),
+    ...renderSelfCorrectionMarkdown(scenario),
+    ...renderFindingsMarkdown(scenario),
     "",
     "| Gate | Status | Reason |",
     "| --- | --- | --- |",
@@ -123,6 +169,9 @@ export function renderAdapterTestCloudEvidence(scenario: AdapterScenario, score:
       validationMode: "live-local",
       decision: score.decision,
       ...(scenario.integrationContext ? { integrationContext: scenario.integrationContext } : {}),
+      ...(scenario.executionProfile ? { executionProfile: scenario.executionProfile } : {}),
+      ...(scenario.selfCorrections ? { selfCorrections: scenario.selfCorrections } : {}),
+      ...(scenario.findings ? { findings: scenario.findings } : {}),
       status: score.passed ? "passed" : "failed",
       score: {
         passedGates: score.totalPassed,
@@ -221,6 +270,7 @@ export function renderAdapterSuiteMarkdown(scenarios: AdapterScenario[]): string
     `Review or block findings: **${summary.reviewOrBlockScenarios}**`,
     `Security / SOC scenarios: **${summary.securitySocScenarios}**`,
     `Splunk-integrated scenarios: **${summary.splunkIntegratedScenarios}**`,
+    `SIFT-integrated scenarios: **${summary.siftIntegratedScenarios}**`,
     `Public framework checks: **${installSummary.coverageLabel}**`,
     "",
     "| Agent Type | Decision | Gates | Scenario |",

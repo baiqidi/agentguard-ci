@@ -17,4 +17,14 @@ describe("app navigation", () => {
     ]);
     expect(getPageNavigation("zh", "splunk")[2].description).toContain("companion app");
   });
+
+  it("returns SANS-specific information architecture", () => {
+    expect(getPageNavigation("en", "sans").map((item) => item.label)).toEqual([
+      "IR Overview",
+      "SIFT Scenarios",
+      "Run Locally",
+      "Evidence"
+    ]);
+    expect(getPageNavigation("en", "sans")[1].description).toContain("self-correction");
+  });
 });

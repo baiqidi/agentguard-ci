@@ -15,6 +15,14 @@ export function getContestEvidenceConfig(): ContestEvidenceConfig {
     };
   }
 
+  if (contest === "sans" || contest === "find-evil" || contest === "findevil") {
+    return {
+      targetPlatform: "SANS SIFT Workstation + Protocol SIFT MCP",
+      evidenceArtifact: "sift-ir-evidence.json",
+      evidenceLabel: "SIFT incident-response evidence"
+    };
+  }
+
   if (contest === "tencent") {
     return {
       targetPlatform: "Tencent Cloud AI Agent Governance Evidence",

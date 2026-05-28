@@ -31,7 +31,18 @@ The current AgentGuard suite already includes a Security/SOC adapter that blocks
 
 ## Build Delta
 
-Small. The existing product is already close. Add SANS-specific copy first; add deeper SOC scenarios if time allows.
+Implemented for the SANS path:
+
+- Three incident-response scenarios:
+  - `sift-disk-persistence-self-correction`
+  - `sift-auth-log-accuracy-validation`
+  - `sift-containment-approval`
+- SANS contest mode with `targetPlatform: "SANS SIFT Workstation + Protocol SIFT MCP"`.
+- SANS evidence artifact name: `sift-ir-evidence.json`.
+- Local SIFT-compatible runner: `scripts/run-sans-sift-ir-demo.mjs`.
+- Safe fixture evidence bundle: `sans-fixtures/case-001/`.
+- Readiness check: `npm run sans:check`.
+- Dashboard wrapper: `http://localhost:5173/?contest=sans`.
 
 ## Judging Strength
 
@@ -41,9 +52,9 @@ Small. The existing product is already close. Add SANS-specific copy first; add 
 
 ## Gaps Before Submission
 
-- Confirm final Devpost requirements and video deadline.
-- Decide whether to add the two deeper SOC scenarios before submitting.
-- Create a security-focused demo video.
+- Record the required public demo video with live terminal execution and audio narration.
+- If Protocol SIFT Slack access or full SIFT case data becomes available, rerun the same command contract against those assets.
+- Register on Devpost and paste the final repository, video, architecture, dataset, logs, and accuracy-report links.
 
 ## Source
 

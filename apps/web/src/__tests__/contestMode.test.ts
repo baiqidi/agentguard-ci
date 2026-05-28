@@ -17,6 +17,16 @@ describe("contest mode helpers", () => {
     });
   });
 
+  it("detects SANS FIND EVIL mode from the URL search string", () => {
+    expect(getContestMode("?contest=sans")).toBe("sans");
+    expect(getContestEvidenceTarget("sans")).toBe("SANS SIFT Workstation + Protocol SIFT MCP");
+    expect(getContestEvidenceArtifact("sans")).toBe("sift-ir-evidence.json");
+    expect(getContestTrackBadge("sans")).toEqual({
+      label: "FIND EVIL",
+      value: "Protocol SIFT IR"
+    });
+  });
+
   it("preserves default mode when no contest is provided", () => {
     expect(getContestMode("")).toBe("default");
     expect(getContestEvidenceTarget("default")).toBe("UiPath Test Cloud");

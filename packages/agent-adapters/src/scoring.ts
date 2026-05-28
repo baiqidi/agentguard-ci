@@ -133,6 +133,9 @@ export function summarizeAdapterScores(scores: AdapterScore[]): AdapterSuiteSumm
     gatePassRate,
     liveAgentTypes,
     securitySocScenarios: scores.filter((score) => score.agentType === "security-soc").length,
-    splunkIntegratedScenarios: scores.filter((score) => score.integrationPlatform === "Splunk MCP Server").length
+    splunkIntegratedScenarios: scores.filter((score) => score.integrationPlatform === "Splunk MCP Server").length,
+    siftIntegratedScenarios: scores.filter(
+      (score) => score.integrationPlatform === "SANS SIFT Workstation + Protocol SIFT MCP"
+    ).length
   };
 }
