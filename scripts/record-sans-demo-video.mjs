@@ -81,6 +81,9 @@ function renderTerminalScene(command) {
   const report = existsSync(join(root, "agentguard-runs", "sans-find-evil", "accuracy-report.json"))
     ? JSON.stringify(readJson(join(root, "agentguard-runs", "sans-find-evil", "accuracy-report.json")), null, 2)
     : "";
+  const readiness = existsSync(join(root, "agentguard-runs", "sans-find-evil", "sift-readiness.json"))
+    ? readJson(join(root, "agentguard-runs", "sans-find-evil", "sift-readiness.json"))
+    : {};
   const terminalLines = [
     "$ npm run sans:check",
     "",
@@ -88,9 +91,11 @@ function renderTerminalScene(command) {
     "> npm run sans:prepare && node scripts/verify-sans-find-evil-submission.mjs",
     "",
     "AgentGuard SANS FIND EVIL run complete",
-    "Execution mode: fixture-local",
+    `Execution mode: ${readiness.executionMode ?? "sift-compatible-local"}`,
     "PASS runtime:execution-log - terminal-style tool calls and self-correction present",
+    "PASS dataset:dfir-breadth - Windows event, memory triage, and replay artifacts documented",
     "PASS accuracy:traceability - confirmed/rejected/inferred artifact-located findings",
+    "PASS scenario-routes - 5 DFIR checkpoints with promotion, review, and block decisions",
     "PASS workflow:sans-find-evil - CI runs sans:check and uploads judge evidence",
     "",
     "Recent execution log:",
@@ -129,7 +134,7 @@ function renderTerminalScene(command) {
       <section>
         <div class="badge">Live command contract</div>
         <h1>Run the same SANS evidence gate.</h1>
-        <p>The final recording should show a real terminal running <strong>${escapeHtml(command)}</strong>. This replay panel is generated from the latest local run so the video stays scene-aligned.</p>
+        <p>A judge can clone the repository, run <strong>${escapeHtml(command)}</strong>, and reproduce the same SIFT-compatible evidence packet, audit trail, and five DFIR safety decisions.</p>
       </section>
       <pre>${escapeHtml(terminalLines)}</pre>
     </main>

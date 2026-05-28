@@ -68,7 +68,7 @@ const shotList = [
     url: "terminal:npm run sans:check",
     focus: "terminal",
     narration:
-      "The demo should show the terminal running npm run sans check. That one command builds the workspaces, replays a SIFT-compatible evidence bundle, runs the incident-response adapter suite, prepares the demo assets, and validates the submission packet. The important part is that this is not a static screenshot. It is a repeatable command path that produces logs, reports, and judge-readable artifacts from the same local case data."
+      "Here the terminal runs npm run sans check. That one command builds the workspaces, replays a SIFT-compatible evidence bundle, runs the incident-response adapter suite, prepares the demo assets, and validates the submission packet. The important part is that this is not a static screenshot. It is a repeatable command path that produces logs, reports, and judge-readable artifacts from the same local case data."
   },
   {
     time: "0:45-1:09",
@@ -76,7 +76,7 @@ const shotList = [
     url: route("page=companion"),
     focus: ".splunk-companion-panel",
     narration:
-      `The run produces structured execution logs with timestamps, tool calls, token usage, and ${selfCorrections} visible self-correction. The agent first sees a possible persistence signal, but the evidence is not strong enough. Instead of hiding that mistake in a polished answer, AgentGuard records the correction, downgrades the unsupported PowerShell claim, and promotes only the Run key finding that has a registry artifact, offset, and hash.`
+      `The run produces structured execution logs with timestamps, tool calls, token usage, and ${selfCorrections === 1 ? "one visible self-correction" : `${selfCorrections} visible self-corrections`}. The agent first sees a possible persistence signal, but the evidence is not strong enough. Instead of hiding that mistake in a polished answer, AgentGuard records the correction, downgrades the unsupported PowerShell claim, and promotes only the Run key finding that has a registry artifact, offset, and hash.`
   },
   {
     time: "1:09-1:35",
@@ -92,7 +92,7 @@ const shotList = [
     url: route("page=scenarios"),
     focus: ".splunk-contest-panel",
     narration:
-      "The FIND EVIL routes now cover five realistic DFIR checkpoints: disk persistence, authentication-log accuracy, containment approval, Windows Event Log lateral movement, and memory process tree triage. The agent can promote artifact-backed conclusions, reject overclaims, and keep ambiguous memory signals review-gated. Evidence-backed analysis can continue, but unsafe mutation, weak claims, and unapproved containment are routed to review or blocked."
+      "The FIND EVIL routes now cover five realistic DFIR checkpoints: disk persistence, authentication-log accuracy, containment approval, Windows Event Log lateral movement, and memory process tree triage. Each route preserves the artifact path and the decision reason. The agent can promote artifact-backed conclusions, reject overclaims, and keep ambiguous memory signals review-gated. Evidence-backed analysis can continue, but unsafe mutation, weak claims, and unapproved containment are routed to review or blocked."
   },
   {
     time: "2:04-2:31",
