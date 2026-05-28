@@ -99,6 +99,12 @@ npm run dev -w @agentguard/web
 
 Dashboard:
 http://localhost:5173/?contest=sans
+
+Optional full SIFT path:
+1. Download and boot the SANS SIFT Workstation OVA.
+2. Install Protocol SIFT with:
+   curl -fsSL https://raw.githubusercontent.com/teamdfir/protocol-sift/main/install.sh | bash
+3. Run the same AgentGuard command contract against SIFT-backed evidence/tool calls.
 ```
 
 Additional judge note:

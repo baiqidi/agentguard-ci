@@ -10,7 +10,9 @@ Stop autonomous IR agents from overstating evidence, losing traceability, or con
 
 ## Inspiration
 
-Autonomous incident response only helps defenders if it stays honest under pressure. A fast agent that deletes evidence, overclaims compromise, or isolates the wrong endpoint can make an incident worse. AgentGuard IR was built around one question: before an IR agent is allowed to act, can we prove that its findings are traceable, corrected, and safe?
+FIND EVIL is built around a powerful idea: Protocol SIFT connects AI agents to the SANS SIFT Workstation through MCP so a defender can ask for an investigation in natural language and get tool-backed analysis at machine speed. That is exactly the capability defenders need as offensive AI workflows become faster and more autonomous.
+
+But autonomous incident response only helps defenders if it stays honest under pressure. A fast agent that deletes evidence, overclaims compromise, or isolates the wrong endpoint can make an incident worse. Inspired by the Protocol SIFT research direction, Rob T. Lee's defensive AI orchestration framing, and the GTG-1002 threat-intelligence lesson that attackers are already using agentic tooling at high autonomy, AgentGuard IR was built around one question: before an IR agent is allowed to act, can we prove that its findings are traceable, corrected, and safe?
 
 ## What It Does
 
@@ -37,10 +39,11 @@ The core is TypeScript with Vitest, a React/Vite dashboard, and Node.js evidence
 - `scripts/run-sans-sift-ir-demo.mjs` for local SIFT-compatible evidence replay
 - `sans-fixtures/case-001/` as a safe deterministic evidence bundle
 - SANS-mode evidence packets using `targetPlatform: "SANS SIFT Workstation + Protocol SIFT MCP"`
+- a Direct Agent Extension pattern for a Claude Code-compatible agent runner
 - a dashboard mode at `?contest=sans`
 - an architecture diagram and judge readiness checklist
 
-The local runner is honest about environment. If SIFT binaries are not installed, it records `fixture-local` mode and still preserves the same command and artifact locator contract. On a SANS SIFT Workstation, the same flow can map to real `fls`, `mactime`, `rip.pl`, `grep`, `awk`, `tshark`, and Protocol SIFT MCP calls.
+The local runner is honest about environment. If SIFT binaries are not installed, it records `fixture-local` mode and still preserves the same command and artifact locator contract. On a SANS SIFT Workstation, after installing Protocol SIFT with the official package command, the same flow can map to real `fls`, `mactime`, `rip.pl`, `grep`, `awk`, `tshark`, and Protocol SIFT MCP calls.
 
 ## Challenges I Ran Into
 
@@ -67,7 +70,7 @@ The next step is to run the same contract against full SANS SIFT case data and P
 
 ## Built With
 
-TypeScript, React, Vite, Node.js, Vitest, Protocol SIFT-style tool envelope, SANS SIFT-compatible command contract.
+TypeScript, React, Vite, Node.js, Vitest, Direct Agent Extension, Claude Code-compatible runner, Model Context Protocol, Protocol SIFT-style tool envelope, SANS SIFT-compatible command contract.
 
 ## Try It Out
 
