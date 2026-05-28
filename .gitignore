@@ -8,4 +8,5 @@ agentguard-runs/
 test-results/
 playwright-report/
 *.log
+!sans-fixtures/**/*.log
 tools/piper/

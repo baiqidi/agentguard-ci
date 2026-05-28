@@ -108,6 +108,7 @@ if (!skipDocs) {
     "docs/submission/sans-find-evil-submission-copy.md",
     "docs/submission/sans-find-evil-judge-readiness.md",
     "sans-fixtures/case-001/README.md",
+    "sans-fixtures/case-001/auth.log",
     ".github/workflows/sans-find-evil.yml"
   ];
 
