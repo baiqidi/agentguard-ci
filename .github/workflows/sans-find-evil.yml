@@ -13,6 +13,8 @@ jobs:
     name: Validate SANS FIND EVIL submission evidence
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
     steps:
       - name: Check out repository
@@ -21,14 +23,30 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run SANS readiness gate
-        run: npm run sans:check
+      - name: Build workspaces
+        run: npm run build
+
+      - name: Run SANS local fixture runner
+        run: node scripts/run-sans-sift-ir-demo.mjs --output-dir agentguard-runs/sans-find-evil
+
+      - name: Run SANS adapter suite
+        run: >
+          node --input-type=module
+          -e "process.env.AGENTGUARD_CONTEST='sans'; await import('./packages/agent-adapters/dist/suite-cli.js')"
+          --
+          --output-dir agentguard-runs/sans-agent-adapters
+
+      - name: Prepare SANS video assets
+        run: npm run video:prep:sans
+
+      - name: Verify SANS readiness gate
+        run: node scripts/verify-sans-find-evil-submission.mjs
 
       - name: Upload SANS evidence bundle
         uses: actions/upload-artifact@v4

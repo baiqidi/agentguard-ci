@@ -154,9 +154,13 @@ if (!skipDocs) {
     const requiredWorkflowSignals = [
       "actions/checkout@v4",
       "actions/setup-node@v4",
-      "node-version: 20",
+      "node-version: 24",
       "npm ci",
-      "npm run sans:check",
+      "npm run build",
+      "Run SANS local fixture runner",
+      "Run SANS adapter suite",
+      "npm run video:prep:sans",
+      "node scripts/verify-sans-find-evil-submission.mjs",
       "actions/upload-artifact@v4",
       "sans-find-evil-evidence"
     ];
