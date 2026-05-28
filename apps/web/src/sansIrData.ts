@@ -20,6 +20,13 @@ export interface SansArtifactCard {
   command: string;
 }
 
+export interface SansReadinessCard {
+  id: string;
+  title: Localized;
+  proof: Localized;
+  command: string;
+}
+
 export interface SansIrCopy {
   kicker: string;
   title: string;
@@ -43,15 +50,15 @@ export const sansScenarioCards: SansScenarioCard[] = [
     },
     evidence: {
       en: "NTUSER.DAT Run key offset, SHA256, timeline window, and self-correction log.",
-      zh: "NTUSER.DAT Run key offset、SHA256、时间窗口和自我纠错日志。"
+      zh: "NTUSER.DAT Run key 偏移量、SHA256、时间窗口和自我纠错日志。"
     },
     correction: {
       en: "The unsupported PowerShell claim is downgraded and the Run key finding becomes the confirmed claim.",
-      zh: "无证据支撑的 PowerShell 结论被降级，Run key 发现成为确认结论。"
+      zh: "无证据支撑的 PowerShell 结论被降级，Run key 发现成为已确认结论。"
     },
     outcome: {
       en: "PROMOTE: artifact-backed finding with explicit correction.",
-      zh: "PROMOTE：有 artifact 支撑，并且纠错链清晰。"
+      zh: "PROMOTE: 有 artifact 支撑，并且纠错链清晰。"
     }
   },
   {
@@ -78,7 +85,7 @@ export const sansScenarioCards: SansScenarioCard[] = [
     },
     outcome: {
       en: "PROMOTE: confirmed suspicious activity without fake certainty.",
-      zh: "PROMOTE：确认可疑活动，但不制造虚假确定性。"
+      zh: "PROMOTE: 确认可疑活动，但不制造虚假确定性。"
     }
   },
   {
@@ -105,7 +112,7 @@ export const sansScenarioCards: SansScenarioCard[] = [
     },
     outcome: {
       en: "BLOCK: unsafe state mutation without named approval.",
-      zh: "BLOCK：没有具名审批的高风险状态变更。"
+      zh: "BLOCK: 没有具名审批的高风险状态变更。"
     }
   }
 ];
@@ -125,6 +132,19 @@ export const sansArtifactCards: SansArtifactCard[] = [
     command: "npm run sans:check"
   },
   {
+    id: "sift-readiness",
+    title: {
+      en: "SIFT readiness report",
+      zh: "SIFT 就绪度报告"
+    },
+    path: "agentguard-runs/sans-find-evil/sift-readiness.json",
+    proof: {
+      en: "Records fixture-local vs SIFT-live mode, required SIFT tools, and Protocol SIFT setup status.",
+      zh: "记录 fixture-local 与 SIFT-live 模式、所需 SIFT 工具和 Protocol SIFT 配置状态。"
+    },
+    command: "npm run sans:check"
+  },
+  {
     id: "accuracy-report",
     title: {
       en: "Accuracy report",
@@ -133,7 +153,7 @@ export const sansArtifactCards: SansArtifactCard[] = [
     path: "agentguard-runs/sans-find-evil/accuracy-report.json",
     proof: {
       en: "Confirmed, rejected, and inferred findings with artifact locators.",
-      zh: "confirmed、rejected、inferred 三类 finding，并带 artifact locator。"
+      zh: "包含 confirmed、rejected、inferred 三类 finding，并带 artifact locator。"
     },
     command: "npm run sans:check"
   },
@@ -165,10 +185,50 @@ export const sansArtifactCards: SansArtifactCard[] = [
   }
 ];
 
+export const sansReadinessCards: SansReadinessCard[] = [
+  {
+    id: "fixture-local",
+    title: {
+      en: "Fixture-local safe replay",
+      zh: "Fixture-local 安全复现"
+    },
+    proof: {
+      en: "Judges can regenerate deterministic evidence without private SIFT credentials or destructive tools.",
+      zh: "评委无需私有 SIFT 凭据或破坏性工具，也能重新生成确定性的证据包。"
+    },
+    command: "npm run sans:check"
+  },
+  {
+    id: "sift-live",
+    title: {
+      en: "SIFT-live migration path",
+      zh: "SIFT-live 迁移路径"
+    },
+    proof: {
+      en: "The same command contract maps to a SANS SIFT Workstation with fls, mactime, rip.pl, tshark, and Protocol SIFT MCP.",
+      zh: "同一套命令契约可以映射到 SANS SIFT Workstation 中的 fls、mactime、rip.pl、tshark 和 Protocol SIFT MCP。"
+    },
+    command: "node scripts/run-sans-sift-ir-demo.mjs --fixture-dir <starter-case-data>"
+  },
+  {
+    id: "protocol-sift-install",
+    title: {
+      en: "Protocol SIFT install path",
+      zh: "Protocol SIFT 安装路径"
+    },
+    proof: {
+      en: "The readiness report prints the official install command and whether Protocol SIFT is configured.",
+      zh: "就绪度报告会输出官方安装命令，并标记 Protocol SIFT 是否已配置。"
+    },
+    command: "curl -fsSL https://raw.githubusercontent.com/teamdfir/protocol-sift/main/install.sh | bash"
+  }
+];
+
 export function summarizeSansIrSurface() {
   return {
     irRoutes: sansScenarioCards.length,
     localArtifacts: sansArtifactCards.length,
+    readinessCards: sansReadinessCards.length,
     selfCorrections: 1,
     accuracyStatuses: 3,
     replayCommands: new Set(sansArtifactCards.map((card) => card.command)).size

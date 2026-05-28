@@ -8,6 +8,7 @@ Current implementation:
 
 - Uses a Claude Code-compatible Protocol SIFT runner contract.
 - Runs on local safe evidence fixtures and documents the SIFT migration path.
+- Generates `sift-readiness.json` with SIFT tool availability, Protocol SIFT install guidance, and fixture-local vs SIFT-live mode.
 - Produces terminal-style execution logs with timestamps, tool calls, and token usage.
 - Demonstrates self-correction.
 - Produces an accuracy report with artifact locators.
@@ -32,6 +33,7 @@ The agent corrects an unsupported PowerShell/persistence claim before the final 
 Evidence:
 
 - `agentguard-runs/sans-find-evil/accuracy-report.json`
+- `agentguard-runs/sans-find-evil/sift-readiness.json`
 - confirmed, rejected, and inferred finding statuses
 - locators such as `NTUSER.DAT:Software\Microsoft\Windows\CurrentVersion\Run@0x1f4a`
 
@@ -56,6 +58,7 @@ The scenarios cover disk persistence, Linux authentication logs, and network/end
 Evidence:
 
 - `agent-execution-log.jsonl`
+- `sift-readiness.json`
 - `evidence-dataset.md`
 - `investigative-narrative.md`
 - SANS-mode `sift-ir-evidence.json` files from the adapter suite
@@ -96,6 +99,7 @@ Expected generated artifacts:
 
 - `agentguard-runs/sans-find-evil/agent-execution-log.jsonl`
 - `agentguard-runs/sans-find-evil/accuracy-report.json`
+- `agentguard-runs/sans-find-evil/sift-readiness.json`
 - `agentguard-runs/sans-find-evil/evidence-dataset.md`
 - `agentguard-runs/sans-find-evil/investigative-narrative.md`
 - `agentguard-runs/sans-agent-adapters/agent-adapter-suite-summary.json`

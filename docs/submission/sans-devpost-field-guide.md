@@ -125,6 +125,7 @@ npm run sans:check
 Expected evidence:
 
 ```text
+agentguard-runs/sans-find-evil/sift-readiness.json
 agentguard-runs/sans-find-evil/agent-execution-log.jsonl
 agentguard-runs/sans-find-evil/accuracy-report.json
 agentguard-runs/sans-find-evil/evidence-dataset.md

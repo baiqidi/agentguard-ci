@@ -77,7 +77,7 @@ The SANS wrapper positions AgentGuard as the audit and reliability gate before a
 - The dashboard can run in SANS mode with `?contest=sans`.
 - Evidence payloads switch to `targetPlatform: "SANS SIFT Workstation + Protocol SIFT MCP"`.
 - The evidence artifact name becomes `sift-ir-evidence.json`.
-- The local runner writes terminal-style execution logs, an accuracy report, dataset documentation, and an investigative narrative:
+- The local runner writes terminal-style execution logs, an accuracy report, dataset documentation, an investigative narrative, and a SIFT readiness preflight that records whether the run is fixture-local, SIFT-compatible local, or SIFT-live:
 
 ```bash
 npm run sans:check
@@ -89,6 +89,7 @@ SANS-specific artifacts:
 
 - `architecture_diagram_sans.md`: agent, SIFT tools, MCP, evidence sources, and output pipeline.
 - `sans-fixtures/case-001/`: safe local evidence bundle for replay.
+- `agentguard-runs/sans-find-evil/sift-readiness.json`: required SIFT tools, Protocol SIFT install path, execution mode, and starter-case-data override.
 - `agentguard-runs/sans-find-evil/agent-execution-log.jsonl`: timestamped tool execution and self-correction log.
 - `agentguard-runs/sans-find-evil/accuracy-report.json`: confirmed, rejected, and inferred findings with artifact locators.
 - `agentguard-runs/sans-demo-video/shot-list.json`: under-five-minute FIND EVIL demo storyboard with a required terminal scene.

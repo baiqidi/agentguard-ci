@@ -3,6 +3,14 @@ import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 
 const root = process.cwd();
+const protocolSiftInstallCommand =
+  "curl -fsSL https://raw.githubusercontent.com/teamdfir/protocol-sift/main/install.sh | bash";
+const siftToolSpecs = [
+  { name: "fls", purpose: "Enumerate files from disk images and bodyfile inputs." },
+  { name: "mactime", purpose: "Build incident timelines from SIFT bodyfile evidence." },
+  { name: "rip.pl", purpose: "Parse Registry hives and validate persistence claims." },
+  { name: "tshark", purpose: "Inspect packet captures and network-flow evidence." }
+];
 
 function readArg(name, fallback) {
   const index = process.argv.indexOf(name);
@@ -26,9 +34,42 @@ function jsonLine(value) {
   return `${JSON.stringify(value)}\n`;
 }
 
+function buildSiftReadiness({ executionMode, fixtureDir, protocolSiftConfigured, toolAvailability }) {
+  const toolMatrix = siftToolSpecs.map((tool) => ({
+    name: tool.name,
+    available: Boolean(toolAvailability[tool.name]),
+    purpose: tool.purpose
+  }));
+  const missingRequiredTools = toolMatrix.filter((tool) => !tool.available).map((tool) => tool.name);
+
+  return {
+    generatedAt: "2026-05-18T03:49:45.000Z",
+    architecturalPattern: "Direct Agent Extension",
+    protocol: "Protocol SIFT MCP",
+    targetPlatform: "SANS SIFT Workstation + Protocol SIFT MCP",
+    executionMode,
+    fixtureFallback: true,
+    fixtureDir,
+    protocolSift: {
+      configured: protocolSiftConfigured,
+      installCommand: protocolSiftInstallCommand,
+      notebookResource: "Protocol SIFT NotebookLM resource for build questions and architecture guidance."
+    },
+    toolMatrix,
+    readiness: {
+      canRunFixture: true,
+      canRunSiftLive: missingRequiredTools.length === 0 && protocolSiftConfigured,
+      missingRequiredTools,
+      inputOverride: "--fixture-dir <path-to-starter-case-data>",
+      supportedEvidenceTypes: ["disk timeline", "registry export", "authentication log", "network flow index"]
+    }
+  };
+}
+
 async function main() {
   const outputDir = resolve(readArg("--output-dir", join(root, "agentguard-runs", "sans-find-evil")));
   const fixtureDir = resolve(readArg("--fixture-dir", join(root, "sans-fixtures", "case-001")));
+  const protocolSiftEndpoint = readArg("--protocol-sift-endpoint", process.env.PROTOCOL_SIFT_MCP_URL ?? "");
   await mkdir(outputDir, { recursive: true });
 
   const timelinePath = join(fixtureDir, "timeline.body");
@@ -47,9 +88,19 @@ async function main() {
     fls: commandAvailable("fls"),
     mactime: commandAvailable("mactime"),
     rip: commandAvailable("rip.pl"),
+    "rip.pl": commandAvailable("rip.pl"),
     tshark: commandAvailable("tshark")
   };
-  const executionMode = Object.values(toolAvailability).some(Boolean) ? "sift-compatible-local" : "fixture-local";
+  const requiredSiftToolsAvailable = siftToolSpecs.every((tool) => Boolean(toolAvailability[tool.name]));
+  const protocolSiftConfigured =
+    Boolean(protocolSiftEndpoint) || commandAvailable("protocol-sift") || commandAvailable("protocol-sift-mcp");
+  const executionMode =
+    requiredSiftToolsAvailable && protocolSiftConfigured
+      ? "sift-live"
+      : Object.values(toolAvailability).some(Boolean)
+        ? "sift-compatible-local"
+        : "fixture-local";
+  const siftReadiness = buildSiftReadiness({ executionMode, fixtureDir, protocolSiftConfigured, toolAvailability });
   const failedLoginLines = authLog.split("\n").filter((line) => line.includes("Failed password"));
   const acceptedFromAttacker = authLog
     .split("\n")
@@ -59,6 +110,16 @@ async function main() {
   const pcap = JSON.parse(pcapIndex);
 
   const logEntries = [
+    {
+      ts: "2026-05-18T03:49:45.000Z",
+      event: "sift_preflight",
+      tool: "agentguard_sift_preflight",
+      mode: executionMode,
+      artifact: "sift-readiness.json",
+      protocol: "Protocol SIFT MCP",
+      result: `mode=${executionMode} missing=${siftReadiness.readiness.missingRequiredTools.join(",") || "none"}`,
+      tokenUsage: { input: 140, output: 38 }
+    },
     {
       ts: "2026-05-18T03:50:00.000Z",
       event: "tool_call",
@@ -157,6 +218,15 @@ async function main() {
       detected: "Initial PowerShell timeline hit had no backing registry persistence artifact.",
       correction: "Unsupported compromise claim corrected before the final narrative."
     },
+    siftReadiness: {
+      readinessArtifact: "sift-readiness.json",
+      architecturalPattern: siftReadiness.architecturalPattern,
+      protocol: siftReadiness.protocol,
+      executionMode,
+      canRunFixture: siftReadiness.readiness.canRunFixture,
+      canRunSiftLive: siftReadiness.readiness.canRunSiftLive,
+      missingRequiredTools: siftReadiness.readiness.missingRequiredTools
+    },
     findings
   };
 
@@ -171,6 +241,15 @@ async function main() {
     "- `sans-fixtures/case-001/pcap-flow-index.json`: Safe packet-flow index for a containment-risk example.",
     "",
     `Execution mode: ${executionMode}.`,
+    "",
+    "## Protocol SIFT install command",
+    "",
+    `\`${protocolSiftInstallCommand}\``,
+    "",
+    "## Readiness artifact",
+    "",
+    "`sift-readiness.json` records the current fixture-local or SIFT-live mode, required SIFT tools, Protocol SIFT configuration, and the `--fixture-dir` override for starter case data.",
+    "",
     "When SIFT tools are installed, this runner records tool availability and keeps the same artifact locator contract."
   ].join("\n");
 
@@ -196,6 +275,7 @@ async function main() {
   await Promise.all([
     writeFile(join(outputDir, "agent-execution-log.jsonl"), logEntries.map(jsonLine).join("")),
     writeFile(join(outputDir, "accuracy-report.json"), JSON.stringify(accuracyReport, null, 2)),
+    writeFile(join(outputDir, "sift-readiness.json"), JSON.stringify(siftReadiness, null, 2)),
     writeFile(join(outputDir, "evidence-dataset.md"), datasetDoc),
     writeFile(join(outputDir, "investigative-narrative.md"), narrative)
   ]);

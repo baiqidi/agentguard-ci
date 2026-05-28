@@ -29,16 +29,36 @@ describe("SANS FIND EVIL local runner", () => {
     const report = JSON.parse(await readFile(join(outputDir, "accuracy-report.json"), "utf8"));
     const dataset = await readFile(join(outputDir, "evidence-dataset.md"), "utf8");
     const narrative = await readFile(join(outputDir, "investigative-narrative.md"), "utf8");
+    const readiness = JSON.parse(await readFile(join(outputDir, "sift-readiness.json"), "utf8"));
 
+    expect(log).toContain('"event":"sift_preflight"');
     expect(log).toContain('"tool":"fls"');
     expect(log).toContain('"event":"self_correction"');
     expect(report.summary.selfCorrections).toBe(1);
+    expect(report.siftReadiness).toMatchObject({
+      readinessArtifact: "sift-readiness.json",
+      architecturalPattern: "Direct Agent Extension"
+    });
     expect(report.findings[0]).toMatchObject({
       status: "confirmed",
       artifact: "registry-run-key.txt",
       locator: "NTUSER.DAT:Software\\Microsoft\\Windows\\CurrentVersion\\Run@0x1f4a"
     });
+    expect(readiness).toMatchObject({
+      architecturalPattern: "Direct Agent Extension",
+      protocol: "Protocol SIFT MCP",
+      fixtureFallback: true
+    });
+    expect(readiness.protocolSift.installCommand).toContain("protocol-sift/main/install.sh");
+    expect(readiness.toolMatrix.map((tool: { name: string }) => tool.name)).toEqual([
+      "fls",
+      "mactime",
+      "rip.pl",
+      "tshark"
+    ]);
     expect(dataset).toContain("sans-fixtures/case-001/auth.log");
+    expect(dataset).toContain("Protocol SIFT install command");
+    expect(dataset).toContain("sift-readiness.json");
     expect(narrative).toContain("Confirmed password spraying");
     expect(narrative).toContain("Unsupported compromise claim corrected");
 
@@ -52,6 +72,7 @@ describe("SANS FIND EVIL local runner", () => {
     );
 
     expect(verify.status).toBe(0);
+    expect(verify.stdout).toContain("PASS readiness:sift-preflight");
     expect(verify.stdout).toContain("SANS FIND EVIL submission check passed");
   });
 

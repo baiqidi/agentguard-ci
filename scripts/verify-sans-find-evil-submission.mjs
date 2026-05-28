@@ -44,6 +44,7 @@ const skipDocs = hasFlag("--skip-docs");
 const runtimeFiles = [
   "agent-execution-log.jsonl",
   "accuracy-report.json",
+  "sift-readiness.json",
   "evidence-dataset.md",
   "investigative-narrative.md"
 ];
@@ -54,7 +55,14 @@ for (const file of runtimeFiles) {
 
 if (existsSync(join(outputDir, "agent-execution-log.jsonl"))) {
   const log = read(join(outputDir, "agent-execution-log.jsonl"));
-  const requiredLogSignals = ['"tool":"fls"', '"tool":"rip.pl"', '"tool":"grep"', '"event":"self_correction"', "tokenUsage"];
+  const requiredLogSignals = [
+    '"event":"sift_preflight"',
+    '"tool":"fls"',
+    '"tool":"rip.pl"',
+    '"tool":"grep"',
+    '"event":"self_correction"',
+    "tokenUsage"
+  ];
   const missing = requiredLogSignals.filter((signal) => !log.includes(signal));
 
   if (missing.length === 0) {
@@ -81,6 +89,39 @@ if (existsSync(join(outputDir, "accuracy-report.json"))) {
   }
 }
 
+if (existsSync(join(outputDir, "sift-readiness.json"))) {
+  const readiness = JSON.parse(read(join(outputDir, "sift-readiness.json")));
+  const toolNames = (readiness.toolMatrix ?? []).map((tool) => tool.name);
+  const requiredTools = ["fls", "mactime", "rip.pl", "tshark"];
+  const missingToolRows = requiredTools.filter((tool) => !toolNames.includes(tool));
+  const hasInstallCommand = readiness.protocolSift?.installCommand?.includes("protocol-sift/main/install.sh");
+
+  if (
+    readiness.architecturalPattern === "Direct Agent Extension" &&
+    readiness.protocol === "Protocol SIFT MCP" &&
+    readiness.fixtureFallback === true &&
+    readiness.readiness?.canRunFixture === true &&
+    hasInstallCommand &&
+    missingToolRows.length === 0
+  ) {
+    pass("readiness:sift-preflight", `${readiness.executionMode} with ${toolNames.length} tool rows`);
+  } else {
+    fail(
+      "readiness:sift-preflight",
+      `Missing SIFT readiness signal(s): ${[
+        readiness.architecturalPattern === "Direct Agent Extension" ? "" : "Direct Agent Extension",
+        readiness.protocol === "Protocol SIFT MCP" ? "" : "Protocol SIFT MCP",
+        readiness.fixtureFallback === true ? "" : "fixtureFallback",
+        readiness.readiness?.canRunFixture === true ? "" : "canRunFixture",
+        hasInstallCommand ? "" : "install command",
+        ...missingToolRows
+      ]
+        .filter(Boolean)
+        .join(", ")}`
+    );
+  }
+}
+
 if (existsSync(join(outputDir, "evidence-dataset.md"))) {
   const dataset = read(join(outputDir, "evidence-dataset.md"));
   const requiredDatasetSignals = [
@@ -88,7 +129,9 @@ if (existsSync(join(outputDir, "evidence-dataset.md"))) {
     "registry-run-key.txt",
     "auth.log",
     "pcap-flow-index.json",
-    "Execution mode"
+    "Execution mode",
+    "Protocol SIFT install command",
+    "sift-readiness.json"
   ];
   const missing = requiredDatasetSignals.filter((signal) => !dataset.includes(signal));
 
