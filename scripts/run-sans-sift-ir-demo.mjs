@@ -1,5 +1,4 @@
-import { access, mkdir, readFile, writeFile } from "node:fs/promises";
-import { constants } from "node:fs";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { spawnSync } from "node:child_process";
 
@@ -10,20 +9,17 @@ function readArg(name, fallback) {
   return index >= 0 ? process.argv[index + 1] : fallback;
 }
 
-async function fileExists(path) {
+function commandAvailable(command) {
   try {
-    await access(path, constants.F_OK);
-    return true;
+    const result =
+      process.platform === "win32"
+        ? spawnSync("where.exe", [command], { encoding: "utf8" })
+        : spawnSync("sh", ["-lc", `command -v ${JSON.stringify(command)}`], { encoding: "utf8" });
+
+    return result.status === 0;
   } catch {
     return false;
   }
-}
-
-function commandAvailable(command) {
-  const probe = process.platform === "win32" ? "where" : "command";
-  const args = process.platform === "win32" ? [command] : ["-v", command];
-  const result = spawnSync(probe, args, { encoding: "utf8", shell: process.platform !== "win32" });
-  return result.status === 0;
 }
 
 function jsonLine(value) {
