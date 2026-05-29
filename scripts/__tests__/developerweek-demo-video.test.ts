@@ -44,9 +44,11 @@ describe("DeveloperWeek demo video assets", () => {
     expect(voiceover).not.toContain("SANS");
     expect(voiceover).not.toContain("Splunk");
     expect(checklist).toContain("YouTube link");
+    expect(checklist).toContain("https://youtu.be/RQFx5FuB3nY");
     expect(checklist).toContain("https://github.com/baiqidi/agentguard-ci/tree/codex/developerweek-ny");
     expect(manifest.verifiedEvidence.totalScenarios).toBe(17);
     expect(manifest.verifiedEvidence.liveAgentTypes).toBe(13);
+    expect(manifest.publicDemoVideo).toBe("https://youtu.be/RQFx5FuB3nY");
     expect(manifest.futureRecordCommand).toBe("npm run video:record:developerweek");
   });
 

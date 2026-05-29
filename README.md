@@ -7,7 +7,7 @@ Instead of trusting a polished agent summary, AgentGuard CI runs repeatable scen
 ## DeveloperWeek New York 2026 Judge Quick Start
 
 - **Submission branch:** https://github.com/baiqidi/agentguard-ci/tree/codex/developerweek-ny
-- **Current public demo video:** https://youtu.be/CTRoxgFSGlg
+- **Current public demo video:** https://youtu.be/RQFx5FuB3nY
 - **One-command local proof:** `npm install && npm run developerweek:check`
 - **Enterprise agent evidence:** `agentguard-runs/agent-adapters/agent-adapter-suite-summary.md`
 - **DeveloperWeek pack:** `docs/hackathons/developerweek-new-york-pack.md`

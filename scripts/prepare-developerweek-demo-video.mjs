@@ -48,6 +48,7 @@ const riskPrevented = readiness?.riskPreventedLabel ?? `${review + blocked} unsa
 const baseUrl = process.env.AGENTGUARD_DEVELOPERWEEK_DEMO_URL ?? "http://localhost:5173";
 const route = (query) => `${baseUrl}/?contest=developerweek&lang=en&present=1&${query}`;
 const repository = "https://github.com/baiqidi/agentguard-ci/tree/codex/developerweek-ny";
+const publicDemoVideo = process.env.AGENTGUARD_DEVELOPERWEEK_PUBLIC_VIDEO ?? "https://youtu.be/RQFx5FuB3nY";
 
 const shotList = [
   {
@@ -105,7 +106,7 @@ const voiceover = shotList.map((shot) => shot.narration).join("\n\n");
 const checklist = [
   "# DeveloperWeek Demo Video Checklist",
   "",
-  "- [ ] YouTube link: paste the final public or unlisted DeveloperWeek demo URL.",
+  `- [x] YouTube link: ${publicDemoVideo}`,
   `- [ ] GitHub branch: ${repository}`,
   "- [ ] Demo video length: 90 to 180 seconds.",
   "- [ ] Demo opens on the broad AgentGuard CI dashboard, not a SANS or Splunk vertical.",
@@ -122,6 +123,7 @@ const manifest = {
   baseUrl,
   targetDuration: "1:57",
   publicRepository: repository,
+  publicDemoVideo,
   verifiedEvidence: {
     verdict: readiness?.verdict ?? "ready-for-ci-gating",
     totalScenarios,

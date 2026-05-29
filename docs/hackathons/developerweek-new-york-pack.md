@@ -36,7 +36,7 @@ The strongest angle:
 
 ## Demo Flow
 
-Use the existing public video as proof of a running product, but frame it as one vertical edition of the broader platform:
+Use the DeveloperWeek-specific public video as proof of a running product and frame it as the broad enterprise-agent edition of the platform:
 
 1. Open with the general dashboard and risk radar.
 2. Show `npm run build`, `npm test`, and `npm run agentguard:agent-suite`.
@@ -47,7 +47,7 @@ Use the existing public video as proof of a running product, but frame it as one
 ## Submission Links
 
 - GitHub branch: https://github.com/baiqidi/agentguard-ci/tree/codex/developerweek-ny
-- Current public demo video: https://youtu.be/CTRoxgFSGlg
+- Current public demo video: https://youtu.be/RQFx5FuB3nY
 - Primary evidence summary: `agentguard-runs/agent-adapters/agent-adapter-suite-summary.md`
 - Product README: `README.md`
 - Submission copy: `docs/submission/developerweek-new-york-submission-copy.md`
@@ -57,8 +57,8 @@ Use the existing public video as proof of a running product, but frame it as one
 Required before final submission:
 
 - DeveloperWeek-specific Devpost story and additional-info answers.
-- Confirm whether Devpost requires a video URL for this hackathon submission.
-- Optional but high-value: record a shorter general AgentGuard CI demo that opens on the broad agent governance dashboard instead of the SANS-specific edition.
+- Confirm the Devpost project page embeds the DeveloperWeek demo video URL.
+- Optional but high-value: post a Devpost update that calls out the final video, 17 scenarios, and one-command proof.
 
 Not required before registration:
 

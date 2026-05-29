@@ -81,13 +81,12 @@ https://github.com/baiqidi/agentguard-ci/tree/codex/developerweek-ny
 
 Current public demo video:
 
-https://youtu.be/CTRoxgFSGlg
+https://youtu.be/RQFx5FuB3nY
 
 Local verification:
 
 ```bash
 npm install
-npm run build
-npm test
-npm run agentguard:agent-suite
+npm run developerweek:check
+npm run video:check:developerweek
 ```

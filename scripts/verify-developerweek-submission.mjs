@@ -46,6 +46,7 @@ function requireSignals(label, content, signals) {
 }
 
 const outputDir = resolve(readArg("--output-dir", join(root, "agentguard-runs", "developerweek-agent-adapters")));
+const publicDemoVideo = "https://youtu.be/RQFx5FuB3nY";
 
 const requiredDocs = [
   "README.md",
@@ -72,8 +73,21 @@ if (existsSync(join(root, "README.md"))) {
     "DeveloperWeek New York 2026 Judge Quick Start",
     "npm run developerweek:check",
     "codex/developerweek-ny",
-    "?contest=developerweek"
+    "?contest=developerweek",
+    publicDemoVideo
   ]);
+}
+
+const publicVideoDocs = [
+  "docs/hackathons/developerweek-new-york-pack.md",
+  "docs/submission/developerweek-new-york-submission-copy.md",
+  "docs/submission/developerweek-new-york-judge-readiness.md"
+];
+
+for (const file of publicVideoDocs) {
+  if (existsSync(join(root, file))) {
+    requireSignals(`public-video:${file}`, read(join(root, file)), [publicDemoVideo]);
+  }
 }
 
 if (existsSync(join(root, "package.json"))) {
@@ -190,6 +204,7 @@ if (missingVideoAssetFiles.length === 0) {
     totalSeconds === 117 &&
     hasTerminalScene &&
     hasOnlyDeveloperWeekRoutes &&
+    manifest.publicDemoVideo === publicDemoVideo &&
     manifest.verifiedEvidence?.totalScenarios === 17 &&
     manifest.verifiedEvidence?.liveAgentTypes === 13
   ) {
