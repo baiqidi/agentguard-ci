@@ -1002,8 +1002,24 @@ function adaptSplunkText(value: string): string {
     .replaceAll("UiPath", "Splunk");
 }
 
+function adaptDeveloperWeekText(value: string): string {
+  if (getContestMode() !== "developerweek") {
+    return value;
+  }
+
+  return value
+    .replaceAll("uipath/test-cloud-import.csv", "agentguard-runs/developerweek-agent-adapters/agent-adapter-suite-summary.json")
+    .replaceAll("test-cloud-evidence.json", "developerweek-ci-evidence.json")
+    .replaceAll("UiPath Test Cloud / Test Manager", "DeveloperWeek CI evidence gate")
+    .replaceAll("UiPath Test Manager", "DeveloperWeek review packet")
+    .replaceAll("UiPath Test Cloud", "DeveloperWeek CI gate")
+    .replaceAll("Track 3", "DeveloperWeek")
+    .replaceAll("Test Cloud", "DeveloperWeek CI")
+    .replaceAll("UiPath", "DeveloperWeek");
+}
+
 function adaptContestText(value: string): string {
-  return adaptSplunkText(adaptTencentText(value));
+  return adaptDeveloperWeekText(adaptSplunkText(adaptTencentText(value)));
 }
 
 export function getInitialLocale(localeParam: string | null, browserLanguage = ""): Locale {
@@ -1291,7 +1307,7 @@ export function formatResearchHeadline(
 ): string {
   return locale === "zh"
     ? adaptContestText(`${principleCount} 条原则，来自 ${paperCount} 篇 Agent 评估论文 + ${uipathControlCount} 个 UiPath 控制点`)
-    : fallback;
+    : adaptContestText(fallback);
 }
 
 export function formatOptimizationRecommendation(fallback: string, locale: Locale): string {

@@ -670,6 +670,92 @@ function OverviewProofPanel({
     );
   }
 
+  if (contestMode === "developerweek") {
+    const copy = {
+      kicker: "DeveloperWeek proof",
+      title: "An AI-agent release gate judges can rerun.",
+      body:
+        "AgentGuard CI turns enterprise agent behavior into a promote, review, or block decision before an agent changes code, data, records, tickets, workflows, or production state.",
+      suiteLabel: "Enterprise suite",
+      suiteValue: "17 enterprise agent scenarios",
+      suiteDetail: "Browser/RPA · data · support · workflow · documents · finance · HR · CRM · SOC · knowledge · multi-agent",
+      coverageLabel: "Agent categories",
+      coverageValue: "13 categories",
+      coverageDetail: "A broad DeveloperWeek product surface instead of one vertical demo.",
+      deliveryLabel: "Stopped before promotion",
+      deliveryValue: "15 unsafe actions",
+      deliveryDetail: "9 review routes and 6 hard blocks preserve human approval and state safety.",
+      verifyLabel: "One-command proof",
+      verifyTitle: "A judge can run npm run developerweek:check.",
+      verifyBody:
+        "That command builds the monorepo, regenerates the evidence packet, verifies the GitHub branch, and checks the DeveloperWeek submission assets.",
+      verifyFoot: "agent-adapter-suite-summary.json · developerweek-ci-evidence.json · GitHub Actions",
+      wedgeLabel: "Why it matters",
+      wedgeTitle: "The product is not another agent. It is the gate before agents act.",
+      wedgeBody:
+        "As teams move from copilots to autonomous agents, release safety becomes a developer workflow problem.",
+      blockedAction: "Open evidence",
+      routeAction: "Open scenarios",
+      deliveryAction: "Open runbook"
+    };
+
+    return (
+      <section className="proof-signal-panel" aria-label={copy.kicker}>
+        <div className="proof-signal-grid">
+          <article className="proof-signal-lead">
+            <span>{copy.kicker}</span>
+            <h2>{copy.title}</h2>
+            <p>{copy.body}</p>
+            <div className="proof-signal-list">
+              <article className="proof-signal-item">
+                <small>{copy.suiteLabel}</small>
+                <strong>{copy.suiteValue}</strong>
+                <p>{copy.suiteDetail}</p>
+              </article>
+              <article className="proof-signal-item">
+                <small>{copy.coverageLabel}</small>
+                <strong>{copy.coverageValue}</strong>
+                <p>{copy.coverageDetail}</p>
+              </article>
+              <article className="proof-signal-item">
+                <small>{copy.deliveryLabel}</small>
+                <strong>{copy.deliveryValue}</strong>
+                <p>{copy.deliveryDetail}</p>
+              </article>
+            </div>
+            <div className="proof-action-row">
+              <button onClick={() => onLaunchPreset("overview-to-evidence")} type="button">
+                <small>{copy.verifyLabel}</small>
+                <strong>{copy.blockedAction}</strong>
+              </button>
+              <button onClick={() => onLaunchPreset("overview-to-scenarios")} type="button">
+                <small>{copy.coverageLabel}</small>
+                <strong>{copy.routeAction}</strong>
+              </button>
+              <button onClick={() => onLaunchPreset("overview-to-companion")} type="button">
+                <small>{copy.deliveryLabel}</small>
+                <strong>{copy.deliveryAction}</strong>
+              </button>
+            </div>
+          </article>
+          <div className="proof-signal-side">
+            <article className="proof-signal-card">
+              <span>{copy.verifyLabel}</span>
+              <strong>{copy.verifyTitle}</strong>
+              <p>{copy.verifyBody}</p>
+              <small>{copy.verifyFoot}</small>
+            </article>
+            <article className="proof-signal-card is-accent">
+              <span>{copy.wedgeLabel}</span>
+              <strong>{copy.wedgeTitle}</strong>
+              <p>{copy.wedgeBody}</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   if (contestMode !== "splunk") {
     return null;
   }
@@ -904,7 +990,7 @@ function ScenariosPage({
         />
       ) : null}
       {contestMode === "sans" ? <SansIrScenarioSection locale={locale} /> : null}
-      <AgentCoveragePanel coverageSummary={agentCoverageSummary} locale={locale} />
+      <AgentCoveragePanel contestMode={contestMode} coverageSummary={agentCoverageSummary} locale={locale} />
       <RiskRadarPanel locale={locale} riskRadarSummary={riskRadarSummary} />
       <ScenarioWorkbenchPanel
         locale={locale}
@@ -1169,6 +1255,83 @@ const sansOperatorWorkflowSteps: Record<Locale, OperatorWorkflowStep[]> = {
   ]
 };
 
+const developerWeekOperatorWorkflowSteps: Record<Locale, OperatorWorkflowStep[]> = {
+  en: [
+    {
+      id: "developerweek-install",
+      title: "Install and build the workspace",
+      command: "npm install; npm run build",
+      artifact: "workspace build output",
+      why: "Proves the product is not a mockup before any benchmark or demo evidence is collected."
+    },
+    {
+      id: "developerweek-gate",
+      title: "Run the DeveloperWeek evidence gate",
+      command: "npm run developerweek:check",
+      artifact: "agentguard-runs/developerweek-agent-adapters/",
+      why: "Executes 17 enterprise agent scenarios across 13 categories and verifies the reusable judge packet."
+    },
+    {
+      id: "developerweek-review",
+      title: "Inspect blocked and reviewed actions",
+      command: "Get-Content agentguard-runs/developerweek-agent-adapters/agent-adapter-suite-summary.json",
+      artifact: "agent-adapter-suite-summary.json",
+      why: "Shows every promote, review, and block decision with its failing reliability gate."
+    },
+    {
+      id: "developerweek-evidence",
+      title: "Open one machine-readable evidence packet",
+      command: "Get-Content agentguard-runs/developerweek-agent-adapters/browser-payment-approval/developerweek-ci-evidence.json",
+      artifact: "developerweek-ci-evidence.json",
+      why: "Demonstrates how a real browser-payment agent action is routed to human review before execution."
+    },
+    {
+      id: "developerweek-video",
+      title: "Verify the public demo video asset",
+      command: "npm run video:check:developerweek",
+      artifact: "AgentGuard-CI-DeveloperWeek-Demo.mp4",
+      why: "Checks video duration, audio stream, scene sync, silence budget, and clean narration before upload."
+    }
+  ],
+  zh: [
+    {
+      id: "developerweek-install",
+      title: "安装并构建工作区",
+      command: "npm install; npm run build",
+      artifact: "workspace build output",
+      why: "先证明产品不是静态样机，再收集 benchmark 和演示证据。"
+    },
+    {
+      id: "developerweek-gate",
+      title: "运行 DeveloperWeek 证据门禁",
+      command: "npm run developerweek:check",
+      artifact: "agentguard-runs/developerweek-agent-adapters/",
+      why: "执行 13 类 Agent 的 17 个企业场景，并验证评委可复现的提交包。"
+    },
+    {
+      id: "developerweek-review",
+      title: "检查被阻断和需复核的动作",
+      command: "Get-Content agentguard-runs/developerweek-agent-adapters/agent-adapter-suite-summary.json",
+      artifact: "agent-adapter-suite-summary.json",
+      why: "展示每个 promote、review 和 block 决策，以及触发失败的可靠性门禁。"
+    },
+    {
+      id: "developerweek-evidence",
+      title: "打开一份机器可读证据包",
+      command: "Get-Content agentguard-runs/developerweek-agent-adapters/browser-payment-approval/developerweek-ci-evidence.json",
+      artifact: "developerweek-ci-evidence.json",
+      why: "证明真实浏览器付款 Agent 动作会在执行前进入人工复核。"
+    },
+    {
+      id: "developerweek-video",
+      title: "验证公开视频资产",
+      command: "npm run video:check:developerweek",
+      artifact: "AgentGuard-CI-DeveloperWeek-Demo.mp4",
+      why: "上传前检查视频时长、音频流、镜头同步、静音间隔和旁白清洁度。"
+    }
+  ]
+};
+
 function OperatorRunbookPanel({
   contestMode,
   locale
@@ -1177,6 +1340,7 @@ function OperatorRunbookPanel({
   locale: Locale;
 }) {
   const isSans = contestMode === "sans";
+  const isDeveloperWeek = contestMode === "developerweek";
   const copy =
     isSans && locale === "zh"
       ? {
@@ -1193,13 +1357,32 @@ function OperatorRunbookPanel({
             body:
               "A judge can run the same SIFT-compatible evidence chain, inspect self-correction, review accuracy, and prepare the demo package without trusting screenshots."
           }
+        : isDeveloperWeek && locale === "zh"
+          ? {
+              aria: "DeveloperWeek 证据门禁 Runbook",
+              kicker: "DEVELOPERWEEK CI GATE",
+              title: "从克隆仓库到可复现 Agent 证据，只需五步。",
+              body: "评委可以本地运行同一条命令，看到 17 个企业 Agent 场景、阻断结论、证据包和视频资产验证结果。"
+            }
+          : isDeveloperWeek
+            ? {
+                aria: "DeveloperWeek evidence gate runbook",
+                kicker: "DEVELOPERWEEK CI GATE",
+                title: "Five steps from clone to reproducible agent evidence.",
+                body:
+                  "A judge can run the same command locally and inspect 17 enterprise agent scenarios, blocked decisions, evidence packets, and the verified video asset."
+              }
         : {
             aria: t(locale, "runbook.aria"),
             kicker: t(locale, "runbook.kicker"),
             title: t(locale, "runbook.title"),
             body: t(locale, "runbook.body")
           };
-  const steps = isSans ? sansOperatorWorkflowSteps[locale] : operatorWorkflowSteps;
+  const steps = isSans
+    ? sansOperatorWorkflowSteps[locale]
+    : isDeveloperWeek
+      ? developerWeekOperatorWorkflowSteps[locale]
+      : operatorWorkflowSteps;
 
   return (
     <section className="operator-runbook-panel" aria-label={copy.aria}>
@@ -1245,40 +1428,75 @@ function OperatorStepCard({ index, locale, step }: { index: number; locale: Loca
 }
 
 function AgentCoveragePanel({
+  contestMode,
   coverageSummary,
   locale
 }: {
+  contestMode: ReturnType<typeof getContestMode>;
   coverageSummary: AgentCoverageSummary;
   locale: Locale;
 }) {
+  const isDeveloperWeek = contestMode === "developerweek";
+  const lead = isDeveloperWeek
+    ? locale === "zh"
+      ? {
+          kicker: "GENERAL AGENT CONTROL LAYER",
+          title: "覆盖 13 类 Agent 的 17 个企业场景。",
+          body:
+            "AgentGuard 把浏览器自动化、数据分析、客服、工作流、文档、邮件、财务、HR、CRM、SOC、知识检索、事件响应和多 Agent 协作放进同一套发布门禁。"
+        }
+      : {
+          kicker: "GENERAL AGENT CONTROL LAYER",
+          title: "17 enterprise agent scenarios across 13 categories.",
+          body:
+            "AgentGuard puts browser automation, data analysis, support, workflows, documents, email, finance, HR, CRM, SOC, knowledge retrieval, incident response, and multi-agent coordination behind one release gate."
+        }
+    : {
+        kicker: t(locale, "platform.kicker"),
+        title: t(locale, "platform.title"),
+        body: t(locale, "platform.body")
+      };
+  const metrics = isDeveloperWeek
+    ? [
+        { label: "Agent categories", value: "13", detail: "validated adapters" },
+        { label: "Enterprise scenarios", value: "17", detail: "live-local proof" },
+        { label: "Review/block findings", value: "15", detail: "needs control" },
+        { label: "Reliability gates", value: "5", detail: "promote/review/block" }
+      ]
+    : [
+        {
+          label: t(locale, "platform.liveAdapters"),
+          value: String(coverageSummary.liveProfiles),
+          detail: t(locale, "platform.liveAdapters.detail")
+        },
+        {
+          label: t(locale, "platform.blueprints"),
+          value: String(coverageSummary.localValidatedProfiles),
+          detail: t(locale, "platform.blueprints.detail")
+        },
+        {
+          label: t(locale, "platform.liveScenarios"),
+          value: String(coverageSummary.liveScenarioCount),
+          detail: t(locale, "platform.liveScenarios.detail")
+        },
+        {
+          label: t(locale, "platform.blueprintScenarios"),
+          value: String(coverageSummary.localScenarioCount),
+          detail: t(locale, "platform.blueprintScenarios.detail")
+        }
+      ];
+
   return (
     <section className="agent-platform-panel" aria-label={t(locale, "platform.aria")}>
       <div className="platform-lead">
-        <span>{t(locale, "platform.kicker")}</span>
-        <h2>{t(locale, "platform.title")}</h2>
-        <p>{t(locale, "platform.body")}</p>
+        <span>{lead.kicker}</span>
+        <h2>{lead.title}</h2>
+        <p>{lead.body}</p>
       </div>
       <div className="platform-metrics">
-        <Metric
-          label={t(locale, "platform.liveAdapters")}
-          value={String(coverageSummary.liveProfiles)}
-          detail={t(locale, "platform.liveAdapters.detail")}
-        />
-        <Metric
-          label={t(locale, "platform.blueprints")}
-          value={String(coverageSummary.localValidatedProfiles)}
-          detail={t(locale, "platform.blueprints.detail")}
-        />
-        <Metric
-          label={t(locale, "platform.liveScenarios")}
-          value={String(coverageSummary.liveScenarioCount)}
-          detail={t(locale, "platform.liveScenarios.detail")}
-        />
-        <Metric
-          label={t(locale, "platform.blueprintScenarios")}
-          value={String(coverageSummary.localScenarioCount)}
-          detail={t(locale, "platform.blueprintScenarios.detail")}
-        />
+        {metrics.map((metric) => (
+          <Metric detail={metric.detail} key={metric.label} label={metric.label} value={metric.value} />
+        ))}
       </div>
       <div className="agent-profile-grid">
         {agentProfiles.map((profile) => (

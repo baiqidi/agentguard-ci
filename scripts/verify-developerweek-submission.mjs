@@ -85,6 +85,25 @@ if (existsSync(join(root, "package.json"))) {
   } else {
     fail("package:developerweek-scripts", `Missing script(s): ${missing.join(", ")}`);
   }
+
+  const missingVideo = [
+    "video:prep:developerweek",
+    "video:audio:prep:developerweek",
+    "video:audio:developerweek",
+    "video:record:developerweek",
+    "video:check:developerweek"
+  ].filter((scriptName) => !scripts[scriptName]);
+
+  if (scripts["developerweek:prepare"]?.includes("video:prep:developerweek") && missingVideo.length === 0) {
+    pass("package:developerweek-video-scripts");
+  } else {
+    fail(
+      "package:developerweek-video-scripts",
+      `DeveloperWeek video prep/audio/record/check scripts must be exposed and developerweek:prepare must regenerate video assets. Missing: ${
+        missingVideo.join(", ") || "none"
+      }`
+    );
+  }
 }
 
 if (existsSync(join(root, ".github/workflows/developerweek-ci-gate.yml"))) {
@@ -137,6 +156,72 @@ if (existsSync(join(outputDir, "browser-payment-approval", "developerweek-ci-evi
   } else {
     fail("evidence:developerweek-target", "DeveloperWeek evidence target or promotion rule is missing.");
   }
+}
+
+const videoDir = join(root, "agentguard-runs", "developerweek-demo-video");
+const videoAssetFiles = [
+  "shot-list.json",
+  "voiceover-en.txt",
+  "submission-checklist.md",
+  "asset-manifest.json"
+];
+const missingVideoAssetFiles = videoAssetFiles.filter((file) => !existsSync(join(videoDir, file)));
+
+if (missingVideoAssetFiles.length === 0) {
+  const shotList = JSON.parse(read(join(videoDir, "shot-list.json")));
+  const manifest = JSON.parse(read(join(videoDir, "asset-manifest.json")));
+  const totalSeconds = shotList.reduce((sum, shot) => {
+    const [start, end] = shot.time.split("-");
+    const toSeconds = (value) => {
+      const [minutes, seconds] = value.split(":").map(Number);
+      return minutes * 60 + seconds;
+    };
+    return sum + toSeconds(end) - toSeconds(start);
+  }, 0);
+  const hasTerminalScene = shotList.some((shot) => shot.url === "terminal:npm run developerweek:check");
+  const hasOnlyDeveloperWeekRoutes = shotList.every(
+    (shot) =>
+      shot.url === "terminal:npm run developerweek:check" ||
+      (shot.url.includes("?contest=developerweek") && shot.url.includes("present=1"))
+  );
+
+  if (
+    shotList.length === 6 &&
+    totalSeconds === 117 &&
+    hasTerminalScene &&
+    hasOnlyDeveloperWeekRoutes &&
+    manifest.verifiedEvidence?.totalScenarios === 17 &&
+    manifest.verifiedEvidence?.liveAgentTypes === 13
+  ) {
+    pass("video-prep:developerweek-assets", "6 scenes / 117s / terminal plus DeveloperWeek product routes");
+  } else {
+    fail(
+      "video-prep:developerweek-assets",
+      `Expected 6 scenes, 117 seconds, terminal proof, DeveloperWeek product routes, and manifest metrics. Scenes: ${shotList.length}; seconds: ${totalSeconds}; terminal: ${hasTerminalScene}; routes: ${hasOnlyDeveloperWeekRoutes}.`
+    );
+  }
+
+  const voiceover = read(join(videoDir, "voiceover-en.txt"));
+  const requiredPhrases = [
+    "AI-agent release gate",
+    "17 enterprise agent scenarios across 13 categories",
+    "promote, review, or block",
+    "machine-readable evidence"
+  ];
+  const forbiddenTokens = ["terminal:", "Screen note", "C:\\Users", "file://", "SANS", "Splunk"];
+  const missingPhrases = requiredPhrases.filter((phrase) => !voiceover.includes(phrase));
+  const redFlags = forbiddenTokens.filter((token) => voiceover.includes(token));
+
+  if (missingPhrases.length === 0 && redFlags.length === 0) {
+    pass("video-prep:developerweek-narration");
+  } else {
+    fail(
+      "video-prep:developerweek-narration",
+      `Missing phrase(s): ${missingPhrases.join(", ") || "none"}. Red flags: ${redFlags.join(", ") || "none"}.`
+    );
+  }
+} else {
+  fail("video-prep:developerweek-assets", `Missing video prep file(s): ${missingVideoAssetFiles.join(", ")}`);
 }
 
 const failures = checks.filter((check) => check.status === "FAIL");
