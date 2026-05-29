@@ -4,7 +4,7 @@
 
 | Criterion | AgentGuard CI Response | Evidence |
 | --- | --- | --- |
-| Progress | Working monorepo, React dashboard, TypeScript scenario runners, tests, and local evidence generation. | `npm run build`, `npm test`, `npm run agentguard:agent-suite` |
+| Progress | Working monorepo, React dashboard, TypeScript scenario runners, tests, and DeveloperWeek evidence generation. | `npm run developerweek:check` |
 | Concept | Agent reliability firewall for teams deploying AI agents into production workflows. | `README.md`, `docs/submission/developerweek-new-york-submission-copy.md` |
 | Feasibility | Can become a CI plugin, GitHub App, hosted SaaS dashboard, or enterprise governance workflow. | `docs/hackathons/developerweek-new-york-pack.md` |
 | Enterprise relevance | Covers browser/RPA, data, support, workflow, documents, finance, HR, CRM, SOC, knowledge, and multi-agent systems. | `agentguard-runs/agent-adapters/agent-adapter-suite-summary.md` |
@@ -29,10 +29,10 @@
 
 ## Final Submission Checklist
 
-- [ ] Register on DeveloperWeek New York 2026 Devpost.
-- [ ] Create project as `AgentGuard CI`.
-- [ ] Paste story from `docs/submission/developerweek-new-york-submission-copy.md`.
-- [ ] Use GitHub branch URL: `https://github.com/baiqidi/agentguard-ci/tree/codex/developerweek-ny`.
-- [ ] Use current video URL or record a broader DeveloperWeek-specific video.
+- [x] Register on DeveloperWeek New York 2026 Devpost.
+- [x] Create project as `AgentGuard CI`.
+- [x] Paste story from `docs/submission/developerweek-new-york-submission-copy.md`.
+- [x] Use GitHub branch URL: `https://github.com/baiqidi/agentguard-ci/tree/codex/developerweek-ny`.
+- [x] Use current video URL or record a broader DeveloperWeek-specific video.
 - [ ] Verify public project page shows the GitHub branch and update text.
 - [ ] Post a Devpost update after submission: "AgentGuard CI is now packaged for DeveloperWeek NY with 17 enterprise agent scenarios and one-command local verification."

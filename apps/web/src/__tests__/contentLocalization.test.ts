@@ -43,6 +43,26 @@ describe("Chinese judging copy", () => {
   });
 });
 
+describe("DeveloperWeek judging copy", () => {
+  it("maps the DeveloperWeek first-round judging criteria to product evidence", () => {
+    const cards = getJudgingCards("en", "developerweek");
+
+    expect(cards).toHaveLength(4);
+    expect(cards.map((card) => card.label)).toEqual(["Progress", "Concept", "Feasibility", "Enterprise relevance"]);
+    expect(cards[0].proof).toContain("developerweek:check");
+    expect(cards[1].title).toContain("reliability firewall");
+  });
+
+  it("keeps DeveloperWeek readiness focused on installability and evidence", () => {
+    const items = getReadinessItems("en", "developerweek");
+
+    expect(items).toHaveLength(4);
+    expect(items[0].label).toContain("One-command proof");
+    expect(items[1].detail).toContain("17 enterprise agent scenarios");
+    expect(items[3].detail).toContain("codex/developerweek-ny");
+  });
+});
+
 describe("Chinese Splunk contest copy", () => {
   it("keeps the contest hero and companion copy readable", () => {
     const contestCopy = getSplunkContestCopy("zh");

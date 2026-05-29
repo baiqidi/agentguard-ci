@@ -8,7 +8,7 @@ Instead of trusting a polished agent summary, AgentGuard CI runs repeatable scen
 
 - **Submission branch:** https://github.com/baiqidi/agentguard-ci/tree/codex/developerweek-ny
 - **Current public demo video:** https://youtu.be/CTRoxgFSGlg
-- **One-command local proof:** `npm install && npm run build && npm test && npm run agentguard:agent-suite`
+- **One-command local proof:** `npm install && npm run developerweek:check`
 - **Enterprise agent evidence:** `agentguard-runs/agent-adapters/agent-adapter-suite-summary.md`
 - **DeveloperWeek pack:** `docs/hackathons/developerweek-new-york-pack.md`
 - **Submission copy:** `docs/submission/developerweek-new-york-submission-copy.md`
@@ -55,6 +55,7 @@ Open the web console in different modes:
 - Tencent wrapper: `http://localhost:5173/?contest=tencent`
 - Splunk wrapper: `http://localhost:5173/?contest=splunk`
 - SANS FIND EVIL wrapper: `http://localhost:5173/?contest=sans`
+- DeveloperWeek NY wrapper: `http://localhost:5173/?contest=developerweek`
 
 ## Project Description
 

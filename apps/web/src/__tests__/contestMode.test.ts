@@ -32,4 +32,15 @@ describe("contest mode helpers", () => {
     expect(getContestEvidenceTarget("default")).toBe("UiPath Test Cloud");
     expect(getContestEvidenceArtifact("default")).toBe("test-cloud-evidence.json");
   });
+
+  it("detects DeveloperWeek mode from the URL search string", () => {
+    expect(getContestMode("?contest=developerweek")).toBe("developerweek");
+    expect(getContestMode("?contest=dwny")).toBe("developerweek");
+    expect(getContestEvidenceTarget("developerweek")).toBe("DeveloperWeek NY Agent CI Gate");
+    expect(getContestEvidenceArtifact("developerweek")).toBe("developerweek-ci-evidence.json");
+    expect(getContestTrackBadge("developerweek")).toEqual({
+      label: "DeveloperWeek",
+      value: "Agent CI Gate"
+    });
+  });
 });

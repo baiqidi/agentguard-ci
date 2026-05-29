@@ -6,6 +6,7 @@ import { adapterScenarios } from "../scenarios.js";
 import { scoreAdapterScenario } from "../scoring.js";
 import {
   renderAdapterMarkdownReport,
+  renderAdapterSuiteMarkdown,
   renderAdapterTestCloudEvidence,
   writeAdapterScenarioReports,
   writeAdapterSuiteReports
@@ -94,6 +95,30 @@ describe("agent adapter reporting", () => {
         locator: "NTUSER.DAT:Software\\Microsoft\\Windows\\CurrentVersion\\Run@0x1f4a",
         status: "confirmed"
       });
+    } finally {
+      delete process.env.AGENTGUARD_CONTEST;
+    }
+  });
+
+  it("renders DeveloperWeek CI evidence and a judge-ready suite verdict", () => {
+    process.env.AGENTGUARD_CONTEST = "developerweek";
+
+    try {
+      const scenario = adapterScenarios[0];
+      const score = scoreAdapterScenario(scenario);
+      const evidence = JSON.parse(renderAdapterTestCloudEvidence(scenario, score));
+      const pathsMarkdown = renderAdapterSuiteMarkdown(adapterScenarios);
+
+      expect(evidence.targetPlatform).toBe("DeveloperWeek NY Agent CI Gate");
+      expect(evidence.attachments).toEqual([
+        "report.json",
+        "report.md",
+        "junit.xml",
+        "developerweek-ci-evidence.json"
+      ]);
+      expect(pathsMarkdown).toContain("## DeveloperWeek CI Readiness");
+      expect(pathsMarkdown).toContain("Verdict: **READY FOR CI GATING**");
+      expect(pathsMarkdown).toContain("Command: `npm run developerweek:check`");
     } finally {
       delete process.env.AGENTGUARD_CONTEST;
     }

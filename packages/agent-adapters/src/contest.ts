@@ -31,6 +31,14 @@ export function getContestEvidenceConfig(): ContestEvidenceConfig {
     };
   }
 
+  if (contest === "developerweek" || contest === "developer-week" || contest === "dwny") {
+    return {
+      targetPlatform: "DeveloperWeek NY Agent CI Gate",
+      evidenceArtifact: "developerweek-ci-evidence.json",
+      evidenceLabel: "DeveloperWeek CI evidence"
+    };
+  }
+
   return {
     targetPlatform: "UiPath Test Cloud",
     evidenceArtifact: "test-cloud-evidence.json",

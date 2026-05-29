@@ -22,6 +22,8 @@
     "splunk:check": "npm run splunk:prepare && node scripts/verify-splunk-submission.mjs",
     "sans:prepare": "npm run build && node scripts/run-sans-sift-ir-demo.mjs --output-dir agentguard-runs/sans-find-evil && node --input-type=module -e \"process.env.AGENTGUARD_CONTEST='sans'; await import('./packages/agent-adapters/dist/suite-cli.js')\" -- --output-dir agentguard-runs/sans-agent-adapters && npm run video:prep:sans",
     "sans:check": "npm run sans:prepare && node scripts/verify-sans-find-evil-submission.mjs",
+    "developerweek:prepare": "npm run build && node --input-type=module -e \"process.env.AGENTGUARD_CONTEST='developerweek'; await import('./packages/agent-adapters/dist/suite-cli.js')\" -- --output-dir agentguard-runs/developerweek-agent-adapters",
+    "developerweek:check": "npm run developerweek:prepare && node scripts/verify-developerweek-submission.mjs",
     "video:prep:tencent": "node scripts/prepare-tencent-demo-video.mjs",
     "video:prep:splunk": "node scripts/prepare-splunk-demo-video.mjs",
     "video:prep:sans": "node scripts/prepare-sans-demo-video.mjs",

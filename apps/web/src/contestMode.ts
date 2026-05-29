@@ -1,4 +1,4 @@
-export type ContestMode = "default" | "tencent" | "splunk" | "sans";
+export type ContestMode = "default" | "tencent" | "splunk" | "sans" | "developerweek";
 
 function readSearch(search?: string): string {
   if (typeof search === "string") {
@@ -27,6 +27,10 @@ export function getContestMode(search?: string): ContestMode {
     return "sans";
   }
 
+  if (contest === "developerweek" || contest === "developer-week" || contest === "dwny") {
+    return "developerweek";
+  }
+
   return "default";
 }
 
@@ -52,6 +56,13 @@ export function getContestTrackBadge(mode: ContestMode): { label?: string; value
     };
   }
 
+  if (mode === "developerweek") {
+    return {
+      label: "DeveloperWeek",
+      value: "Agent CI Gate"
+    };
+  }
+
   return {};
 }
 
@@ -68,6 +79,10 @@ export function getContestEvidenceTarget(mode: ContestMode): string {
     return "Tencent Cloud AI Agent Governance Evidence";
   }
 
+  if (mode === "developerweek") {
+    return "DeveloperWeek NY Agent CI Gate";
+  }
+
   return "UiPath Test Cloud";
 }
 
@@ -82,6 +97,10 @@ export function getContestEvidenceArtifact(mode: ContestMode): string {
 
   if (mode === "tencent") {
     return "governance-evidence.json";
+  }
+
+  if (mode === "developerweek") {
+    return "developerweek-ci-evidence.json";
   }
 
   return "test-cloud-evidence.json";

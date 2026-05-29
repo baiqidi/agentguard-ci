@@ -166,6 +166,43 @@ export function getJudgingCards(locale: Locale, contestMode: ContestMode): Score
     ];
   }
 
+  if (contestMode === "developerweek") {
+    return [
+      {
+        id: "progress",
+        label: "Progress",
+        title: "A working product judges can rerun, not a slide-only agent idea.",
+        body: "The repository builds, tests, runs the live-local adapter suite, and emits Markdown/JSON evidence for every enterprise-agent decision.",
+        proof: "Run npm run developerweek:check.",
+        page: "companion"
+      },
+      {
+        id: "concept",
+        label: "Concept",
+        title: "A reliability firewall for teams shipping AI agents into real workflows.",
+        body: "AgentGuard CI answers the release question: should this agent action be promoted, reviewed, or blocked before it mutates external state?",
+        proof: "See the Overview and Evidence pages.",
+        page: "overview"
+      },
+      {
+        id: "feasibility",
+        label: "Feasibility",
+        title: "The path to a GitHub App, CI plugin, or hosted SaaS is direct.",
+        body: "The current command contract already looks like a CI gate: deterministic scenarios in, release decision and evidence packet out.",
+        proof: "See the Operations page and GitHub branch.",
+        page: "companion"
+      },
+      {
+        id: "enterprise",
+        label: "Enterprise relevance",
+        title: "Coverage spans the agent categories companies are actually adopting.",
+        body: "Browser/RPA, data, support, workflow, documents, finance, HR, CRM, SOC, knowledge retrieval, and multi-agent coordination are all represented.",
+        proof: "See the Scenarios page.",
+        page: "scenarios"
+      }
+    ];
+  }
+
   if (locale === "zh") {
     return [
       {
@@ -288,6 +325,31 @@ export function getReadinessItems(locale: Locale, contestMode: ContestMode): Rea
         id: "updates",
         label: "Significant updates are documentable",
         detail: "The submission-period work now includes SOC routes, the Splunk packaging path, the companion app, and the multi-page frontend."
+      }
+    ];
+  }
+
+  if (contestMode === "developerweek") {
+    return [
+      {
+        id: "command",
+        label: "One-command proof",
+        detail: "npm run developerweek:check regenerates the DeveloperWeek CI evidence packet and verifies the README, Devpost copy, and branch URL."
+      },
+      {
+        id: "coverage",
+        label: "Enterprise-agent coverage",
+        detail: "The evidence suite covers 17 enterprise agent scenarios across 13 categories with promote, review, and block outcomes."
+      },
+      {
+        id: "evidence",
+        label: "Machine-readable evidence",
+        detail: "DeveloperWeek mode switches evidence packets to DeveloperWeek NY Agent CI Gate and writes developerweek-ci-evidence.json."
+      },
+      {
+        id: "branch",
+        label: "Submission branch",
+        detail: "Judges can inspect the focused codex/developerweek-ny branch instead of a generic multi-contest README."
       }
     ];
   }

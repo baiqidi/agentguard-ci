@@ -222,10 +222,17 @@ export async function writeAdapterScenarioReports(
 
 export function renderAdapterSuiteJson(scenarios: AdapterScenario[]): string {
   const scores = scenarios.map(scoreAdapterScenario);
+  const summary = summarizeAdapterScores(scores);
+  const contestConfig = getContestEvidenceConfig();
+  const developerWeekReadiness =
+    contestConfig.evidenceArtifact === "developerweek-ci-evidence.json"
+      ? buildDeveloperWeekReadiness(summary)
+      : undefined;
 
   return JSON.stringify(
     {
-      summary: summarizeAdapterScores(scores),
+      summary,
+      ...(developerWeekReadiness ? { developerWeekReadiness } : {}),
       publicAgentInstallSummary: summarizePublicAgentInstallChecks(publicAgentInstallChecks),
       publicAgentInstallChecks,
       scenarios: scenarios.map((scenario, index) => ({
@@ -248,9 +255,49 @@ export function renderAdapterSuiteJson(scenarios: AdapterScenario[]): string {
   );
 }
 
+function buildDeveloperWeekReadiness(summary: ReturnType<typeof summarizeAdapterScores>) {
+  const isReady =
+    summary.totalScenarios >= 17 &&
+    summary.liveAgentTypes >= 13 &&
+    summary.reviewOrBlockScenarios > 0 &&
+    summary.gatePassRate >= 60;
+
+  return {
+    verdict: isReady ? "ready-for-ci-gating" : "needs-more-coverage",
+    command: "npm run developerweek:check",
+    releaseContract: "Promote only when all five universal gates pass; otherwise route to review or block before external mutation.",
+    coverage: {
+      totalScenarios: summary.totalScenarios,
+      agentCategories: summary.liveAgentTypes,
+      gatePassRate: summary.gatePassRate,
+      promoted: summary.promotedScenarios,
+      review: summary.reviewScenarios,
+      blocked: summary.blockedScenarios
+    },
+    riskPreventedLabel: `${summary.reviewOrBlockScenarios} unsafe or under-evidenced agent actions stopped before promotion`
+  };
+}
+
+function renderDeveloperWeekReadinessMarkdown(summary: ReturnType<typeof summarizeAdapterScores>): string[] {
+  const readiness = buildDeveloperWeekReadiness(summary);
+  const verdict = readiness.verdict === "ready-for-ci-gating" ? "READY FOR CI GATING" : "NEEDS MORE COVERAGE";
+
+  return [
+    "",
+    "## DeveloperWeek CI Readiness",
+    `Verdict: **${verdict}**`,
+    `Command: \`${readiness.command}\``,
+    `Release contract: ${readiness.releaseContract}`,
+    `Coverage: ${readiness.coverage.totalScenarios} scenarios across ${readiness.coverage.agentCategories} agent categories, ${readiness.coverage.gatePassRate}% gate pass rate.`,
+    `Decision mix: ${readiness.coverage.promoted} promote / ${readiness.coverage.review} review / ${readiness.coverage.blocked} block.`,
+    `Risk prevented: ${readiness.riskPreventedLabel}.`
+  ];
+}
+
 export function renderAdapterSuiteMarkdown(scenarios: AdapterScenario[]): string {
   const scores = scenarios.map(scoreAdapterScenario);
   const summary = summarizeAdapterScores(scores);
+  const contestConfig = getContestEvidenceConfig();
   const installSummary = summarizePublicAgentInstallChecks(publicAgentInstallChecks);
   const rows = scenarios
     .map((scenario, index) => {
@@ -276,6 +323,9 @@ export function renderAdapterSuiteMarkdown(scenarios: AdapterScenario[]): string
     "| Agent Type | Decision | Gates | Scenario |",
     "| --- | --- | --- | --- |",
     rows,
+    ...(contestConfig.evidenceArtifact === "developerweek-ci-evidence.json"
+      ? renderDeveloperWeekReadinessMarkdown(summary)
+      : []),
     ""
   ].join("\n");
 }
