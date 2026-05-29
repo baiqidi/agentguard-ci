@@ -1,33 +1,33 @@
-# AgentGuard IR
+# AgentGuard CI
 
-AgentGuard IR is a reliability firewall for autonomous incident-response agents. It sits around a Protocol SIFT-style workflow and asks the question that matters before an AI agent acts on a real incident: **is the finding traceable, corrected, and safe enough to promote?**
+AgentGuard CI is a reliability firewall for enterprise AI agents. It tests whether an agent is safe enough to run, promote, or route to human review before it touches production workflows, code, customer data, financial records, incident-response systems, or business automations.
 
-Instead of trusting a polished agent summary, AgentGuard IR replays SIFT-compatible evidence, records tool calls and self-corrections, classifies findings as confirmed / rejected / inferred, and blocks risky response actions until the evidence and approval path are clear.
+Instead of trusting a polished agent summary, AgentGuard CI runs repeatable scenarios, records tool calls and self-corrections, checks evidence integrity, and returns a clear decision: **promote**, **review**, or **block**.
 
-## FIND EVIL Judge Quick Start
+## DeveloperWeek New York 2026 Judge Quick Start
 
-- **Public demo video:** https://youtu.be/CTRoxgFSGlg
-- **Devpost project:** https://devpost.com/software/agentguard-ir
-- **Submission branch:** https://github.com/baiqidi/agentguard-ci/tree/codex/sans-find-evil
-- **One-command verification:** `npm install && npm run sans:check`
-- **Main evidence packet:** `agentguard-runs/sans-find-evil/`
-- **Judge summary:** `agentguard-runs/sans-find-evil/judge-evidence-summary.md`
+- **Submission branch:** https://github.com/baiqidi/agentguard-ci/tree/codex/developerweek-ny
+- **Current public demo video:** https://youtu.be/CTRoxgFSGlg
+- **One-command local proof:** `npm install && npm run build && npm test && npm run agentguard:agent-suite`
+- **Enterprise agent evidence:** `agentguard-runs/agent-adapters/agent-adapter-suite-summary.md`
+- **DeveloperWeek pack:** `docs/hackathons/developerweek-new-york-pack.md`
+- **Submission copy:** `docs/submission/developerweek-new-york-submission-copy.md`
 
 What the command proves:
 
-1. The workspace builds and the SANS FIND EVIL submission packet is reproducible.
-2. The local case data produces terminal-style execution logs and artifact-level findings.
-3. AgentGuard separates confirmed evidence from rejected overclaims and inferred signals.
-4. Unsafe containment and destructive IR actions stay blocked without named approval.
-5. The demo covers five DFIR checkpoints: disk persistence, authentication-log accuracy, containment approval, Windows Event Log lateral movement, and memory process tree triage.
+1. The product builds from source and the test suite runs locally.
+2. The live-local adapter suite covers 17 enterprise agent scenarios across 13 agent categories.
+3. AgentGuard separates safe promotions from review-needed and hard-blocked actions.
+4. The same control contract applies across code repair, browser/RPA, data analysis, customer support, workflow automation, document compliance, finance, HR, CRM, SOC, knowledge retrieval, and multi-agent coordination.
+5. The product produces judge-readable Markdown/JSON evidence that can become a CI gate or SaaS workflow for teams deploying agents.
 
 ## Why This Matters
 
-Protocol SIFT and SANS SIFT-style tooling make AI-assisted DFIR faster, but speed alone is not safety. A fast IR agent can overstate compromise, lose evidence provenance, or isolate the wrong endpoint. AgentGuard IR adds a repeatable approval gate before autonomous action: evidence first, correction visible, mutation only after the risk contract is satisfied.
+Developer teams are moving from chatbots to agents that can use tools, write code, change records, query customer data, and trigger workflows. That creates a new release question: not "did the model answer?" but "can this autonomous action be trusted?" AgentGuard CI turns agent behavior into a measurable release gate: evidence first, correction visible, mutation only after the risk contract is satisfied.
 
 ## Repository Scope
 
-AgentGuard CI is the underlying agent reliability platform used to build AgentGuard IR and other contest wrappers. The command-backed live adapter focuses on code-repair agents: it uses a mixed frontend/backend Issue Tracker as a CI failure playground, then scores whether an agent repaired the failure safely. The broader product is a general AgentGuard control layer for RPA/browser, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems, now backed by executable live-local adapter scenarios.
+AgentGuard CI is the underlying agent reliability platform used to build multiple contest wrappers. The command-backed live adapter focuses on code-repair agents: it uses a mixed frontend/backend Issue Tracker as a CI failure playground, then scores whether an agent repaired the failure safely. The broader product is a general AgentGuard control layer for RPA/browser, data, support, workflow, document, email, finance, HR, CRM, SOC, knowledge, and multi-agent systems, now backed by executable live-local adapter scenarios.
 
 The repository now supports multiple contest wrappers on top of the same product core:
 
@@ -35,6 +35,7 @@ The repository now supports multiple contest wrappers on top of the same product
 - **Tencent Cloud**: Chinese enterprise AI governance packaging.
 - **Splunk**: Security-track packaging for agentic SOC workflows with Splunk MCP evidence.
 - **SANS FIND EVIL**: Protocol SIFT / SIFT Workstation incident-response packaging with self-correction and artifact-level accuracy evidence.
+- **DeveloperWeek NY**: Broad enterprise AI-agent safety packaging with a startup-feasible developer-tool story.
 
 Public repository: https://github.com/baiqidi/agentguard-ci
 
@@ -46,6 +47,7 @@ License: MIT, covering the original AgentGuard CI solution code in this reposito
 - Tencent Cloud AI contest: Chinese enterprise governance story and localized dashboard.
 - Splunk Agentic Ops: Security track plus Best Use of Splunk MCP Server.
 - SANS FIND EVIL: autonomous incident-response reliability gate for Protocol SIFT workflows.
+- DeveloperWeek New York: enterprise AI-agent governance tool for teams shipping agentic apps.
 
 Open the web console in different modes:
 

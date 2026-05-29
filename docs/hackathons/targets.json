@@ -50,6 +50,24 @@
     ]
   },
   {
+    "id": "developerweek-new-york-2026",
+    "name": "DeveloperWeek New York 2026 Hackathon",
+    "tier": "active-alternate",
+    "status": "active",
+    "deadline": "2026-06-10 10:00 EDT",
+    "urgency": "high",
+    "eligibility": "appears-viable-for-china-resident-solo-builder",
+    "fitScore": 84,
+    "prizeStrategy": "Strong broad-audience target because AgentGuard can be positioned as a startup-feasible enterprise AI-agent governance tool rather than a single security vertical.",
+    "agentguardAngle": "A CI-ready reliability firewall that tests whether AI agents should be promoted, reviewed, or blocked before they touch production workflows.",
+    "requiredDelta": "DeveloperWeek-specific README, Devpost copy, judge-readiness doc, and ideally a broader enterprise-agent demo video before final submission.",
+    "sourceUrls": [
+      "https://dwny-2026-hackathon.devpost.com/",
+      "https://dwny-2026-hackathon.devpost.com/rules",
+      "https://www.developerweek.com/newyork/hackathon/"
+    ]
+  },
+  {
     "id": "tencent-cloud-ai-agent",
     "name": "腾讯云黑客松 AI 智能体争霸赛",
     "tier": "active-alternate",
